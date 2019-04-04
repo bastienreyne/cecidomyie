@@ -1,6 +1,6 @@
 # Modélisation du système manguier — cécidomyie
 
-Le but de ce projet est de modéliser conjointement la populations d'inflorescences du manguier et la population de cécidomyies des fleurs au sein d'un verger.
+Le but de ce projet est de modéliser conjointement la populations d'inflorescences des manguiers et la population de cécidomyies des fleurs au sein d'un verger.
 
 Ce git est organisé en plusieurs dossiers :
 
