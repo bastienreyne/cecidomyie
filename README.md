@@ -1,1 +1,1 @@
-# Modélisation du système manguier -- cécidomyie
+# Modélisation du système manguier — cécidomyie
