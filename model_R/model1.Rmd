@@ -1,0 +1,213 @@
+---
+title: "Sous-modèle 1"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, eval = FALSE)
+```
+
+Ce document présente le sous-modèle 1 du système manguier--cécidomyies et son implémentation en $\texttt{R}$ correspondant au fichier $\texttt{model1.R}$.
+
+## Présentation du modèle
+
+Ce modèle a pour objectif d'estimer les populations de larves et de cécidomyies femelles à partir des inflorescences observées. Le modèle repose sur un système d'équations permettant entre autre d'avoir :
+
++ $N_{t,i}$ : le nombre de femelles dans le sous-bloc $i$ au temps $t$ ;
++ $N_{t, i}^{\text{endo}}$ : le nombre de femelles endogène dans le sous-bloc $i$ au temps $t$. Est appelée femelle endogène une femelle qui émerge du sol du sous-bloc considéré ;
++ $L_{t,i}$ : le nombre de larves s'éjectant des inflorescences dans le sous-bloc $i$ au temps $t$.
+
+### Équations
+
+Ainsi, le nombre de femelles endogènes est donné par l'équation suivante
+$$ N_{t,i}^{\text{endo}} = L_{t-\tau_p, i}  p_p\mu_p\mu_{\text{MS}}\frac{1}{1+SR} ,$$
+où :
+
++ $L_{t-\tau_p, i}$ est le nombre de larves s'éjectant des manguiers à la date $t-\tau_p$, $\tau_p$ représentant la durée de pupaison ;
++ $p_p$ est la probabilié pour une larve d'entrer en pupaison ;
++ $\mu_p$ est la probabilité de survire à la phase de pupaison ;
++ $\mu_{\text{MS}}$ est la probabilité de survie d'une larve à la modalité de couverture du sol ;
++ $SR$ est le *sex-ratio*.
+
+Autrement dit, le nombre de femelles endogènes est donné par le nombre de larves entrées en pupaison à la date $t-\tau_p$ qui ont survécues à la phase de pupaison et à la modalité de couverture du sol, pondéré par la proportion de femelles chez les cécidomyies.
+
+Le nombre de larves est quant à lui donné par
+$$L_{t,i} = N_{t-\tau_\ell, i} R_{t-\tau_\ell, i} E \mu_\ell,$$
+où :
+
++ $N_{t-\tau_\ell, i}$ est le nombre de femelles dans le sous-bloc $i$ à la date $t-\tau_\ell$, $\tau_\ell$ étant la durée entre la ponte des œufs et le troisième stade larvaire (qui correspond à l'éjection des larves vers le sol) ;
++ $R_{t-\tau_\ell, i}$ est un indicateur de ressource d'inflorescences pour les cécidomyies femelles ;
++ $E$ est le nombre d'œufs moyens pondus par une cécidomyie femelle ;
++ $\mu_\ell$ est la probabilité pour un œuf d'atteindre le troisième stade larvaire.
+
+Le nombre de larves peut être simplement vu comme le nombre d'œufs pondus à la date $t - \tau_\ell$ qui sont parvenus jusqu'au troisième stade larvaire.
+
+L'indicateur de ressource $R$ mentionné ci-dessus est défini par
+$$ R_{t,i} = \begin{cases}
+1 & \mbox{si } N_{t,i} < kI_{t,i},\\
+\frac{kI_{t,i}}{N_{t,i}} & \mbox{sinon}.
+\end{cases}$$
+Le coefficient $k$ représente le nombre maximal de femelles qu'une inflorescences peut acceuillir chaque jour. De manière intuitive, cela signifie juste que si le nombre de femelles est significativement supérieur au nombre d'inflorescences, les femelles ne pourront pas toutes pondre ; les ressources sont limitées.
+
+Enfin, le nombre total de femelles est donné par
+$$N_{t,i} = \lambda_{t,i} + \sum_{j\in\{\text{ER, EH} \}} \alpha_{t,j,i}N_{t,j}^{\text{endo}},$$
+où :
+
++ $\lambda_{t,i}$ représente le nombre femelles exogènes au bloc venant dans le sous-bloc $i$ à la date $t$ ;
++ $\alpha_{t,j,i}$ est la proportion des femelles endogènes du sous-bloc $j$ venant dans le sous-bloc $i$.
+
+Le nombre de femelles pour un sous-bloc $i$ est simplement donné par la somme du nombre de femelles exogène au bloc venant dans le sous-bloc $i$, du nombre de femelles des autres sous-blocs venant dans le sous-bloc $i$ et du nombre de femelles endogènes du sous-bloc $i$ qui y restent.
+
+Par ailleurs, on définit $\lambda_{t,i}$ et $\alpha_{t,j,i}$ par
+$$\lambda_{t,i} = \gamma I_{t,i} \qquad \mbox{et} \qquad \alpha_{t,j,i} = \begin{cases}
+0 & \mbox{si } j = \text{B},\\
+1-p_m & \mbox{si } j = i \mbox{ et } j\neq \text{B},\\
+p_mI_{t,i}/{\sum_{k\in \{\text{ER, B, EH}\},  k \neq j } I_{t,k}} & \mbox{sinon},
+\end{cases}$$
+où $p_m$ est la probabilité pour une cécidomyie de quitter le sous-bloc dans lequel elle a émergé.
+
+Dans les deux cas, les arrivées de femelles dans le sous-bloc $i$ dépendent du nombre d'inflorescences en vie au temps $t$.
+
+### Hypothèses
+
+Il faut noter que ce modèle repose sur plusieurs hypothèses --- parfois implicites. Pêle-mèle, on peut citer :
+
++ les arrivées des femelles exogènes au bloc sont proportionelles au nombres d'inflorescences ;
++ aucune des femelles qui émergent dans le bloc ne le quittent ;
++ la durée de vie des femelles est d'un jour ;
++ aucune cécidomyes n'émerge du bloc B ;
++ les cécidomyies qui sortent de leur phase de diapause ne sont pas pris en compte ;
++ le stade des inflorescences n'est pas pris en compte, alors qu'il influe probablement sur le coefficient $k$.
+
+## Implémentation
+
+L'implémentation du modèle est décomposée en fonction élémentaires. Sauf indication contraire, les fonctions renvoient les résultats pour les trois sous-blocs.
+
+On commence par initialiser tous les paramètres du modèles, ceux qui seront fixes (littérature ou hypothèses) et ceux qui seront à calibrer :
+```{r}
+## Paramètres fixes
+sex.ratio <- 0.5
+mu.B <- 0
+proba.pupaison <- 0.77 ## p_p * mu_p
+duree.larvation <- 7
+duree.pupaison <- 5
+eggs <- 150
+mu.larvation <- 0.04
+nb.jours <- 80
+
+## Paramètres à calibrer
+gamma <- 1.5
+mu.ER <- 0.8
+mu.EH <- 0.4
+proba.migration <- 0.5
+capacite.inflo <- 4.5
+```
+On importe ensuite les données, on attribue aux parcelles ER, B et EH un indice pour plus de lisibilité :
+```{r}
+## Datas
+inflos.ER <- read.csv("r1.csv")$inflos_vivantes
+inflos.B <- read.csv("b1.csv")$inflos_vivantes
+inflos.EH <- read.csv("h1.csv")$inflos_vivantes
+larves.ER <- read.csv("r1.csv")$larves
+larves.B <- read.csv("b1.csv")$larves
+larves.EH <- read.csv("h1.csv")$larves
+inflos <- cbind(inflos.ER, inflos.B, inflos.EH)
+larves.obs <- cbind(larves.ER, larves.B, larves.EH)
+
+## Indices
+ER <- 1
+B <- 2
+EH <- 3
+```
+
+Ainsi, on en vient aux fonctions qui composent le modèle. La première \texttt{exogene} renvoie le nombre d'individus exogènes arrvivant dans chaque parcelle. Elle prend donc en entrée le coefficient $\gamma$ et le nombres d'inflorescences à chaque date $t$ pour chaque sous-bloc $i$ et renvoie une matrice $\Lambda$ de taille $\texttt{nb.jours} \times 3$ où $\Lambda[t,i]$ est égal au nombre d'individus exogènes au bloc arrivant dans le sous-bloc $i$ à la date $t$.
+```{r}
+exogene <- function(gamma, inflos){
+    return(gamma * inflos)
+}
+```
+
+La fonction \texttt{echange.dans.bloc} renvoie --- pour un $p_m$ donné --- les $\alpha_{t,j,i}$. Plus précisément, la fonction renvoie trois matrices $\alpha_{\text{ER}}, \alpha_{\text{B}}$ et $\alpha_{\text{EH}}$ correspondant aux coefficient des individus venant respectivement dans les sous-blocs ER, B et EH. 
+```{r}
+echange.dans.bloc <- function(proba.migration, inflos){
+    alphaER <- alphaB <- alphaEH <- matrix(0, nrow = nb.jours, ncol = 3)
+    alphaER[,ER] <- alphaEH[,EH] <- 1 - proba.migration
+    alphaER[,EH] <- proba.migration * inflos[,ER] / (inflos[,B]+inflos[,ER])
+    alphaEH[,ER] <- proba.migration * inflos[,EH] / (inflos[,B]+inflos[,EH])
+    alphaB[,ER] <- proba.migration * inflos[,B] / (inflos[,B]+inflos[,EH])
+    alphaB[,EH] <- proba.migration * inflos[,B] / (inflos[,B]+inflos[,ER])
+    
+    return(list(alphaER, alphaB, alphaEH))
+}
+```
+
+Pour calculer l'indicateur de ressources $R$, on utilise la fonction \texttt{dispo.ressources}. Cette fonction a besoin comme arguments du jour $t$, du coefficient $k$, du nombre d'inflorscences et du nombre de femelles.
+
+```{r}
+dispo.ressources <- function(jour, capacite.inflo, inflos, femelles){
+    ans <- rep(NA, 3)
+    ans[femelles[jour,] <= capacite.inflo * inflos[jour,]] <- 1
+    ans[femelles[jour,] > capacite.inflo * inflos[jour,]] <- capacite.inflo *
+        inflos[jour,which(femelles[jour,] > capacite.inflo * inflos[jour,])] /
+        femelles[jour, which(femelles[jour,] > capacite.inflo * inflos[jour,])]
+    return(ans)
+}
+
+```
+
+Le nombre de larves pour un jour $t$ est donné par la fonction \texttt{larves}. Il lui faut donc comme argument le jour $t$, le nombre d'inflorescences et le nombre de femelles ; faisant aussi appel à la \texttt{dispo.ressources} le coefficient $k$ est également nécessaire. Le nombre de larves $L_{t,i}$ dépendant du nombre de femelles au moment $t-\tau_\ell$, le nombre de larves avant la date $\tau_\ell + 1$ sera fixé à 0.
+```{r}
+larves <- function(jour, capacite.inflo, inflos, femelles){
+    if (jour - duree.larvation <= 0)
+        return(c(0,0,0))
+    else{
+        R <- dispo.ressources(jour-duree.larvation, capacite.inflo, inflos, femelles)
+        return(femelles[jour-duree.larvation,] * R * eggs * mu.larvation)
+    }
+}
+```
+
+Le nombre de femelles émergeant du sol à la date $t$ est donné par la fonction \texttt{femelles.endogene}. La fonction prend pour arguments le jour $t$, le nombre de larves et la probabilité de survie d’une larve à la modalité de couverture du sol. Le nombre de femelles endogène $N_{t, i}^{\text{endo}}$ dépendant du nombre de larves à la date $t - \tau_p$, le nombre de femelles endogènes avant la date $\tau_p + 1$ sera fixé à 0.
+
+```{r}
+femelles.endogene <- function(jour, larves, mu.sol){
+    if (jour - duree.pupaison <= 0)
+        return(c(0,0,0))
+    else
+        return(larves[jour - duree.pupaison,] * mu.sol * proba.pupaison * sex.ratio)
+}
+```
+
+Le nombre total de femelles est donné par \texttt{femelles.total}. Cette fonction ne fonctionne que pour un sous-bloc à a fois. La fonction a besoin du jour $t$, des coefficients $\alpha$, du nombre de femelles endogènes et exogènes.
+```{r}
+femelles.total <- function(jour, alpha, femelles.exo, femelles.endo){
+    return(femelles.exo[jour] + alpha[jour,] %*% femelles.endo[jour,])
+}
+```
+
+Enfin, la fonction \texttt{dynamiques} prend pour arguments $\gamma,\ p_m,\  \mu_{\text{ER}},\ \mu_{\text{EH}},\ k$ et les inflorescences observées et renvoie le nombre de larves estimées.
+```{r}
+dynamiques <- function(gamma, proba.migration, mu.ER, mu.EH, capacite.inflo, inflos){
+    alpha <- echange.dans.bloc(proba.migration, inflos)
+    
+    femelles.exo <- exogene(gamma, inflos)
+    larves <- matrix(0, nrow = nb.jours, ncol = 3)
+    femelles.endo <- matrix(0, nrow = nb.jours, ncol = 3)
+    femelles <- matrix(0, nrow = nb.jours, ncol = 3)
+    mu.sol <- c(mu.ER, mu.B, mu.EH)
+    for (jour in 1:nb.jours){
+        # browser()
+        femelles[jour,] <- femelles.exo[jour,]
+        larves[jour,] <- larves(jour, capacite.inflo, inflos, femelles)
+        
+        femelles.endo[jour,] <- femelles.endogene(jour, larves, mu.sol)
+        
+        femelles[jour, ER] <- femelles.total(jour, alpha[[ER]], femelles.exo[,ER], femelles.endo)
+        femelles[jour, B] <- femelles.total(jour, alpha[[B]], femelles.exo[,B], femelles.endo)
+        femelles[jour, EH] <- femelles.total(jour, alpha[[EH]], femelles.exo[,EH], femelles.endo)
+    }
+    
+    return(larves)
+}
+```
+
