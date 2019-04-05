@@ -1,0 +1,27 @@
+Bounds1.py
+Bornes des paramètres à estimer pour l'algo de basin hopping pour la première optimisation
+
+Bounds2.py
+Bornes des paramètres à estimer pour l'algo de basin hopping pour la deuxième optimisation
+
+Datas.py
+Données utiles pour les optimisations, paramètres fixes et populations observées
+Fait appel aux fichier FunDatas pour récupérer les données observées
+
+FunModele.py
+Fonction pour simuler le modèle complet
+
+FunModele1.py
+Fonctions pour simuler le premier sous-modèle
+
+FunNorm.py
+Fonctions pour normaliser les données
+
+FunObj.py
+Fonctions objectif (critère d'erreur)
+
+FunOptimisation1.py
+Fonctions pour la premiere optimisation
+
+FunOptimisation2.py
+Fonctions pour la deuxième optimisation

@@ -1,0 +1,14 @@
+Cinétique inflorescences.ipynb
+Lisse les données du fichier donnees.floraison, plus précisément les inflos mortes car les suivis de ces 
+notations ont commencé tard. Et extrapole ces données à l'échelle du verger en ajustant les inflorescences vivantes 
+sur les vivantes du fichier piege.
+Il fait appel aux fichiers :
+- CinetiqueInflorescencesFonctions1.py pour récupérer les données du fichier donnees.floraison et 
+tracer des graphes 
+- CinetiqueInflorescencesFonctions2.py pour récupérer les données des fichiers donnees.floraison et piege, 
+les mettre à la même période et pour faire une optimisation entre les deux jeux de données
+
+Interprétation des données récoltées.ipynb 
+Dans ce fichier, il y a des graphes des dynamiques observées des inflorescences et des larves du fichier 
+piège et des graphes de tepérature sur la période des relevés. 
+Il fait appel au fichier Fonctions.py pour récupérer les données et tracer les graphes.

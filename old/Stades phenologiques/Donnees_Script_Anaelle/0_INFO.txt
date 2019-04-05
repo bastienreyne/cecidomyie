@@ -1,0 +1,44 @@
+BASES DE DONNEES (A. Dambreville) : 
+
+- Bases de données développement inflos: 
+	- BaseDeCroissanceInflo.csv
+
+
+
+- Bases de données thermiques: 
+
+	- VergerBassinMartin.txt
+
+	- VergerGrandFond.txt
+VergerSaintGillesHauts.txt
+
+	- VergerBassinPlat.txt
+
+
+Les 
+
+
+SCRIPTS:
+
+
+
+- 'script.r': sert à faire les graphiques et les régressions (à partir de la ligne 46 pour les inflos). 
+Fait appel au script 'creation base nTInflo dvlpt2.r'. 
+
+- 'creation base nTInflo dvlpt2.r' : met en forme les données de phéno et de météo.
+Fait appel au script 'Preparation Base Inflo.R'.
+
+
+
+- 'creation base nTInflo dvlpt2.r' : 
+
+Pour tous les fichiers de températures, deux moyennes sont calculées :
+
+	- 'tempMoyheure' est la moyenne des températures relevées chaque quart d'heure
+	
+- 'tempMoy' est la moyenne des températures minimale et maximale relevées dans la journée
+
+
+
+- 'Preparation Base Inflo.R' : 
+Charge le fichier de données BaseDeCroissanceInflo.csv et met en forme ses variables.
