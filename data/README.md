@@ -8,7 +8,7 @@ Le format des fichiers indique ce qu'ils repésentent :
 
 + les fichiers *excel* correspondent aux données brutes ;
 + les scripts *R* sont les scripts utilisés pour les traiter ;
-+ les *markdown* et les *pdf* précisent la méthodologie employée ;
++ les *Rmarkdown* et les *pdf* précisent la méthodologie employée ;
 + les fichiers *csv* sont les données traitées, qui seront utilisés.
 
 ### Nature des données
