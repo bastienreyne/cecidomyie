@@ -1,0 +1,57 @@
+\documentclass[a4paper, 10pt]{article}
+
+% Nécessaire
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amsthm}
+\usepackage{amsfonts,amssymb}
+
+% Marge
+\usepackage{geometry}
+\geometry{margin={2.2cm ,2cm}}
+
+% Figures, graphiques
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{caption}
+
+% Surlignage
+\usepackage{alltt}
+
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{color}
+\usepackage{colortbl}
+
+% Indicatrice
+\usepackage{dsfont}
+
+\usepackage{multirow}
+\usepackage{eurosym}
+\usepackage{extarrows}
+% \usepackage{pdfpages}
+
+
+% Titre
+\title{Optimisation multi-objectifs avec l'algorithme NSGA-II}
+\author{}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+La résolution d'un problème à plusieurs objectifs n'a que très rarement une unique solution. Les algorithmes d'optimisation de problèmes multi-objectifs, dont NSGA-II tel que décrit dans \cite{nsga}, propose  alors un sous-ensemble de solutions inclus dans l'optimum de Pareto. L'optimum de Pareto (aussi appelé ensemble de Pareto) d'un problème est un ensemble regroupant toutes les solutions non-dominées d'un problème. Est qualifiée non-dominée une solution $x\in \mathbb{R}^p$ pour laquelle il n'existe pas de solution $y$ telle que $y_1 \succ x_1, \ldots, y_p \succ x_p$.
+
+
+
+
+\bibliographystyle{alpha} 
+\bibliography{nsga}
+
+
+\end{document}
+
+

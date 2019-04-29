@@ -1,0 +1,106 @@
+                        fun: 192.802025796022
+ lowest_optimization_result:       fun: 192.802025796022
+ hess_inv: array([[ 5.22508046e-02, -2.11672072e-01,  7.80264234e-03,
+         1.03780670e-02, -3.16712764e-04],
+       [-2.11672072e-01,  8.95924315e-01, -9.20666322e-02,
+        -1.57528786e-01,  1.09623194e-03],
+       [ 7.80264234e-03, -9.20666322e-02,  8.50784581e-01,
+        -2.45306626e-01,  1.02981631e-03],
+       [ 1.03780670e-02, -1.57528786e-01, -2.45306626e-01,
+         6.11031223e-01,  3.63932916e-04],
+       [-3.16712764e-04,  1.09623194e-03,  1.02981631e-03,
+         3.63932916e-04,  1.12673949e-05]])
+      jac: array([  -4.41779327,   -1.50577164,   -0.55496597,   -0.54854202,
+       -113.873312  ])
+  message: 'Desired error not necessarily achieved due to precision loss.'
+     nfev: 880
+      nit: 3
+     njev: 124
+   status: 2
+  success: False
+        x: array([0.03330459, 0.30995317, 0.5448183 , 0.84510979, 0.05204026])
+                    message: ['requested number of basinhopping iterations completed successfully']
+      minimization_failures: 2923
+                       nfev: 1330490
+                        nit: 10000
+                       njev: 186458
+                          x: array([0.03330459, 0.30995317, 0.5448183 , 0.84510979, 0.05204026])
+                        fun: 1054406.9439096646
+ lowest_optimization_result:       fun: 1054406.9439096646
+ hess_inv: array([[ 6.66667449e-01, -3.33332551e-01,  0.00000000e+00,
+        -3.33332551e-01, -3.70155910e-09],
+       [-3.33332551e-01,  6.66667449e-01,  0.00000000e+00,
+        -3.33332551e-01, -3.70155928e-09],
+       [ 0.00000000e+00,  0.00000000e+00,  1.00000000e+00,
+         0.00000000e+00,  0.00000000e+00],
+       [-3.33332551e-01, -3.33332551e-01,  0.00000000e+00,
+         6.66667449e-01, -3.70155925e-09],
+       [-3.70155910e-09, -3.70155928e-09,  0.00000000e+00,
+        -3.70155925e-09,  9.11492354e-10]])
+      jac: array([0.      , 0.      , 0.      , 0.      , 6.421875])
+  message: 'Desired error not necessarily achieved due to precision loss.'
+     nfev: 509
+      nit: 3
+     njev: 71
+   status: 2
+  success: False
+        x: array([2.35578067, 0.60936918, 0.56588497, 0.11713895, 0.05499295])
+                    message: ['requested number of basinhopping iterations completed successfully']
+      minimization_failures: 9405
+                       nfev: 2762696
+                        nit: 10000
+                       njev: 382793
+                          x: array([2.35578067, 0.60936918, 0.56588497, 0.11713895, 0.05499295])
+                        fun: 1142.4859496101162
+ lowest_optimization_result:       fun: 1142.4859496101162
+ hess_inv: array([[ 1.00000000e+00,  0.00000000e+00,  0.00000000e+00,
+         0.00000000e+00,  0.00000000e+00],
+       [ 0.00000000e+00,  1.00000000e+00,  0.00000000e+00,
+         0.00000000e+00, -3.57525307e-08],
+       [ 0.00000000e+00,  0.00000000e+00,  1.00000000e+00,
+         0.00000000e+00,  0.00000000e+00],
+       [ 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,
+         1.00000000e+00,  0.00000000e+00],
+       [ 0.00000000e+00, -3.57525307e-08,  0.00000000e+00,
+         0.00000000e+00,  1.02727923e-07]])
+      jac: array([0.00000000e+00, 1.52587891e-05, 0.00000000e+00, 0.00000000e+00,
+       2.02158188e+02])
+  message: 'Desired error not necessarily achieved due to precision loss.'
+     nfev: 866
+      nit: 6
+     njev: 122
+   status: 2
+  success: False
+        x: array([4.56377025, 0.33829139, 0.47232954, 0.97589689, 0.0545812 ])
+                    message: ['requested number of basinhopping iterations completed successfully']
+      minimization_failures: 9016
+                       nfev: 6054066
+                        nit: 10000
+                       njev: 851525
+                          x: array([4.56377025, 0.33829139, 0.47232954, 0.97589689, 0.0545812 ])
+     fun: 193.185830961323
+     jac: array([ 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,  0.00000000e+00,
+       -5.68434189e-06])
+ message: 'Optimization terminated successfully.'
+    nfev: 1974
+     nit: 25
+ success: True
+       x: array([9.98003142e+02, 9.07270831e-01, 7.00142522e-01, 6.22938715e-01,
+       5.33690963e-02])
+     fun: 1054406.9439096765
+     jac: array([ 0.        ,  0.        ,  0.        ,  0.        , -0.04656613])
+ message: 'Optimization terminated successfully.'
+    nfev: 2124
+     nit: 27
+ success: True
+       x: array([3.70429123e+02, 1.61613225e-01, 5.32323591e-02, 7.69899660e-01,
+       5.49929484e-02])
+     fun: 1142.4859491624459
+     jac: array([2.27373675e-05, 2.27373675e-05, 2.27373675e-05, 2.27373675e-05,
+       1.80464804e+02])
+ message: 'Optimization terminated successfully.'
+    nfev: 2229
+     nit: 26
+ success: True
+       x: array([7.58056540e+02, 3.12223100e-01, 1.10006637e-01, 5.34107248e-01,
+       5.45811999e-02])

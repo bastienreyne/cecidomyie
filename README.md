@@ -8,4 +8,5 @@ Ce git est organisé en plusieurs dossiers :
 + **data** contenant les données utilisées ;
 + **model_R** contenant l'implémantation du modèle en R ;
 + **model_python** contenant l'implémentation du modèle en Python ;
-+ **old** la première implémentation du modèle, réalisée par Laurie Saint-Cricq
++ **old** la première implémentation du modèle, réalisée par Laurie Saint-Cricq ;
++ **drafts** brouillons en tout genre

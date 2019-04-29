@@ -1,0 +1,23 @@
+Les paramètres du modèle des cécidomyies :
+
+{%\centre
+\newcommand{\mc}[3]{\multicolumn{#1}{#2}{#3}}
+\begin{center}
+\begin{tabular}{cc}
+\mc{1}{c}{Paramètres connus} & \mc{1}{c}{Paramètres à estimer}\\
+$E$, $\mu$, $\d_l$, $d_p$, $SR$, $p_{pup}$, $\mu_B$ & $\gamma$, $\mu_A$, $\mu_C$, $p_l$, $k$
+\end{tabular}
+\end{center}
+}%
+% \vspace*{1.5cm}
+% Les paramètres du modèle des inflorescences :
+% {%
+% \newcommand{\mc}[3]{\multicolumn{#1}{#2}{#3}}
+% \begin{center}
+% \begin{tabular}{cc}
+% \mc{1}{c}{Paramètre connu} & \mc{1}{c}{Paramètre à estimer}\\
+% $T$ & $\psi$
+% \end{tabular}
+% \end{center}
+% }%
+
