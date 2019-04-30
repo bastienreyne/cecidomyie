@@ -4,10 +4,12 @@ library(lubridate)
 library(readxl)
 
 ## Importation des données
-data <- read_csv2("donnees.floraison.csv")
-data %<>% mutate_at(c("ApdateC", "ApdateM", c(paste0("Lat",1:5,"dateC"), paste0("Lat", 1:5, "dateM"))), list(as.Date), "%d/%m/%Y")
-
-obs_floraison <- function(bloc = 1, modalite = NULL, annee = 2017){
+data <- read_csv2("raw/2017_floraison.csv")
+data %<>% mutate_at(c("ApdateC", "ApdateM",
+                      c(paste0("Lat",1:5,"dateC"),
+                        paste0("Lat", 1:5, "dateM"))), dmy)
+    
+obs_floraison <- function(bloc = 1, modalite = NULL, annee = 2017) {
     
     data %<>% filter(Bloc == bloc & Annee == annee)
     if (!is.null(modalite))
@@ -56,7 +58,7 @@ obs_floraison <- function(bloc = 1, modalite = NULL, annee = 2017){
     res <- as_tibble(cbind(days, alive, dead, new, alive_theo, stadeC_theo, stadeE_theo, stadeF_theo, dead_theo))
     res %<>% mutate_at("days", list(as_date)) %>% mutate(Bloc = paste("Bloc", bloc)) %>% mutate(Sol = modalite)
     
-    write_csv2(res, paste0("2017_flo_B", bloc,"_", modalite,".csv"))
+    # write_csv2(res, paste0("2017_flo_B", bloc,"_", modalite,".csv"))
     return(res)
     
 }
@@ -69,4 +71,4 @@ r2 <- obs_floraison(modalite = "Sn", bloc = 2)
 h2 <- obs_floraison(modalite = "E", bloc = 2)
 
 final <- bind_rows(b1,h1,r1,b2,r2,h2)
-write_csv2(final, "2017_floraison.csv")
+# write_csv2(final, "2017_floraison.csv")
