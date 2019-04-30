@@ -51,7 +51,8 @@ floraison2017 <- rbind(inflos_apic, inflos_lat1, inflos_lat2,
     arrange(birth)
 floraison2017$birth <- floraison2017$birth - 365
 floraison2017$death <- floraison2017$death - 365
-
+isna <- floraison2017$death %>% is.na %>% which
+floraison2017$death[isna] <- floraison2017$birth[isna] + 50
 # write.csv(floraison2017, file = "2017_floraison_not_corrected.csv")
 
 floraison2017_ER <- floraison2017 %>% filter(Traitm == "ER")
@@ -60,6 +61,7 @@ floraison2017_EH <- floraison2017 %>% filter(Traitm == "EH")
 
 date <- floraison2017 %$% unique(c(birth, death)) %>% na.omit
 date <- min(date):max(date) %>% as_date
+
 
 inflos_floraison_ER <- rep(NA, length(date))
 inflos_floraison_PS <- rep(NA, length(date))
@@ -97,25 +99,29 @@ for (day in 1:length(date)) {
 floraison_ER <- cbind(date, inflos = inflos_floraison_ER, deads = inflos_deads_ER) %>% 
     as_tibble %>% 
     mutate_at("date", as_date) %>%
-    filter(date >= "2017-07-19") %>% 
+    filter(date >= "2017-07-19") %>%
+    filter(date < "2017-10-04") %>% 
     mutate(Sol = "ER")
 
 floraison_PS <- cbind(date, inflos = inflos_floraison_PS, deads = inflos_deads_PS) %>%
     as_tibble %>% 
     mutate_at("date", as_date) %>%
     filter(date >= "2017-07-19") %>% 
+    filter(date < "2017-10-04") %>% 
     mutate(Sol = "PS")
 
 floraison_EH <- cbind(date, inflos = inflos_floraison_EH, deads = inflos_deads_EH) %>%
     as_tibble %>% 
     mutate_at("date", as_date) %>%
-    filter(date >= "2017-07-19") %>% 
+    filter(date >= "2017-07-19") %>%
+    filter(date < "2017-10-04") %>% 
     mutate(Sol = "EH")
 
 floraison_all <- cbind(date, inflos = inflos_floraison_all, deads = inflos_deads_all) %>%
     as_tibble %>% 
     mutate_at("date", as_date) %>%
-    filter(date >= "2017-07-19") %>% 
+    filter(date >= "2017-07-19") %>%
+    filter(date < "2017-10-04") %>% 
     mutate(Sol = "all")
 
 
@@ -128,13 +134,13 @@ floraison <- rbind(floraison_ER, floraison_PS, floraison_EH, floraison_all)
 
 index <- floraison_ER %$% which(date == "2017-09-05" | date == "2017-09-06")
 ecart_ER <- (floraison_ER[49, 2] - floraison_ER[50, 2]) %>%
-    as.numeric() / sum(floraison_ER$inflos)
+    as.numeric() #/ sum(floraison_ER$inflos)
 
 ecart_PS <- (floraison_PS[49, 2] - floraison_PS[50, 2]) %>%
-    as.numeric() / sum(floraison_PS$inflos)
+    as.numeric() #/ sum(floraison_PS$inflos)
 
 ecart_EH <- (floraison_EH[49, 2] - floraison_EH[50, 2]) %>% 
-    as.numeric() / sum(floraison_EH$inflos)
+    as.numeric() #/ sum(floraison_EH$inflos)
 
 date2017 <- floraison_ER$date
 
@@ -153,13 +159,13 @@ inflos_piege_EH <- inflos_piege %>%
     filter(date < "2017-10-04") %>% 
     pull(inflos)
 
-inflos_target_ER <- inflos_piege_ER / sum(inflos_piege_ER)
-inflos_target_PS <- inflos_piege_PS / sum(inflos_piege_PS)
-inflos_target_EH <- inflos_piege_EH / sum(inflos_piege_EH)
+inflos_target_ER <- inflos_piege_ER #/ sum(inflos_piege_ER)
+inflos_target_PS <- inflos_piege_PS #/ sum(inflos_piege_PS)
+inflos_target_EH <- inflos_piege_EH #/ sum(inflos_piege_EH)
 
-inflos_current_ER <- floraison_ER$inflos / sum(floraison_ER$inflos)
-inflos_current_PS <- floraison_PS$inflos / sum(floraison_PS$inflos)
-inflos_current_EH <- floraison_EH$inflos / sum(floraison_EH$inflos)
+inflos_current_ER <- floraison_ER$inflos #/ sum(floraison_ER$inflos)
+inflos_current_PS <- floraison_PS$inflos #/ sum(floraison_PS$inflos)
+inflos_current_EH <- floraison_EH$inflos #/ sum(floraison_EH$inflos)
 
 # inflos_ER <- floraison_ER$inflos
 # inflos_ER[16:49] <- inflos_ER[16:49] - seq(0, 16, length.out = 35)
@@ -317,9 +323,9 @@ resultat <- cbind(inflos_ER = inflos_ER * sum(inflos_piege_ER),
 
 # Débourrements -----------------------------------------------------------
 
-burst_ER <- (floraison2017_ER %>% arrange(birth) %>% count(birth))
-burst_PS <- (floraison2017_PS %>% arrange(birth) %>% count(birth))
-burst_EH <- (floraison2017_EH %>% arrange(birth) %>% count(birth))
+burst_ER <- floraison2017_ER %>% arrange(birth) %>% count(birth)
+burst_PS <- floraison2017_PS %>% arrange(birth) %>% count(birth)
+burst_EH <- floraison2017_EH %>% arrange(birth) %>% count(birth)
 
 burstER <- burstPS <- burstEH <- rep(0, length(date2017))
 ind_ER <- which(date2017 %in% burst_ER$birth)
@@ -336,34 +342,41 @@ burstEH[1] <- burstEH[1] + sum(burst_EH$n[1:7])
 
 burst <- cbind(burstER, burstPS, burstEH)
 
-# Morts -------------------------------------------------------------------
-
-deadsER <- floraison_ER$deads
-deadsPS <- floraison_PS$deads
-deadsEH <- floraison_EH$deads
-
-
 # Mise à l'échelle --------------------------------------------------------
 
-new_inflos_ER <- inflos_ER * sum(inflos_piege_ER)
-new_inflos_PS <- inflos_PS * sum(inflos_piege_PS)
-new_inflos_EH <- inflos_EH * sum(inflos_piege_EH)
+new_inflos_ER <- inflos_ER #* sum(inflos_piege_ER)
+new_inflos_PS <- inflos_PS #* sum(inflos_piege_PS)
+new_inflos_EH <- inflos_EH #* sum(inflos_piege_EH)
 
-new_burst_ER <- burstER / floraison_ER$inflos * new_inflos_ER
-new_burst_PS <- burstPS / floraison_PS$inflos * new_inflos_PS
-new_burst_EH <- burstEH / floraison_EH$inflos * new_inflos_EH
+new_burst_ER <- burstER * my_alpha_ER #/ floraison_ER$inflos * new_inflos_ER
+new_burst_PS <- burstPS * my_alpha_PS #/ floraison_PS$inflos * new_inflos_PS
+new_burst_EH <- burstEH * my_alpha_EH #/ floraison_EH$inflos * new_inflos_EH
 
-new_deads_obs_ER <- deadsER / floraison_ER$inflos * new_inflos_ER
-new_deads_obs_PS <- deadsPS / floraison_PS$inflos * new_inflos_PS
-new_deads_obs_EH <- deadsEH / floraison_EH$inflos * new_inflos_EH
+# new_deads_obs_ER <- deadsER * my_alpha_ER #/ floraison_ER$inflos * new_inflos_ER
+# new_deads_obs_PS <- deadsPS * my_alpha_PS #/ floraison_PS$inflos * new_inflos_PS
+# new_deads_obs_EH <- deadsEH * my_alpha_EH #/ floraison_EH$inflos * new_inflos_EH
+# 
+# new_deads_est_ER <- deads_ER * my_alpha_ER #* sum(inflos_piege_ER)
+# new_deads_est_PS <- deads_PS * my_alpha_PS #* sum(inflos_piege_PS)
+# new_deads_est_EH <- deads_EH * my_alpha_EH #* sum(inflos_piege_EH)
+# 
+# new_deads_ER <- c(new_deads_est_ER, new_deads_obs_ER[51:length(floraison_ER$deads)])
+# new_deads_PS <- c(new_deads_est_PS, new_deads_obs_PS[51:length(floraison_PS$deads)])
+# new_deads_EH <- c(new_deads_est_EH, new_deads_obs_EH[51:length(floraison_EH$deads)])
 
-new_deads_est_ER <- deads_ER * my_alpha_ER * sum(inflos_piege_ER)
-new_deads_est_PS <- deads_PS * my_alpha_PS * sum(inflos_piege_PS)
-new_deads_est_EH <- deads_EH * my_alpha_EH * sum(inflos_piege_EH)
+# Morts -------------------------------------------------------------------
 
-new_deads_ER <- c(new_deads_est_ER, new_deads_obs_ER[51:length(floraison_ER$deads)])
-new_deads_PS <- c(new_deads_est_PS, new_deads_obs_PS[51:length(floraison_PS$deads)])
-new_deads_EH <- c(new_deads_est_EH, new_deads_obs_EH[51:length(floraison_EH$deads)])
+deadsER <- cumsum(new_burst_ER) - new_inflos_ER
+new_deads_ER <- deadsER - lag(deadsER)
+new_deads_ER[1] <- deadsER[1]
+
+deadsPS <- cumsum(new_burst_PS) - new_inflos_PS
+new_deads_PS <- deadsPS - lag(deadsPS)
+new_deads_PS[1] <- deadsPS[1]
+
+deadsEH <- cumsum(new_burst_EH) - new_inflos_EH
+new_deads_EH <- deadsEH - lag(deadsEH)
+new_deads_EH[1] <- deadsEH[1]
 
 
 # Propre ------------------------------------------------------------------
@@ -374,7 +387,8 @@ ajusted_ER <- cbind(date = date2017,
                     inflos = new_inflos_ER) %>%
     as_tibble() %>% 
     mutate_at("date", as_date) %>% 
-    mutate(ld = rev(lag(rev(deads), 7)))
+    mutate(ld = rev(lag(rev(deads), 7))) %>% 
+    mutate(decaled = cumsum(burst) - cumsum(ld))
 
 ajusted_PS <- cbind(date = date2017,
                     burst = new_burst_PS,
@@ -382,7 +396,8 @@ ajusted_PS <- cbind(date = date2017,
                     inflos = new_inflos_PS) %>% 
     as_tibble() %>% 
     mutate_at("date", as_date) %>% 
-    mutate(ld = rev(lag(rev(deads), 7)))
+    mutate(ld = rev(lag(rev(deads), 7))) %>% 
+    mutate(decaled = cumsum(burst) - cumsum(ld))
 
 
 ajusted_EH <- cbind(date = date2017,
@@ -391,7 +406,8 @@ ajusted_EH <- cbind(date = date2017,
                     inflos = new_inflos_EH) %>%
     as_tibble() %>% 
     mutate_at("date", as_date) %>% 
-    mutate(ld = rev(lag(rev(deads), 7)))
+    mutate(ld = rev(lag(rev(deads), 7))) %>% 
+    mutate(decaled = cumsum(burst) - cumsum(ld))
 
 
 
@@ -399,3 +415,9 @@ ajusted_ER %>% ggplot(aes(x = date, y = inflos)) +
     geom_line() +
     geom_line(aes(y = cumsum(burst) - cumsum(deads)), col = "red") +
     geom_line(aes(y = cumsum(burst) - cumsum(ld)), col = "green4")
+
+
+deads_decalees <- cbind(ajusted_ER$decaled, ajusted_PS$decaled, ajusted_EH$decaled)
+deads_decalees[71:77, ] <- 0
+
+write.csv(deads_decalees, file = "corrected.csv")
