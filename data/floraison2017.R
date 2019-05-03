@@ -100,28 +100,24 @@ floraison_ER <- cbind(date, inflos = inflos_floraison_ER, deads = inflos_deads_E
     as_tibble %>% 
     mutate_at("date", as_date) %>%
     filter(date >= "2017-07-19") %>%
-    filter(date < "2017-10-04") %>% 
     mutate(Sol = "ER")
 
 floraison_PS <- cbind(date, inflos = inflos_floraison_PS, deads = inflos_deads_PS) %>%
     as_tibble %>% 
     mutate_at("date", as_date) %>%
     filter(date >= "2017-07-19") %>% 
-    filter(date < "2017-10-04") %>% 
     mutate(Sol = "PS")
 
 floraison_EH <- cbind(date, inflos = inflos_floraison_EH, deads = inflos_deads_EH) %>%
     as_tibble %>% 
     mutate_at("date", as_date) %>%
     filter(date >= "2017-07-19") %>%
-    filter(date < "2017-10-04") %>% 
     mutate(Sol = "EH")
 
 floraison_all <- cbind(date, inflos = inflos_floraison_all, deads = inflos_deads_all) %>%
     as_tibble %>% 
     mutate_at("date", as_date) %>%
     filter(date >= "2017-07-19") %>%
-    filter(date < "2017-10-04") %>% 
     mutate(Sol = "all")
 
 
@@ -131,6 +127,27 @@ floraison <- rbind(floraison_ER, floraison_PS, floraison_EH, floraison_all)
 # write.csv(floraison, file = "2017_floraison_not_corrected.csv")
 
 # Correction --------------------------------------------------------------
+
+floraison_ER_to_correct <- cbind(date, inflos = inflos_floraison_ER, deads = inflos_deads_ER) %>% 
+    as_tibble %>% 
+    mutate_at("date", as_date) %>%
+    filter(date >= "2017-07-19") %>%
+    filter(date <= "2017-10-06") %>% 
+    mutate(Sol = "ER")
+
+floraison_PS_to_correct <- cbind(date, inflos = inflos_floraison_PS, deads = inflos_deads_PS) %>%
+    as_tibble %>% 
+    mutate_at("date", as_date) %>%
+    filter(date >= "2017-07-19") %>% 
+    filter(date <= "2017-10-06") %>% 
+    mutate(Sol = "PS")
+
+floraison_EH_to_correct <- cbind(date, inflos = inflos_floraison_EH, deads = inflos_deads_EH) %>%
+    as_tibble %>% 
+    mutate_at("date", as_date) %>%
+    filter(date >= "2017-07-19") %>%
+    filter(date <= "2017-10-06") %>% 
+    mutate(Sol = "EH")
 
 index <- floraison_ER %$% which(date == "2017-09-05" | date == "2017-09-06")
 ecart_ER <- (floraison_ER[49, 2] - floraison_ER[50, 2]) %>%
@@ -142,30 +159,27 @@ ecart_PS <- (floraison_PS[49, 2] - floraison_PS[50, 2]) %>%
 ecart_EH <- (floraison_EH[49, 2] - floraison_EH[50, 2]) %>% 
     as.numeric() #/ sum(floraison_EH$inflos)
 
-date2017 <- floraison_ER$date
+date2017 <- floraison_ER_to_correct$date
 
 inflos_piege_ER <- inflos_piege %>%
     filter(Sol == "ER") %>%
-    filter(date < "2017-10-04") %>% 
     pull(inflos)
 
 inflos_piege_PS <- inflos_piege %>%
     filter(Sol == "PS") %>%
-    filter(date < "2017-10-04") %>% 
     pull(inflos)
 
 inflos_piege_EH <- inflos_piege %>%
     filter(Sol == "EH") %>%
-    filter(date < "2017-10-04") %>% 
     pull(inflos)
 
 inflos_target_ER <- inflos_piege_ER #/ sum(inflos_piege_ER)
 inflos_target_PS <- inflos_piege_PS #/ sum(inflos_piege_PS)
 inflos_target_EH <- inflos_piege_EH #/ sum(inflos_piege_EH)
 
-inflos_current_ER <- floraison_ER$inflos #/ sum(floraison_ER$inflos)
-inflos_current_PS <- floraison_PS$inflos #/ sum(floraison_PS$inflos)
-inflos_current_EH <- floraison_EH$inflos #/ sum(floraison_EH$inflos)
+inflos_current_ER <- floraison_ER_to_correct$inflos #/ sum(floraison_ER$inflos)
+inflos_current_PS <- floraison_PS_to_correct$inflos #/ sum(floraison_PS$inflos)
+inflos_current_EH <- floraison_EH_to_correct$inflos #/ sum(floraison_EH$inflos)
 
 # inflos_ER <- floraison_ER$inflos
 # inflos_ER[16:49] <- inflos_ER[16:49] - seq(0, 16, length.out = 35)
@@ -300,17 +314,44 @@ resultats_EH <- cbind(date = date2017,
 
 plot_ER <- resultats_ER %>% ggplot(aes(x = date, y = Nombre, color = Source)) +
     geom_point() +
-    geom_line()
+    geom_line(linetype = "dashed") +
+    scale_color_discrete(labels = c(expression(alpha~I[t]^{c}),
+                                    expression(alpha~I[t]^{1}),
+                                    expression(alpha~I[t]^{2}))) +
+    theme(legend.title = element_blank(), legend.text = element_text(size = 14),
+          axis.title = element_text(size = 14), axis.text = element_text(size = 13)) +
+    labs(title = "Enherbement ras") +
+    ylab("Nombre de larves") +
+    xlab("Date") +
+    ylim(c(0, 6000))
 
 
 plot_PS <- resultats_PS %>% ggplot(aes(x = date, y = Nombre, color = Source)) +
     geom_point() +
-    geom_line()
+    geom_line(linetype = "dashed") +
+    scale_color_discrete(labels = c(expression(alpha~I[t]^{c}),
+                                    expression(alpha~I[t]^{1}),
+                                    expression(alpha~I[t]^{2}))) +
+    theme(legend.title = element_blank(), legend.text = element_text(size = 14),
+          axis.title = element_text(size = 14), axis.text = element_text(size = 13)) +
+    labs(title = "Paillage synthétique") +
+    ylab("Nombre de larves") +
+    xlab("Date") +
+    ylim(c(0, 6000))
 
 
 plot_EH <- resultats_EH %>% ggplot(aes(x = date, y = Nombre, color = Source)) +
     geom_point() +
-    geom_line() 
+    geom_line(linetype = "dashed") +
+    scale_color_discrete(labels = c(expression(alpha~I[t]^{c}),
+                                    expression(alpha~I[t]^{1}),
+                                    expression(alpha~I[t]^{2}))) +
+    theme(legend.title = element_blank(), legend.text = element_text(size = 14),
+          axis.title = element_text(size = 14), axis.text = element_text(size = 13)) +
+    labs(title = "Enherbement haut") +
+    ylab("Nombre de larves") +
+    xlab("Date") +
+    ylim(c(0, 6100))
 
 
 library(gridExtra)
@@ -418,6 +459,63 @@ ajusted_ER %>% ggplot(aes(x = date, y = inflos)) +
 
 
 deads_decalees <- cbind(ajusted_ER$decaled, ajusted_PS$decaled, ajusted_EH$decaled)
-deads_decalees[71:77, ] <- 0
+deads_decalees[74:80, ] <- cbind(floraison_ER$inflos[81:87] * my_alpha_ER,
+                                 floraison_PS$inflos[81:87] * my_alpha_PS,
+                                 floraison_EH$inflos[81:87] * my_alpha_EH)
 
-write.csv(deads_decalees, file = "corrected.csv")
+# write.csv(deads_decalees, file = "corrected.csv")
+
+to_plot_ER <- cbind(Date = date2017,
+                    IT1 = inflos_piege_ER,
+                    ITC = new_inflos_ER,
+                    ITA = deads_decalees[, 1]) %>% 
+    as_tibble %>% 
+    mutate_at("Date", as_date) %>% 
+    gather(ITC, ITA, IT1, key = Inflos, value = Nombre) %>% 
+    ggplot(aes(x = Date, y = Nombre, color = Inflos)) +
+    geom_line(lwd = 0.75) +
+    scale_color_discrete(labels = c(expression(I[t]^{1}), 
+                                    expression(I[t]^{a}), expression(alpha~I[t]^{c}))) +
+    theme(legend.title = element_blank(), legend.text = element_text(size = 14),
+          axis.title = element_text(size = 14), axis.text = element_text(size = 13)) +
+    labs(title = "Enherbement ras") +
+    ylab("Nombre d'inflos") +
+    xlab("Date") +
+    ylim(c(0, 6001))
+
+to_plot_PS <- cbind(Date = date2017,
+                    IT1 = inflos_piege_PS,
+                    ITC = new_inflos_PS,
+                    ITA = deads_decalees[, 2]) %>% 
+    as_tibble %>% 
+    mutate_at("Date", as_date) %>% 
+    gather(ITC, ITA, IT1, key = Inflos, value = Nombre) %>% 
+    ggplot(aes(x = Date, y = Nombre, color = Inflos)) +
+    geom_line(lwd = 0.75) +
+    scale_color_discrete(labels = c(expression(I[t]^{1}), 
+                                    expression(I[t]^{a}), expression(alpha~I[t]^{c}))) +
+    theme(legend.title = element_blank(), legend.text = element_text(size = 14),
+          axis.title = element_text(size = 14), axis.text = element_text(size = 13)) +
+    labs(title = "Paillage synthétique") +
+    ylab("Nombre d'inflos") +
+    xlab("Date") +
+    ylim(c(0, 6001))
+
+to_plot_EH <- cbind(Date = date2017,
+                    IT1 = inflos_piege_EH,
+                    ITC = new_inflos_EH,
+                    ITA = deads_decalees[, 3]) %>% 
+    as_tibble %>%
+    mutate_at("Date", as_date) %>% 
+    gather(ITC, ITA, IT1, key = Inflos, value = Nombre) %>% 
+    ggplot(aes(x = Date, y = Nombre, color = Inflos)) +
+    geom_line(lwd = 0.75) +
+    scale_color_discrete(labels = c(expression(I[t]^{1}), 
+                                   expression(I[t]^{a}), expression(alpha~I[t]^{c}))) +
+    theme(legend.title = element_blank(), legend.text = element_text(size = 14),
+          axis.title = element_text(size = 14), axis.text = element_text(size = 13)) +
+    labs(title = "Enherbement haut") +
+    ylab("Nombre d'inflos") +
+    xlab("Date") +
+    ylim(c(0, 6001))
+

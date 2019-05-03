@@ -1,0 +1,102 @@
+---
+title: "Tentatives..."
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+Ce document récapitule les corrections et modifications apportées au inflorescences et les résultats que cela donne en terme de prédiction des larves.
+
+Pour la suite, *dataset 1* désignera les données sur les inflorescences provenant de l'observation de 200 UCs. Ce fichier précise la date de débourrement et la date de morts des inflorescences apparues sur les UCs suivies. On peut en déduire une dynamique d'inflorescences pour chacun des trois sous-blocs. On la notera $I_t^1$.
+
+On désignera par *dataset 2* le jeu de données donnant le nombre de larves piégés et le nombre d'inflorescences au-dessus du piège. On peut donc en déduire des dynamiques de larves et d'inflorescences pour chacun des trois sous-blocs. On  notera la dynamique d'inflorescences issue de ce fichier $I_t^2$.
+
+## Gestion des valeurs manquantes
+
+On peut remarquer des dates de morts manquantes dans le *dataset 1*. On remplacera ces valeurs manquantes par la date de mort théorique des inflorescences, soit 50 jours après le débourrement.
+
+## Répartition des morts avant le 06 septembre et mise à l'échelle
+
+Un deuxième problème avec le *dataset 1* est que la distinction entre inflorescences vivantes et inflorescences mortes mais encore présentes sur l'arbre n'a été faite qu'à partir du 06 septembre. Il en résulte un décrochement entre le 05 et 06 septembre, cet écart est égal au nombre d'inflorescences mortes entre le début des relevés et le 05 septembre.
+
+Pour corriger ce problème on répartira le nombre de morts observés en essayant au mieux de coller à $I_t^2$, qui n'a pas souffert du problème considéré. Les observations n'ont pas été faites à la même échelle, il faudra utiliser un coefficient de mise à l'échelle $\alpha$. Cela revient au problème d'optimisation suivant :
+$$ \min \quad |\alpha I_t^c - I_t^2|, $$ où $I_t^c$ est la version corrigée d'$I_t^1$.
+
+Plus précisément, on attribuera un poids (à calibrer) pour tous les jours entre le jour 1 et le 5 septembre, et le nombre de morts à chaque jour sera donné par la formule
+$$
+M_t = \frac{p_t \times m}{\sum_j p_j},
+$$
+où $M_t$ désigne le nombre de mort à la date $t$, $m$ le nombre de mort total déterminé par la différence d'inflorescences entre le 05 et 06 septembre et $p_t$ le poids assigné au jour $t$.
+
+Après avoir optimisé en utilisant NSGA-II, les réultats sont visibles sur les graphes ci-dessous.
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+setwd("../data/")
+source("floraison2017.R")
+```
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.height=3}
+plot_ER
+plot_PS
+plot_EH
+```
+
+## Attractivité des inflorescences
+
+On cherche maintenant à séparer la vie des inflorescences en deux stades : attractives et non-attractives.
+Sont considérées comme attractives les inflorescences qui sont en capacité d'accueillir des œufs et qui restent vivantes jusqu'à l'éjection des larves dans le sol 7 jours plus tard. Le stade non-attractif d'une inflorescence représente donc les 7 derniers jours de vie de l'inflorescence.
+
+Pour l'introduire dans le modèle, on utilisera $\alpha I_t^c$. Les dates de débourrement $B_t$ sont connues, il suffit de les mettre à l'échelle avec le coefficient $\alpha$. Par ailleurs,
+$$ \alpha\left(\sum_{j = 1}^t B_j    -   I_t^c\right) = \alpha \sum_{j = 1}^t M_j,$$
+ce qui nous permet d'en déduire le nombre de morts chaque jour.
+
+En décalant le vecteurs du nombre de morts de 7 jours, et en recalculant le nombre d'inflos vivantes grâce aux débourrements et aux morts modifiés, on peut en déduire la dynamique d'inflos attractives. On notera cette dynamique $I_t^a$. Les différences sont visibles dans les graphes ci-dessous
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+setwd("../data/")
+source("floraison2017.R")
+```
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.height=3}
+to_plot_ER
+to_plot_PS
+to_plot_EH
+```
+
+
+## Simulation de la population d'inflorescences
+
+Une deuxième approche a été testé : simuler les dates de débourrements pour coller au mieux aux inflorescences observées en utilisant la formule
+$$ I_t = B_t + \sum_{j = 1}^{50} B_{t-j} \times \left(1 - F_{\mathcal{N}(29, 14)}(t-j) \right), $$
+où 29 et 14 sont respectivement la moyenne et l'écart-type de la durée de vie des inflos observés sur le *dataset 1*.
+
+Après avoir calibré le nombres de débourrements quotidien, on a pu simuler une population d'inflorescences attractives en utilisant la formule
+$$I_t = B_t + \sum_{j = 1}^{50} B_{t-j} \times \left(1 - F_{\mathcal{N}(22, 14)}(t-j) \right), $$
+avec les $B_t$  déjà calibrés. Les dynamiques ainsi simulés seront notés $I_t^s$.
+
+Les dynamiques sont visibles ci-dessous
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+setwd("../drafts/")
+source("plot_simuled.R")
+```
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.height=3}
+simuled_ER
+simuled_PS
+simuled_EH
+```
+
+## Résultats
+
+Avec ces deux dynamiques d'inflos attractives, le modèle fut recalibré. Les résultats sont visibles ci-dessous
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+setwd("../drafts")
+source("with_inflos_corrected.R")
+```
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, fig.height=4}
+lplot_ER
+lplot_PS
+lplot_EH
+```

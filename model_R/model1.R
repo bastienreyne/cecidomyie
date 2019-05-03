@@ -19,14 +19,14 @@ proba.migration <- 0.5
 capacite.inflo <- 4.5
 
 ## Datas
-inflos.ER <- read.csv("r1.csv")$inflos_vivantes
-inflos.B <- read.csv("b1.csv")$inflos_vivantes
-inflos.EH <- read.csv("h1.csv")$inflos_vivantes
-larves.ER <- read.csv("r1.csv")$larves
-larves.B <- read.csv("b1.csv")$larves
-larves.EH <- read.csv("h1.csv")$larves
-inflos <- cbind(inflos.ER, inflos.B, inflos.EH)
-larves.obs <- cbind(larves.ER, larves.B, larves.EH)
+# inflos.ER <- read.csv("r1.csv")$inflos_vivantes
+# inflos.B <- read.csv("b1.csv")$inflos_vivantes
+# inflos.EH <- read.csv("h1.csv")$inflos_vivantes
+# larves.ER <- read.csv("r1.csv")$larves
+# larves.B <- read.csv("b1.csv")$larves
+# larves.EH <- read.csv("h1.csv")$larves
+# inflos <- cbind(inflos.ER, inflos.B, inflos.EH)
+# larves.obs <- cbind(larves.ER, larves.B, larves.EH)
 
 ## Indices
 ER <- 1
@@ -52,12 +52,12 @@ echange.dans.bloc <- function(proba.migration, inflos){
 dispo.ressources <- function(jour, capacite.inflo, inflos, femelles){
     # browser()
     ans <- rep(NA, 3)
-    ans[femelles[jour,] <= capacite.inflo * inflos[jour,]] <- 1
-    ans[femelles[jour,] > capacite.inflo * inflos[jour,]] <- capacite.inflo * inflos[jour,which(femelles[jour,] > capacite.inflo * inflos[jour,])] / femelles[jour, which(femelles[jour,] > capacite.inflo * inflos[jour,])]
+    ans[femelles[jour, ] <= capacite.inflo * inflos[jour,]] <- 1
+    ans[femelles[jour, ] > capacite.inflo * inflos[jour,]] <- capacite.inflo * inflos[jour,which(femelles[jour,] > capacite.inflo * inflos[jour,])] / femelles[jour, which(femelles[jour,] > capacite.inflo * inflos[jour,])]
     return(ans)
 }
 
-larves <- function(jour, capacite.inflo, inflos, femelles){
+larves_toto <- function(jour, capacite.inflo, inflos, femelles){
     if (jour - duree.larvation <= 0)
         return(c(0,0,0))
     else{
@@ -88,7 +88,7 @@ dynamiques <- function(gamma, proba.migration, mu.ER, mu.EH, capacite.inflo, inf
     for (jour in 1:nb.jours){
         # browser()
         femelles[jour,] <- femelles.exo[jour,]
-        larves[jour,] <- larves(jour, as.numeric(capacite.inflo), inflos, femelles)
+        larves[jour,] <- larves_toto(jour, as.numeric(capacite.inflo), inflos, femelles)
         
         femelles.endo[jour,] <- femelles.endogene(jour, larves, mu.sol)
         
