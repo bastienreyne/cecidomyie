@@ -50,9 +50,9 @@ objectif <- function(x, my_function, inflo){
     }
     # browser()
     larves_observed <- larves[true_index2017, ]
-    return(c(my_function(cumsum(larves_est[, 1]), cumsum(larves_observed[, 1])),
-             my_function(cumsum(larves_est[, 2]), cumsum(larves_observed[, 2])),
-             my_function(cumsum(larves_est[, 3]), cumsum(larves_observed[, 3]))))
+    return(c(my_function(larves_est[, 1], larves_observed[, 1]),
+             my_function(larves_est[, 2], larves_observed[, 2]),
+             my_function(larves_est[, 3], larves_observed[, 3])))
 }
 
 ## Corrigées
@@ -80,7 +80,7 @@ ind_opt2 <- res2$value %>% as_tibble %>%
 arg_opt2 <- res2$par[ind_opt, ]
 
 ## Normales
-res3 <- nsga2(objectif, 5, 3, my_mae, inflos_simuled,
+res3 <- nsga2(objectif, 5, 3, my_mae, inflos,
               lower.bounds = rep(0,5),
               upper.bounds = c(10,1,1,1,10),
               popsize = 200, generations = 50)
@@ -186,4 +186,4 @@ lplot_EH <- larvesEH %>% ggplot(aes(x = Date, y = Nombre, color = Larves)) +
           legend.position="bottom") 
 
 
-grid.arrange(plot_ER, plot_PS, plot_EH, nrow = 3)
+# grid.arrange(plot_ER, plot_PS, plot_EH, nrow = 3)
