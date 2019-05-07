@@ -44,10 +44,7 @@ min_max <- function(x, y) {
 
 # Objective function ------------------------------------------------------
 
-objectif <- function(x){
-    my_function <- my_mae
-    inflo <- inflos2017
-    
+objectif <- function(x, my_function, inflo){
     
     larves_estimees <- dynamics(x, inflo)
     larvesER <- larves_estimees[, 1]
@@ -68,19 +65,22 @@ objectif <- function(x){
              my_function(larves_est[, 3], larves_observed[, 3])))
 } 
 
-contrainte <- function(x) {
-    c(sum(x[6:11]), 1 - sum(x[6:11]))
-}
+
 # Optimisation ------------------------------------------------------------
 
-res_c <- nsga2(objectif, 11, 3, 
-               constraints = contrainte, cdim = 2,
-               lower.bounds = rep(0,11),
-               upper.bounds = c(10,1,1,1,10, 1, 1, 1, 1, 1, 1),
-               popsize = 4, generations = 1000)
+res_c <- nsga2(objectif, 5, 3, my_mae, inflos2017,
+               lower.bounds = rep(0,5),
+               upper.bounds = c(10,1,1,1,10),
+               popsize = 300, generations = 100)
 
 ind_opt_c <- res_c$value %>% as_tibble %>%
     mutate(norm = abs(V1 + V2 + V3)) %$% 
     which.min(norm)
 
 arg_opt_c <- res_c$par[ind_opt_c, ]
+
+
+# Plots -------------------------------------------------------------------
+
+Classic <- dynamics(arg_opt_c, inflos2017)
+plot(Classic[, 1])

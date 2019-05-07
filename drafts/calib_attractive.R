@@ -7,7 +7,7 @@ library(tidyverse)
 library(magrittr)
 library(lubridate)
 library(mco)
-source("../model_R/model1.R")
+source("../model_R/model.R")
 simulated <- (read.csv("../data/attractive_simulated.csv") %>% as.matrix())[, 3:5]
 attractiv <- (read.csv("../data/2017_attractives.csv") %>% as.matrix())[, 3:5]
 
@@ -46,7 +46,7 @@ min_max <- function(x, y) {
 
 objectif <- function(x, my_function, inflo){
     
-    larves_estimees <- dynamiques(x[1], x[2], x[3], x[4], x[5], inflo)
+    larves_estimees <- dynamics(x, inflo)
     larvesER <- larves_estimees[, 1]
     larvesPS <- larves_estimees[, 2]
     larvesEH <- larves_estimees[, 3]
@@ -67,7 +67,7 @@ objectif <- function(x, my_function, inflo){
 
 objectif2 <- function(x, my_function, inflo){
     
-    larves_estimees <- dynamiques(x[1], x[2], x[3], x[4], x[5], inflo)
+    larves_estimees <- dynamics(x, inflo)
     larvesER <- larves_estimees[, 1]
     larvesPS <- larves_estimees[, 2]
     larvesEH <- larves_estimees[, 3]
@@ -91,7 +91,7 @@ objectif2 <- function(x, my_function, inflo){
 
 objectif3 <- function(x, my_function, inflo){
     
-    larves_estimees <- dynamiques(x[1], x[2], x[3], x[4], x[5], inflo)
+    larves_estimees <- dynamics(x, inflo)
     larvesER <- larves_estimees[, 1]
     larvesPS <- larves_estimees[, 2]
     larvesEH <- larves_estimees[, 3]
@@ -118,7 +118,7 @@ objectif3 <- function(x, my_function, inflo){
 res_c <- nsga2(objectif, 5, 3, my_mae, inflos2017,
                lower.bounds = rep(0,5),
                upper.bounds = c(10,1,1,1,10),
-               popsize = 300, generations = 100)
+               popsize = 100, generations = 50)
 
 ind_opt_c <- res_c$value %>% as_tibble %>%
     mutate(norm = abs(V1 + V2 + V3)) %$% 
@@ -130,7 +130,7 @@ arg_opt_c <- res_c$par[ind_opt_c, ]
 res_a <- nsga2(objectif, 5, 3, my_mae, attractiv,
              lower.bounds = rep(0,5),
              upper.bounds = c(10,1,1,1,10),
-             popsize = 300, generations = 100)
+             popsize = 100, generations = 50)
 
 ind_opt_a <- res_a$value %>% as_tibble %>%
     mutate(norm = abs(V1 + V2 + V3)) %$% 
@@ -142,7 +142,7 @@ arg_opt_a <- res_a$par[ind_opt_a, ]
 res_s <- nsga2(objectif, 5, 3, my_mae, simulated,
              lower.bounds = rep(0,5),
              upper.bounds = c(10,1,1,1,10),
-             popsize = 300, generations = 100)
+             popsize = 100, generations = 50)
 
 ind_opt_s <- res_s$value %>% as_tibble %>%
     mutate(norm = abs(V1 + V2 + V3)) %$% 
@@ -155,7 +155,7 @@ arg_opt_s <- res_s$par[ind_opt_s, ]
 res_c2 <- nsga2(objectif2, 5, 6, my_mae, attractiv,
                lower.bounds = rep(0,5),
                upper.bounds = c(10,1,1,1,10),
-               popsize = 300, generations = 100)
+               popsize = 100, generations = 50)
 
 ind_opt_c2 <- res_c2$value %>% as_tibble %>%
     mutate(norm = abs(V1 + V2 + V3)) %$% 
@@ -167,7 +167,7 @@ arg_opt_c2 <- res_c2$par[ind_opt_c2, ]
 res_a2 <- nsga2(objectif2, 5, 6, my_mae, inflos2017,
                lower.bounds = rep(0,5),
                upper.bounds = c(10,1,1,1,10),
-               popsize = 300, generations = 100)
+               popsize = 100, generations = 50)
 
 ind_opt_a2 <- res_a2$value %>% as_tibble %>%
     mutate(norm = abs(V1 + V2 + V3)) %$% 
@@ -179,7 +179,7 @@ arg_opt_a2 <- res_a2$par[ind_opt_a2, ]
 res_s2 <- nsga2(objectif2, 5, 6, my_mae, simulated,
                lower.bounds = rep(0,5),
                upper.bounds = c(10,1,1,1,10),
-               popsize = 300, generations = 100)
+               popsize = 100, generations = 50)
 
 ind_opt_s2 <- res_s2$value %>% as_tibble %>%
     mutate(norm = abs(V1 + V2 + V3)) %$% 
@@ -191,7 +191,7 @@ arg_opt_s2 <- res_s2$par[ind_opt_s2, ]
 res_c3 <- nsga2(objectif3, 5, 3, my_mae, inflos2017,
                 lower.bounds = rep(0,5),
                 upper.bounds = c(10,1,1,1,10),
-                popsize = 300, generations = 100)
+                popsize = 100, generations = 50)
 
 ind_opt_c3 <- res_c3$value %>% as_tibble %>%
     mutate(norm = abs(V1 + V2 + V3)) %$% 
@@ -203,7 +203,7 @@ arg_opt_c3 <- res_c3$par[ind_opt_c3, ]
 res_a3 <- nsga2(objectif3, 5, 3, my_mae, attractiv,
                 lower.bounds = rep(0,5),
                 upper.bounds = c(10,1,1,1,10),
-                popsize = 300, generations = 100)
+                popsize = 100, generations = 50)
 
 ind_opt_a3 <- res_a3$value %>% as_tibble %>%
     mutate(norm = abs(V1 + V2 + V3)) %$% 
@@ -215,7 +215,7 @@ arg_opt_a3 <- res_a3$par[ind_opt_a3, ]
 res_s3 <- nsga2(objectif3, 5, 3, my_mae, simulated,
                 lower.bounds = rep(0,5),
                 upper.bounds = c(10,1,1,1,10),
-                popsize = 300, generations = 100)
+                popsize = 100, generations = 50)
 
 ind_opt_s3 <- res_s3$value %>% as_tibble %>%
     mutate(norm = abs(V1 + V2 + V3)) %$% 
@@ -225,9 +225,9 @@ arg_opt_s3 <- res_s3$par[ind_opt_s3, ]
 
 # Plots -------------------------------------------------------------------
 
-lta <- dynamiques(arg_opt_a3[1], arg_opt_a3[2], arg_opt_a3[3], arg_opt_a3[4], arg_opt_a3[5], attractiv)
-lts <- dynamiques(arg_opt_s3[1], arg_opt_s3[2], arg_opt_s3[3], arg_opt_s3[4], arg_opt_s3[5], simulated)
-ltc <- dynamiques(arg_opt_c3[1], arg_opt_c3[2], arg_opt_c3[3], arg_opt_c3[4], arg_opt_c3[5], inflos2017)
+lta <- dynamics(arg_opt_a, attractiv)
+lts <- dynamics(arg_opt_s, simulated)
+ltc <- dynamics(arg_opt_c, inflos2017)
 larves2017
 
 to_plot_ER <- cbind(Date = date2017,
@@ -241,7 +241,10 @@ to_plot_ER <- cbind(Date = date2017,
 
 to_plot_ER %>% ggplot(aes(x = Date, y = Nombre, color = Toto)) +
     geom_point() +
-    geom_line()
+    geom_line() +
+    labs(title = "Enherbement ras") +
+    theme(legend.title = element_blank()) +
+    scale_color_viridis_d()
 
 
 to_plot_PS <- cbind(Date = date2017,
@@ -255,7 +258,10 @@ to_plot_PS <- cbind(Date = date2017,
 
 to_plot_PS %>% ggplot(aes(x = Date, y = Nombre, color = Toto)) +
     geom_point() +
-    geom_line()
+    geom_line() +
+    labs(title = "Paillage synthétique") +
+    theme(legend.title = element_blank()) +
+    scale_color_viridis_d()
 
 
 to_plot_EH <- cbind(Date = date2017,
@@ -269,4 +275,7 @@ to_plot_EH <- cbind(Date = date2017,
 
 to_plot_EH %>% ggplot(aes(x = Date, y = Nombre, color = Toto)) +
     geom_point() +
-    geom_line()
+    geom_line() +
+    labs(title = "Enherbement haut") +
+    theme(legend.title = element_blank()) +
+    scale_color_viridis_d()
