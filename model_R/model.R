@@ -44,9 +44,9 @@ disponibility <- function(day, inflo_capacity, inflos, females) {
 
 larvaes_count <- function(day, inflo_capacity, inflos, females) {
     ## Nombre de larves chaque jour
-    beta7 <- 1/6
-    beta8 <- 1/6
-    beta9 <- 1/6
+    beta7 <-  1/6
+    beta8 <-  1/6
+    beta9 <-  1/6
     beta10 <- 1/6
     beta11 <- 1/6
     beta12 <- 1/6
