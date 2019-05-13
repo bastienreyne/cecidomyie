@@ -54,7 +54,7 @@ On rajoutera 50 jours aux dates de débourrements pour avoir les inflorescences 
 
 \begin{figure}[h]
  \centering
- \epsfig{file = comp.eps, scale = 0.65}
+ \epsfig{file = plots/comp.eps, scale = 0.65}
 \end{figure}
 
 
@@ -74,17 +74,17 @@ où $M_t$ désigne le nombre de mort à la date $t$, $m$ le nombre de mort total
 
 \begin{figure}[h]
  \centering
- \epsfig{file = corr_ER.eps, scale = 0.65}
+ \epsfig{file = plots/corr_ER.eps, scale = 0.65}
 \end{figure}
  
 \begin{figure}[h]
  \centering
- \epsfig{file = corr_PS.eps, scale = 0.65}
+ \epsfig{file = plots/corr_PS.eps, scale = 0.65}
 \end{figure}
 
 \begin{figure}[h]
  \centering
- \epsfig{file = corr_EH.eps, scale = 0.65}
+ \epsfig{file = plots/corr_EH.eps, scale = 0.65}
 \end{figure}
 
 \clearpage
@@ -98,17 +98,17 @@ Les différences entre $I_t^a$ et $I_t^c$, pour chacun des trois sous-blocs, son
 
 \begin{figure}[h]
  \centering
- \epsfig{file = attra_ER.eps, scale = 0.65}
+ \epsfig{file = plots/attra_ER.eps, scale = 0.65}
 \end{figure}
  
 \begin{figure}[h]
  \centering
- \epsfig{file = attra_PS.eps, scale = 0.65}
+ \epsfig{file = plots/attra_PS.eps, scale = 0.65}
 \end{figure}
 
 \begin{figure}[h]
  \centering
- \epsfig{file = attra_EH.eps, scale = 0.65}
+ \epsfig{file = plots/attra_EH.eps, scale = 0.65}
 \end{figure}
 
 
@@ -121,21 +121,27 @@ où 29 et 14 sont respectivement la moyenne et l’écart-type de la durée de v
 Une fois les dates de débourrements obtenus, il devient possible de simuler une population d’inflorescences
 attractives en utilisant la formule
 $$I_t = B_t + \sum_{j = 1}^{50} B_{t-j}\times \left( 1 - F_{\mathcal{N}\left( 22, 14 \right)}(t-j) \right),$$
-avec les $B_t$ déjà calibrés. Les dynamiques ainsi simulés seront notés $I_t^s$. Les résultats sont visibles ci-dessous :
+avec les $B_t$ déjà calibrés. Les dynamiques ainsi simulés seront notés $I_t^s$.
+
+Par curiosité, on s'intéresse aussi à des inflorescences attractives où l'écart-type est fortement réduit (\textit{e.g.} à 2) simulées grâce à la formule
+$$I_t = B_t + \sum_{j = 1}^{50} B_{t-j}\times \left( 1 - F_{\mathcal{N}\left( 22, 2 \right)}(t-j) \right).$$
+On notera cette dynamique $I_t^{sd2}$.
+
+Les résultats sont visibles ci-dessous :
 
 \begin{figure}[!h]
  \centering
- \epsfig{file = simu_ER.eps, scale = 0.65}
+ \epsfig{file = plots/sdmin_ER.eps, scale = 0.65}
 \end{figure}
  
 \begin{figure}[!h]
  \centering
- \epsfig{file = simu_PS.eps, scale = 0.65}
+ \epsfig{file = plots/sdmin_PS.eps, scale = 0.65}
 \end{figure}
 
 \begin{figure}[!h]
  \centering
- \epsfig{file = simu_EH.eps, scale = 0.65}
+ \epsfig{file = plots/sdmin_EH.eps, scale = 0.65}
 \end{figure}
 
 \clearpage
@@ -147,24 +153,39 @@ Les graphes ci-dessous montrent la comparaison entre $I_t^a$ et $I_t^s$ qui sero
 
 \begin{figure}[h]
  \centering
- \epsfig{file = comp_ER.eps, scale = 0.65}
+ \epsfig{file = plots/comp_ER.eps, scale = 0.65}
 \end{figure}
  
 \begin{figure}[h]
  \centering
- \epsfig{file = comp_PS.eps, scale = 0.65}
+ \epsfig{file = plots/comp_PS.eps, scale = 0.65}
 \end{figure}
 
 \begin{figure}[ht]
  \centering
- \epsfig{file = comp_EH.eps, scale = 0.65}
+ \epsfig{file = plots/comp_EH.eps, scale = 0.65}
 \end{figure}
 
 \newpage
 
 Si pour les deux premiers sous-blocs les dynamiques semblent relativement similaires, le dernier sous-bloc montre des différences significatives entre les deux approches.
 
+On peut également comparer la somme cumulée des dynamiques de débourrements entre les deux méthodes :
 
+\begin{figure}[h]
+ \centering
+ \epsfig{file = plots/comp_burst_ER.eps, scale = 0.65}
+\end{figure}
+ 
+\begin{figure}[h]
+ \centering
+ \epsfig{file = plots/comp_burst_PS.eps, scale = 0.65}
+\end{figure}
+
+\begin{figure}[ht]
+ \centering
+ \epsfig{file = plots/comp_burst_EH.eps, scale = 0.65}
+\end{figure}
 
 
 

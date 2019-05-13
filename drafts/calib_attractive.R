@@ -120,44 +120,44 @@ objectif3 <- function(x, my_function, inflo){
 
 # Optimisation ------------------------------------------------------------
 
-
-### FONCTION OBJECTIF CLASSIQUE
-## Classique
-res_c <- nsga2(objectif, 5, 3, my_mae, inflos2017,
-               lower.bounds = rep(0,5),
-               upper.bounds = c(10,1,1,1,10),
-               popsize = 100, generations = 50)
-
-ind_opt_c <- res_c$value %>% as_tibble %>%
-    mutate(norm = abs(V1 + V2 + V3)) %$% 
-    which.min(norm)
-
-arg_opt_c <- res_c$par[ind_opt_c, ]
-
-## Attractive
-res_a <- nsga2(objectif, 5, 3, my_mae, attractiv,
-             lower.bounds = rep(0,5),
-             upper.bounds = c(10,1,1,1,10),
-             popsize = 100, generations = 50)
-
-ind_opt_a <- res_a$value %>% as_tibble %>%
-    mutate(norm = abs(V1 + V2 + V3)) %$% 
-    which.min(norm)
-
-arg_opt_a <- res_a$par[ind_opt_a, ]
-
-## Simulated attractive
-res_s <- nsga2(objectif, 5, 3, my_mae, simulated,
-             lower.bounds = rep(0,5),
-             upper.bounds = c(10,1,1,1,10),
-             popsize = 100, generations = 50)
-
-ind_opt_s <- res_s$value %>% as_tibble %>%
-    mutate(norm = abs(V1 + V2 + V3)) %$% 
-    which.min(norm)
-
-arg_opt_s <- res_s$par[ind_opt_s, ]
-
+# 
+# ### FONCTION OBJECTIF CLASSIQUE
+# ## Classique
+# res_c <- nsga2(objectif, 5, 3, my_mae, inflos2017,
+#                lower.bounds = rep(0,5),
+#                upper.bounds = c(10,1,1,1,10),
+#                popsize = 100, generations = 50)
+# 
+# ind_opt_c <- res_c$value %>% as_tibble %>%
+#     mutate(norm = abs(V1 + V2 + V3)) %$% 
+#     which.min(norm)
+# 
+# arg_opt_c <- res_c$par[ind_opt_c, ]
+# 
+# ## Attractive
+# res_a <- nsga2(objectif, 5, 3, my_mae, attractiv,
+#              lower.bounds = rep(0,5),
+#              upper.bounds = c(10,1,1,1,10),
+#              popsize = 100, generations = 50)
+# 
+# ind_opt_a <- res_a$value %>% as_tibble %>%
+#     mutate(norm = abs(V1 + V2 + V3)) %$% 
+#     which.min(norm)
+# 
+# arg_opt_a <- res_a$par[ind_opt_a, ]
+# 
+# ## Simulated attractive
+# res_s <- nsga2(objectif, 5, 3, my_mae, simulated,
+#              lower.bounds = rep(0,5),
+#              upper.bounds = c(10,1,1,1,10),
+#              popsize = 100, generations = 50)
+# 
+# ind_opt_s <- res_s$value %>% as_tibble %>%
+#     mutate(norm = abs(V1 + V2 + V3)) %$% 
+#     which.min(norm)
+# 
+# arg_opt_s <- res_s$par[ind_opt_s, ]
+# 
 
 ### FONCTION OBJECTIF AVEC CRITÈRE TOTAL LARVES
 res_c2 <- nsga2(objectif2, 5, 6, my_mae, attractiv,
@@ -233,9 +233,9 @@ arg_opt_sp <- res_s2$par[ind_opt_s2, ]
 
 # Plots -------------------------------------------------------------------
 
-lta <- dynamics(arg_opt_a, attractiv)
-lts <- dynamics(arg_opt_s, simulated)
-ltc <- dynamics(arg_opt_c, inflos2017)
+lta <- dynamics(arg_opt_ap, attractiv)
+lts <- dynamics(arg_opt_sp, simulated)
+ltc <- dynamics(arg_opt_cp, inflos2017)
 larves2017
 
 to_plot_ER <- cbind(Date = date2017,
@@ -252,7 +252,8 @@ to_plot_ER %>% ggplot(aes(x = Date, y = Nombre, color = Toto)) +
     geom_line() +
     labs(title = "Enherbement ras") +
     theme(legend.title = element_blank()) +
-    scale_color_viridis_d()
+    scale_color_viridis_d() #+
+    # geom_line(data = inflos2017 %>% as.data.frame(), mapping = aes(x = 1:80,  y = ER, color = ER))
 
 
 to_plot_PS <- cbind(Date = date2017,
