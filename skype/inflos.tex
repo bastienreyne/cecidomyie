@@ -44,7 +44,22 @@
 \maketitle
 
 Ce document présente les différents jeux de données relatifs aux inflorescences qui seront utilisés ainsi que les modifications qui y ont étés apportées.
-L'objectif est d'éditer des jeux de données correspondants non pas aux inflorescences vivantes mais aux inflorescences attractives. Sera déclarée attractive pour une inflorescence la période allant de sa date de débourrement jusqu'à 7 jours avant sa mort (7 jours correspondant à la durée de larvation).
+L'objectif est d'éditer des jeux de données correspondants non pas aux inflorescences vivantes mais aux inflorescences attractives. Sera déclarée attractive pour une inflorescence la période allant de sa date de débourrement jusqu'à $\Delta_t$ jours avant sa mort. Le $\Delta_t$ mentionné représente deux phénomènes différents : soit il représente le stade phénologique PF --- qui correspond à l'arrêt de l'élongation survenant avant la mort naturelle de l'inflorescence ---, soit il manifeste une période de déssechement (dûe à des attaques de cécidomyies) menant l'inflorescence à une mort certaine.
+
+\section{Présentation des données}
+
+Les données qui seront utilisées proviennent de deux jeux de données différents, avec des observations faites sur de la même parcelle.
+
+\subsection{\textit{Dataset 1}}
+
+Le \textit{dataset 1} contient des données relatives aux inflorescences, leurs dates de débourrements, de morts. Ont étés suivies entre le 19 juin et le 15 novembre 2017 deux cents unités de croissances (UCs). Pour chacune de ces UCs, un relevé régulier des inflorescences présentes a été effectué --- recensant leurs dates de débourrements et leurs dates de morts.
+Il faut cependant noter que le relevé des dates de morts n'a commencé qu'à partir du 6 septembre.
+
+De ce jeu de données on pourra obtenir les dates de débourrements et de morts, les dynamiques d'inflorescences vivantes pour les trois sous-blocs, la durée moyenne effective des inflorescences (et l'écart-type associé).
+
+\subsection{\textit{Dataset 2}}
+
+Le second jeu de données concerne le piégeage des larves. Les relevés ont eu lieu entre le 18 juillet et le 6 octobre 2017. Pour chacun des trois sous-blocs, dix arbres ont étés selectionnés aléatoirement sous lesquels ont été placés des pièges. À intervalle régulier furent comptées les larves piégées, les inflorescences au-dessus des pièges ainsi que le nombre d'inflorescences dans l'arbre.
 
 \section{Théorie}
 
