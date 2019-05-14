@@ -14,7 +14,11 @@ inflos_EH <- data %>% filter(Sol == "EH") %>% pull(inflos)
 inflos <- data.frame(inflos_ER, inflos_PS, inflos_EH)
 
 floraison <- read_csv("2017_floraison_dates.csv") %>% 
-    mutate(lifespan = as.numeric(death - birth))
+    mutate(lifespan = as.numeric(death - birth)) %>% 
+    mutate_at("Traitm", as.factor)
+
+pairwise.wilcox.test(floraison$lifespan, floraison$Traitm, p.adjust.method = "holm")
+## Différence significatives entre les sous-blocs
 
 floraison_ER <- floraison %>% filter(Traitm == "ER") %>% pull(lifespan) %>% na.omit
 mean_ER <- floraison_ER %>% mean
@@ -37,15 +41,59 @@ estimation_inflos <- function(bursts, sousbloc) {
     
     mean_hat <- moyenne %>% select(ends_with(sousbloc)) %>% pull
     sd_hat <- stddev %>% select(ends_with(sousbloc)) %>% pull
+    FdR <- pnorm(1:50, mean_hat, sd_hat)
+    
     # browser()
     inflo <- bursts
-    FdR <- 1 - pnorm(1:50, mean_hat, sd_hat)
-    for (t in 2:length(inflos)) {
-        inflo[t] <- inflo[t] + sum(bursts[1:(t-1)] * (1 - FdR[1:(t-1)]))
+    for (t in 1:80) {
+        for (j in 1:50) {
+            if (t - j >= 1 & t-j <= 50){
+                oi <- bursts[t-j] * (1 - FdR[j])
+                inflo[t] <- inflo[t] + oi
+            }
+        }
+    }
+    inflo
+}
+
+estimation_inflos2 <- function(bursts, sousbloc) {
+    
+    mean_hat <- moyenne %>% select(ends_with(sousbloc)) %>% pull
+    sd_hat <- stddev %>% select(ends_with(sousbloc)) %>% pull
+    FdR <- pnorm(1:50, mean_hat, sd_hat)
+    
+    inflo <- bursts
+    # browser()
+    for (t in 2:80) {
+        for (j in (t-1):max(1, t - 50)) {
+            oi <- bursts[t-j] * (1 - FdR[j])
+            inflo[t] <- inflo[t] + oi
+            # if (t >= 53)
+            #     browser()
+        }
     }
     
     inflo
 }
+
+
+estimation_inflos3 <- function(bursts, sousbloc) {
+    
+    mean_hat <- moyenne %>% select(ends_with(sousbloc)) %>% pull
+    sd_hat <- stddev %>% select(ends_with(sousbloc)) %>% pull
+    FdR <- pnorm(1:50, mean_hat, sd_hat)
+    
+    # browser()
+    inflo <- rep(NA, 80)
+    inflo[1] <- bursts[1]
+    for (t in 2:80) {
+        inflo[t] <- bursts[t] + sum(bursts[(t-1):max(1, t - 50)] * (1 - FdR[1:min(50, t-1)]))
+    }
+    
+    inflo
+}
+
+
 
 
 # Optimisation des bursts -------------------------------------------------
@@ -53,18 +101,37 @@ estimation_inflos <- function(bursts, sousbloc) {
 objectif <- function(x, sousbloc) {
     # browser()
     to_closen <- inflos %>% select(ends_with(sousbloc)) %>% pull
-    simulated <- estimation_inflos(x, sousbloc)
+    simulated <- estimation_inflos3(x, sousbloc)
     n_obs <- to_closen %>% length
     
     sum(abs(simulated - to_closen)) / n_obs
 }
 
-res_ER <- nsga2(objectif, idim = 80, odim = 1, "ER",
-                lower.bounds = rep(10, 80), upper.bounds = rep(6000, 80))
+res_ER <- optim(rep(0, 80), objectif, gr = NULL, "ER", lower = 0, upper = 6000, method = "BFGS")
+# res_ER <- nsga2(objectif, 80, 1, "ER", 
+#                 lower.bounds = 0, upper.bounds = 6000)
+bursts_ER <- res_ER$par
 
-res_PS <- nsga2(objectif, idim = 80, odim = 1, "PS",
-                lower.bounds = rep(10, 80), upper.bounds = rep(6000, 80))
+res_PS <- optim(rep(0, 80), objectif, gr = NULL, "PS", lower = 0, upper = 6000, method = "L-BFGS-B")
+bursts_PS <- res_PS$par
 
-res_ER <- nsga2(objectif, idim = 80, odim = 1, "EH",
-                lower.bounds = rep(10, 80), upper.bounds = rep(6000, 80))
+res_EH <- optim(rep(0, 80), objectif, gr = NULL, "EH", lower = 0, upper = 6000, method = "L-BFGS-B")
+bursts_EH <- res_EH$par
 
+bursts <- cbind(bursts_ER, bursts_PS, bursts_EH)
+# write.csv(bursts, file = "2017_bursts_simulated")
+
+# Inflos simulated --------------------------------------------------------
+
+inflos_simu_ER <- estimation_inflos3(bursts_ER, "ER")
+inflos_simu_PS <- estimation_inflos3(bursts_PS, "PS")
+inflos_simu_EH <- estimation_inflos3(bursts_EH, "EH")
+
+plot(inflos_simu_ER)
+lines(inflos_ER)
+
+plot(inflos_simu_PS)
+lines(inflos_PS)
+
+plot(inflos_simu_EH)
+lines(inflos_EH)

@@ -9,7 +9,27 @@ eggs <- 150
 mu_larvation <- 0.04
 nb_jours <- 80
 
+## Paramètres floraison
+moyenne <- data.frame(mean_ER = 31.97826, mean_PS = 28.65, mean_EH = 36.25301)
+stddev <- data.frame(sd_ER = 11.47071, sd_PS = 13.35809, sd_EH = 15.01044)
+
 ## Fonctions du modèle
+inflo_attractive <- function(bursts, sousbloc, delta_t) {
+    
+    mean_hat <- moyenne %>% select(ends_with(sousbloc)) %>% pull
+    sd_hat <- stddev %>% select(ends_with(sousbloc)) %>% pull
+    FdR <- pnorm(1:50, mean_hat - delta_t, sd_hat)
+    
+    # browser()
+    inflo <- rep(NA, 80)
+    inflo[1] <- bursts[1]
+    for (t in 2:80) {
+        inflo[t] <- bursts[t] + sum(bursts[(t-1):max(1, t - 50)] * (1 - FdR[1:min(50, t-1)]))
+    }
+    
+    inflo
+}
+
 
 incoming <- function(gamma, inflos) {
     ## Individus exogene
@@ -101,14 +121,18 @@ females_count <- function(day, alpha, females_exo, females_endo) {
     females_exo[day] + alpha[day, ] %*% females_endo[day, ]
 }
 
-dynamics <- function(arg, inflos) {
+dynamics <- function(arg, bursts) {
     ## Calcule le nombre de larves (inch'allah)
     gamma <- arg[1]
     proba_migration <- arg[2]
     mu_ER <- arg[3]
     mu_EH <- arg[4]
     inflo_capacity <- arg[5]
+    delta_t <- arg[6]
     
+    inflos <- cbind(inflo_attractive(bursts[, 1], "ER", delta_t),
+                    inflo_attractive(bursts[, 2], "PS", delta_t),
+                    inflo_attractive(bursts[, 3], "EH", delta_t))
     
     alpha <- exchange(proba_migration, inflos)
     females_exo <- incoming(gamma, inflos)

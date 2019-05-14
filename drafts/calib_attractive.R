@@ -10,6 +10,7 @@ library(mco)
 source("../model_R/model.R")
 simulated <- (read.csv("../data/attractive_simulated.csv") %>% as.matrix())[, 3:5]
 attractiv <- (read.csv("../data/2017_attractives.csv") %>% as.matrix())[, 3:5]
+bursts <- read.csv("../data/2017_bursts_simulated.csv")[, -1] %>% as.matrix()
 
 data2017PS <- read_csv("b1.csv")
 data2017ER <- read_csv("r1.csv")
@@ -52,9 +53,9 @@ min_max <- function(x, y) {
 
 # Objective function ------------------------------------------------------
 
-objectif <- function(x, my_function, inflo){
+objectif <- function(x, my_function, burst){
     
-    larves_estimees <- dynamics(x, inflo)
+    larves_estimees <- dynamics(x, burst)
     larvesER <- larves_estimees[, 1]
     larvesPS <- larves_estimees[, 2]
     larvesEH <- larves_estimees[, 3]
@@ -73,9 +74,9 @@ objectif <- function(x, my_function, inflo){
              my_function(larves_est[, 3], larves_observed[, 3])))
 }
 
-objectif2 <- function(x, my_function, inflo){
+objectif2 <- function(x, my_function, burst){
     
-    larves_estimees <- dynamics(x, inflo)
+    larves_estimees <- dynamics(x, burst)
     larvesER <- larves_estimees[, 1]
     larvesPS <- larves_estimees[, 2]
     larvesEH <- larves_estimees[, 3]
@@ -160,9 +161,9 @@ objectif3 <- function(x, my_function, inflo){
 # 
 
 ### FONCTION OBJECTIF AVEC CRITÈRE TOTAL LARVES
-res_c2 <- nsga2(objectif2, 5, 6, my_mae, attractiv,
-               lower.bounds = rep(0,5),
-               upper.bounds = c(10,1,1,1,10),
+res_c2 <- nsga2(objectif2, 6, 6, my_mae, bursts,
+               lower.bounds = rep(0,6),
+               upper.bounds = c(10,1,1,1,10, 15),
                popsize = 100, generations = 50)
 
 ind_opt_c2 <- res_c2$value %>% as_tibble %>%
@@ -170,30 +171,30 @@ ind_opt_c2 <- res_c2$value %>% as_tibble %>%
     which.min(norm)
 
 arg_opt_cp <- res_c2$par[ind_opt_c2, ]
-
-## Attractive
-res_a2 <- nsga2(objectif2, 5, 6, my_mae, inflos2017,
-               lower.bounds = rep(0,5),
-               upper.bounds = c(10,1,1,1,10),
-               popsize = 100, generations = 50)
-
-ind_opt_a2 <- res_a2$value %>% as_tibble %>%
-    mutate(norm = abs(V1 + V2 + V3)) %$% 
-    which.min(norm)
-
-arg_opt_ap <- res_a2$par[ind_opt_a2, ]
-
-## Simulated attractive
-res_s2 <- nsga2(objectif2, 5, 6, my_mae, simulated,
-               lower.bounds = rep(0,5),
-               upper.bounds = c(10,1,1,1,10),
-               popsize = 100, generations = 50)
-
-ind_opt_s2 <- res_s2$value %>% as_tibble %>%
-    mutate(norm = abs(V1 + V2 + V3)) %$% 
-    which.min(norm)
-
-arg_opt_sp <- res_s2$par[ind_opt_s2, ]
+# 
+# ## Attractive
+# res_a2 <- nsga2(objectif2, 5, 6, my_mae, inflos2017,
+#                lower.bounds = rep(0,5),
+#                upper.bounds = c(10,1,1,1,10),
+#                popsize = 100, generations = 50)
+# 
+# ind_opt_a2 <- res_a2$value %>% as_tibble %>%
+#     mutate(norm = abs(V1 + V2 + V3)) %$% 
+#     which.min(norm)
+# 
+# arg_opt_ap <- res_a2$par[ind_opt_a2, ]
+# 
+# ## Simulated attractive
+# res_s2 <- nsga2(objectif2, 5, 6, my_mae, simulated,
+#                lower.bounds = rep(0,5),
+#                upper.bounds = c(10,1,1,1,10),
+#                popsize = 100, generations = 50)
+# 
+# ind_opt_s2 <- res_s2$value %>% as_tibble %>%
+#     mutate(norm = abs(V1 + V2 + V3)) %$% 
+#     which.min(norm)
+# 
+# arg_opt_sp <- res_s2$par[ind_opt_s2, ]
 
 ### FONCTION OBJECTIF SOMME CUMULÉE
 # res_c3 <- nsga2(objectif3, 5, 3, my_mae, inflos2017,
@@ -233,10 +234,11 @@ arg_opt_sp <- res_s2$par[ind_opt_s2, ]
 
 # Plots -------------------------------------------------------------------
 
-lta <- dynamics(arg_opt_ap, attractiv)
-lts <- dynamics(arg_opt_sp, simulated)
+lta <- dynamics(arg_opt_a1, attractiv)
+lts <- dynamics(arg_opt_s1, simulated)
 ltc <- dynamics(arg_opt_cp, inflos2017)
 larves2017
+
 
 to_plot_ER <- cbind(Date = date2017,
                     Observed = larves2017[, 1],
