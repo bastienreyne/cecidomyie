@@ -53,9 +53,9 @@ min_max <- function(x, y) {
 
 # Objective function ------------------------------------------------------
 
-objectif <- function(x, my_function, burst){
+objectif <- function(x, my_function, inflos){
     
-    larves_estimees <- dynamics(x, burst)
+    larves_estimees <- dynamics2(x, inflos)
     larvesER <- larves_estimees[, 1]
     larvesPS <- larves_estimees[, 2]
     larvesEH <- larves_estimees[, 3]
@@ -74,9 +74,9 @@ objectif <- function(x, my_function, burst){
              my_function(larves_est[, 3], larves_observed[, 3])))
 }
 
-objectif2 <- function(x, my_function, burst){
+objectif2 <- function(x, my_function, inflos){
     
-    larves_estimees <- dynamics(x, burst)
+    larves_estimees <- dynamics2(x, inflos)
     larvesER <- larves_estimees[, 1]
     larvesPS <- larves_estimees[, 2]
     larvesEH <- larves_estimees[, 3]
@@ -358,3 +358,4 @@ arg_opt_s9 <- c(0.0459845844, 0.4923276480, 0.8434925497, 0.0005568149, 0.114718
 arg_opt_a10 <- c(0.03209081, 0.99362842, 0.99297217, 0.07447543, 7.03321210)
 arg_opt_c10 <- c(0.024703332, 0.009795314, 0.681265524, 0.696271988, 0.111912428)
 arg_opt_s10 <- c(0.05387376, 0.58427221, 0.67736999, 0.01086949, 5.06078461)
+
