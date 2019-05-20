@@ -10,6 +10,8 @@ source("../model_R/model.R")
 simulated <- (read.csv("../data/attractive_simulated.csv") %>% as.matrix())[, 3:5]
 attractiv <- (read.csv("../data/2017_attractives.csv") %>% as.matrix())[, 3:5]
 bursts <- read.csv("../data/2017_bursts_simulated.csv")[, -1] %>% as.matrix()
+load("Itsdmin.Rdata")
+sdmin <- cbind(Itsdmin_ER, Itsdmin_PS, Itsdmin_EH)
 
 data2017PS <- read_csv("b1.csv")
 data2017ER <- read_csv("r1.csv")
@@ -643,8 +645,65 @@ to_plot <- bind_rows(to_plot_ER, to_plot_PS, to_plot_EH)
 to_plot %>% ggplot(aes(x = Date, y = Nombre, color = Toto)) +
     geom_point() +
     geom_line() +
+    theme_bw() +
     theme(legend.title = element_blank()) +
     facet_wrap(Sol ~ .) +
-    ylab("Nombre de larves") +
-    theme_bw()
+    ylab("Nombre de larves")
 
+
+# Attractives sdmin -------------------------------------------------------
+
+res_asd <- nsga2(objectif, 5, 3, my_mae, sdmin,
+                lower.bounds = rep(0,5),
+                upper.bounds = c(10,1,1,1,10),
+                popsize = 100, generations = 50)
+
+ind_opt_asd <- res_asd$value %>% as_tibble %>%
+    mutate(norm = abs(V1 + V2 + V3)) %$% 
+    which.min(norm)
+
+arg_opt_asd <- res_asd$par[ind_opt_asd, ]
+
+lasd <- dynamics2(arg_opt_asd, simulated)
+
+to_plot_ER <- cbind(Date = date2017,
+                    Observées = larves2017[, 1],
+                    Référence = lref[, 1],
+                    `Inflos attractives` = lasd[, 1]) %>% 
+    as_tibble %>% 
+    mutate_at("Date", as_date) %>% 
+    gather(Observées, Référence, `Inflos attractives`, key = Toto, value = Nombre) %>% 
+    mutate(Sol = factor("Enherbement ras", levels = c("Enherbement ras",
+                                                      "Paillage synthétique",
+                                                      "Enherbement haut")))
+to_plot_PS <- cbind(Date = date2017,
+                    Observées = larves2017[, 2],
+                    Référence = lref[, 2],
+                    `Inflos attractives` = lasd[, 2]) %>% 
+    as_tibble %>% 
+    mutate_at("Date", as_date) %>% 
+    gather(Observées, Référence, `Inflos attractives`, key = Toto, value = Nombre) %>% 
+    mutate(Sol = factor("Paillage synthétique", levels = c("Enherbement ras",
+                                                           "Paillage synthétique",
+                                                           "Enherbement haut")))
+
+to_plot_EH <- cbind(Date = date2017,
+                    Observées = larves2017[, 3],
+                    Référence = lref[, 3],
+                    `Inflos attractives` = lasd[, 3]) %>% 
+    as_tibble %>% 
+    mutate_at("Date", as_date) %>% 
+    gather(Observées, Référence, `Inflos attractives`, key = Toto, value = Nombre) %>% 
+    mutate(Sol = factor("Enherbement haut", levels = c("Enherbement ras",
+                                                       "Paillage synthétique",
+                                                       "Enherbement haut")))
+
+to_plot <- bind_rows(to_plot_ER, to_plot_PS, to_plot_EH)
+
+to_plot %>% ggplot(aes(x = Date, y = Nombre, color = Toto)) +
+    geom_point() +
+    geom_line() +
+    theme_bw() +
+    theme(legend.title = element_blank()) +
+    facet_wrap(Sol ~ .) +
+    ylab("Nombre de larves")

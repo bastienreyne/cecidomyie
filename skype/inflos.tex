@@ -44,34 +44,34 @@
 \maketitle
 
 Ce document présente les différents jeux de données relatifs aux inflorescences qui seront utilisés ainsi que les modifications qui y ont étés apportées.
-L'objectif est d'éditer des jeux de données correspondants non pas aux inflorescences vivantes mais aux inflorescences attractives. Sera déclarée attractive pour une inflorescence la période allant de sa date de débourrement jusqu'à $\Delta_t$ jours avant sa mort. Le $\Delta_t$ mentionné représente deux phénomènes différents : soit il représente le stade phénologique PF --- qui correspond à l'arrêt de l'élongation survenant avant la mort naturelle de l'inflorescence ---, soit il manifeste une période de dessèchement (due à des attaques de cécidomyies) menant l'inflorescence à une mort certaine.
+L'objectif est d'éditer des jeux de données correspondants non pas aux inflorescences vivantes mais aux inflorescences attractives. Sera déclarée attractive pour une inflorescence la période allant de sa date de débourrement jusqu'à $\Delta_t$ jours avant sa mort. Le $\Delta_t$ mentionné représente deux phénomènes différents : soit il représente la fin de développement phénologique de l'inflorescence (par exemple, le stade phénologique PF --- qui correspond à l'arrêt de l'élongation survenant avant la mort naturelle de l'inflorescence), soit il manifeste une période de dessèchement (due à des attaques de cécidomyies) menant l'inflorescence à une mort certaine.
 
 \section{Présentation des données}
 
-Les données qui seront utilisées proviennent de deux jeux de données différents, mais les observations furent faites sur la même parcelle. La parcelle fut divisée en trois, chacun des trois lopins ayant une modalité de couverture de sol différente : enherbement ras, paillage synthétique ou enherbement haut.
+Les données qui seront utilisées proviennent de deux jeux de données différents, mais les observations furent faites sur la même parcelle. La parcelle fut divisée en trois, chacune des trois sous-parcelles ayant une modalité de couverture de sol différente : enherbement ras, paillage synthétique ou enherbement haut.
 
 \subsection{\textit{Dataset 1}}
 
-Le \textit{dataset 1} contient des données relatives aux inflorescences, leurs dates de débourrements, de morts. Ont étés suivies entre le 19 juin et le 15 novembre 2017 deux cents unités de croissances (UCs). Pour chacune de ces UCs, un relevé régulier des inflorescences présentes a été effectué --- recensant leurs dates de débourrements et leurs dates de morts.
+Le \textit{dataset 1} contient des données relatives aux inflorescences, leurs dates de débourrements et de morts. Ont étés suivies entre le 19 juin et le 15 novembre 2017 deux cents unités de croissances (UCs). Pour chacune de ces UCs, un relevé régulier des inflorescences présentes a été effectué --- recensant leurs dates de débourrements et leurs dates de morts.
 Il faut cependant noter que le relevé des dates de morts n'a commencé qu'à partir du 6 septembre.
 
 De ce jeu de données on pourra obtenir les dates de débourrements et de morts, les dynamiques d'inflorescences vivantes pour les trois sous-blocs, la durée de vie moyenne effective des inflorescences (et l'écart-type associé). On pourra ainsi obtenir des dynamiques d'inflorescences attractives.
 
 \subsection{\textit{Dataset 2}}
 
-Le second jeu de données concerne le piégeage des larves. Les relevés ont eu lieu entre le 18 juillet et le 6 octobre 2017. Pour chacun des trois sous-blocs, dix arbres ont étés selectionnés aléatoirement sous lesquels ont été placés des pièges. À intervalle régulier furent comptées les larves piégées, les inflorescences au-dessus des pièges ainsi que le nombre d'inflorescences dans l'arbre.
+Le second jeu de données concerne le piégeage des larves. Les relevés ont eu lieu entre le 18 juillet et le 6 octobre 2017. Pour chacun des trois sous-blocs, dix arbres ont étés selectionnés aléatoirement sous lesquels ont été placés des pièges. À intervalle régulier furent comptées les larves piégées, les inflorescences vivantes au-dessus des pièges ainsi que le nombre d'inflorescences vivantes dans l'arbre.
 
 On se servira du \textit{dataset 2} pour avoir les dynamiques de larves et d'inflorescences vivantes associées. On peut noter l'impossibilité d'obtenir les dynamiques d'inflorescences attractives à partir de jeu de données, due à l'absence de date de débourrements ; d'où l'utilité du \textit{dataset 1}.
 
 \subsection{Mise à l'échelle de la parcelle}
 
-Les échelles des deux jeux de données n'étant pas les mêmes, il a été décidé que les deux jeux de données seraient mis à l'échelle de la parcelle. Les dynamiques mises à l'échelle seront celles utilisées ; celle provenant du \textit{dataset 1} sera notée $I_t^1$ et celle du \textit{dataset 2} sera notée $I_t^2$.
+Les échelles des deux jeux de données n'étant pas les mêmes, il a été décidé que les deux jeux de données seraient mis à l'échelle de la sous-parcelle. Les dynamiques des inflorescences vivantes mises à l'échelle seront celles utilisées ; celle provenant du \textit{dataset 1} sera notée $I_t^1$ et celle du \textit{dataset 2} sera notée $I_t^2$.
 
 Plus concrètement, $I_t^1$ sera donnée par
 $$I_t^1 = \alpha\left( \sum_{j=1}^t B_j^1 - \sum_{j=1}^t M_j^1 \right),$$
 où $B_j^1$ et $M_t^1$ désigne respectivement le nombre de débourrements et de morts à la date $t$ et $\alpha$ est le coefficient de mise à l'échelle qui sera à estimer. La dynamique $I_t^2$ sera quant à elle donnée par
 $$I_t^2 = \frac{N}{n}\sum_{j=1}^n I_{j, t}^2,$$
-avec $N$ représentant le nombre d'arbre total du sous-bloc, $n$ le nombre d'arbre suivis et $I_{j, t}^2$ le nombre d'inflorescences sur l'arbre $j$ à la date $t$.
+avec $N$ représentant le nombre d'arbre total de la sous-parcelle, $n$ le nombre d'arbre suivis et $I_{j, t}^2$ le nombre d'inflorescences sur l'arbre $j$ à la date $t$.
 
 \section{Théorie}
 
@@ -87,20 +87,20 @@ On rajoutera 50 jours aux dates de débourrements (qui correspondent à la duré
 
 On observe une dynamique similaire quoique légèrement moins intense, avec une moyenne apparaissant plus tôt et une dispersion moindre.
 
-Un autre résultat notable : si l'on prend le vecteur comptabilisant le nombre de mort à chaque date, qu'on lui applique un décalage de $\Delta_t$ jours et que l'on recalcule les vivantes à partir de ce nouveau vecteur alors on retombe sur les inflorescences attractives.
+Un autre résultat notable : si on prend le vecteur comptabilisant le nombre de mort à chaque date, qu'on lui applique un décalage de $\Delta_t$ jours et que l'on recalcule les vivantes à partir de ce nouveau vecteur alors on retombe sur les inflorescences attractives.
 Ce résultat sera utilisé par la suite.
 
-\section{\textit{Dataset 1}}
+\section{Approche 1 : Dynamiques d'inflorescences attractives à partir du \textit{dataset 1}}
 
 Dans cette section, on décrira les modifications qui ont étés appliquées à la dynamique d'inflorescences issus du \textit{dataset 1} (comprenant les dates de débourrements et de morts des inflorescences) en vue d'avoir une dynamique d'inflorescences attractives.
 
-La première modification apportée est une correction. En effet, sur ce jeu de données la distinction entre inflorescences vivantes et mortes n'a été faite qu'à partir du 6 septembre. Il en résulte un écart significatif dans la dynamique entre le 5 et 6 septembre. Cet écart correspond au nombre de mort qu'il y a eu avant le 6 septembre, qu'il faut donc répartir sur la période concernée. N'ayant aucune indication pour les répartir, on utilisera la dynamique d'inflorescences vivantes du \textit{dataset 2} (données relatives aux pièges) afin que la dynamique du \textit{dataset 1} ressemble le plus possible à la dynamique du \textit{dataset 2}. Plus précisément, on attribuera un poids (à calibrer) pour tous les jours entre le jour 1 et le 5 septembre, et
+La première modification apportée est une correction. En effet, sur ce jeu de données la distinction entre inflorescences vivantes et mortes n'est possible qu'à partir du 6 septembre. Il en résulte un écart significatif dans la dynamique entre le 5 et 6 septembre. Cet écart correspond au nombre de mort qu'il y a eu avant le 6 septembre, qu'il faut donc répartir sur la période concernée. N'ayant aucune indication pour les répartir, on utilisera la dynamique d'inflorescences vivantes du \textit{dataset 2} (données relatives aux pièges) afin que la dynamique du \textit{dataset 1} ressemble le plus possible à la dynamique du \textit{dataset 2}. Plus précisément, on attribuera un poids (à calibrer) pour tous les jours entre le jour 1 et le 5 septembre, et
 le nombre de morts à chaque jour sera donné par la formule
 $$M_t^c = \frac{p_t \times m}{\sum_j p_j},$$
-où $M_t$ désigne le nombre de mort à la date $t$, $m$ le nombre de mort total déterminé par la différence d’inflorescences entre le 5 et 6 septembre et $p_t$ le poids assigné au jour $t$. Les poids $p_t$ et le coefficient de mise à l'échelle $\alpha$ seront déterminés par l'algorithme d'optimisation NSGA-II qui résoudra le problème
-$$\arg\min_{\alpha, p_t} \sum_t \left| I_t^2 - I_t^{1, c} \right|,$$
-où $I_t^{1, c}$ représente les données du \textit{dataset 1} mises à l'échelle et corrigées; cette dynamique est déterminée par la formule
-$$I_t^{1, c} = \begin{cases}
+où $M_t^c$ désigne le nombre de mort à la date $t$, $m$ le nombre de mort total déterminé par la différence d’inflorescences entre le 5 et 6 septembre et $p_t$ le poids assigné au jour $t$. Les poids $p_t$ et le coefficient de mise à l'échelle $\alpha$ seront déterminés par l'algorithme d'optimisation NSGA-II qui résoudra le problème
+$$\arg\min_{\alpha, p_t} \sum_t \left| I_t^2 - I_t^{c,1} \right|,$$
+où $I_t^{c,1}$ représente les données du \textit{dataset 1} mises à l'échelle et corrigées; cette dynamique est déterminée par la formule
+$$I_t^{c,1} = \begin{cases}
                 I_t^1 - M_t^c & \mbox{si } t \leq 6 \mbox{ septembre},\\
                 I_t^1 & \mbox{sinon}.
                \end{cases}$$
@@ -139,7 +139,7 @@ $$\sum_j^t M_j = \alpha\sum_j^t B_j^1 - I_t^{1,c},$$
 et ensuite d'en déduire le nombre de mort quotidien 
 $$M_t = \sum_{j=1}^t M_j - \sum_{j=1}^{t-1} M_j.$$
 
-À partir de là, on peut décaler le vecteur des morts $M_t$ de 7 jours (comme vu en section 1) et obtenir ainsi la dynamique d'inflorescences attractives (qui sera noté $I_t^{a, 1}$). Il faut noter qu'avec la correction effectuée précédemment, il y a des morts parmi les 7 premiers jours. Ces morts-là seront reportés sur les jours suivants.
+À partir de là, on peut décaler le vecteur des morts $M_t$ de $\Delta_t =7$ jours (comme vu en section 2) et obtenir ainsi la dynamique d'inflorescences attractives (qui sera noté $I_t^{a, 1}$). Il faut noter qu'avec la correction effectuée précédemment, il y a des morts parmi les 7 premiers jours. Ces morts-là seront reportés sur les jours suivants.
 Les différences entre $I_t^{a, 1}$ et $I_t^{c, 1}$, pour chacun des trois sous-blocs, sont visibles sur la figure~\ref{DS1A}. L'attractivité se manifeste par une baisse de l'intensité, on n'observe pas de décalage comme vu en section~2.
 
 % \begin{figure}[h]
@@ -165,7 +165,7 @@ Les différences entre $I_t^{a, 1}$ et $I_t^{c, 1}$, pour chacun des trois sous-
 \end{figure}
 
 
-\section{Simulation de dynamiques d'inflorescences attractives}
+\section{Approche 2 : simulation des dynamiques d'inflorescences attractives}
 
 Une deuxième approche a été testée : simuler les dates de débourrements pour coller au mieux aux inflorescences observées sur le \textit{dataset 2} en utilisant la formule
 $$I_t = B_t + \sum_{j = 1}^{50} B_{t-j}\times \left( 1 - F_{\mathcal{N}\left( \mu, \sigma \right)}(t-j) \right),$$
@@ -206,7 +206,7 @@ Les résultats sont visibles sur la figure~\ref{simu}. Les dynamiques d'inflores
 
 \section{Comparaison des deux approches}
 
-La figure~\ref{comp} la comparaison entre $I_t^s$ et $I_t^{c, 1}$ par rapport à $I_t^2$. Si pour les deux premiers sous-blocs les dynamiques semblent relativement similaires, le dernier sous-bloc montre des différences significatives entre les deux approches. La simulation se rapprochant plus du résultat voulu.
+La figure~\ref{comp} représente la comparaison entre $I_t^s$ et $I_t^{c, 1}$ par rapport à $I_t^2$. Si pour les deux premiers sous-blocs les dynamiques semblent relativement similaires, le dernier sous-bloc montre des différences significatives entre les deux approches. La simulation se rapprochant plus du résultat voulu.
 
 % \begin{figure}[h]
 %  \centering
@@ -251,7 +251,7 @@ On peut également comparer la somme cumulée des dynamiques de débourrements d
 \begin{figure}[ht]
  \centering
  \epsfig{file = plots/cumsum_burst.eps, scale = 0.65}
- \caption{Comparaison des sommes cumulées des débourrements simulées ($B_t^s$) ou observée sur le \textit{dataset 1} et mise à l'échelle ($B_t^{c,1}$).}
+ \caption{Comparaison des sommes cumulées des débourrements simulées ($B_t^s$) ou observées sur le \textit{dataset 1} et mises à l'échelle ($\alpha B_t^{1}$).}
  \label{burst}
 \end{figure}
 

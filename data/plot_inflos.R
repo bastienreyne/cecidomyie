@@ -15,6 +15,7 @@ its <- read.csv("inflos_simulated.csv")[3:5] %>% as.matrix
 itas <- read.csv("attractive_simulated.csv")[3:5] %>% as.matrix
 load("Btc1.Rdata")
 load("Bts.Rdata")
+load("Itsdmin.Rdata")
 
 # Plot ds1 ----------------------------------------------------------------
 

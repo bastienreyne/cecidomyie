@@ -64,12 +64,12 @@ disponibility <- function(day, inflo_capacity, inflos, females) {
 
 larvaes_count <- function(day, inflo_capacity, inflos, females) {
     ## Nombre de larves chaque jour
-    beta7 <-  0.025
-    beta8 <-  0.075
-    beta9 <-  0.400
-    beta10 <- 0.400
-    beta11 <- 0.075
-    beta12 <- 0.025
+    beta7 <-  1
+    beta8 <-  0
+    beta9 <-  0
+    beta10 <- 0
+    beta11 <- 0
+    beta12 <- 0
     
     larvae7 <- larvae8 <- larvae9 <- larvae10 <- larvae11 <- larvae12 <- 0
     if (day > 7) {
@@ -161,7 +161,8 @@ dynamics2 <- function(arg, inflos) {
     inflo_capacity <- arg[5]
     
     alpha <- exchange(proba_migration, inflos)
-    females_exo <- incoming(gamma, inflos)
+    # females_exo <- incoming(gamma, inflos)
+    females_exo <- matrix(20, nrow = 80, ncol = 3)
     larves <- matrix(0, nrow = nb_jours, ncol = 3)
     females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
     females <- matrix(0, nrow = nb_jours, ncol = 3)
@@ -176,3 +177,40 @@ dynamics2 <- function(arg, inflos) {
     
     larves
 }
+
+dynamics3 <- function(arg, inflos) {
+    ## Calcule le nombre de larves (inch'allah)
+    gamma <- arg[1]
+    proba_migration <- arg[2]
+    mu_ER <- arg[3]
+    mu_EH <- arg[4]
+    inflo_capacity <- arg[5]
+    saison_deb <- arg[6]
+    saison_end <- arg[7]
+    
+    alpha <- exchange(proba_migration, inflos)
+    # females_exo <- incoming(gamma, inflos)
+    females_exo <- matrix(20, nrow = 80, ncol = 3)
+    larves <- matrix(0, nrow = nb_jours, ncol = 3)
+    females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
+    females <- matrix(0, nrow = nb_jours, ncol = 3)
+    mu_sol <- c(mu_ER, mu_PS, mu_EH)
+    for (jour in 1:nb_jours) {
+        larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females)
+        females_endo[jour, ] <- emerging(jour, larves, mu_sol)
+        females[jour, 1] <- females_count3(jour, alpha[[1]], females_exo[, 1], females_endo, saison_deb, saison_end)
+        females[jour, 2] <- females_count3(jour, alpha[[2]], females_exo[, 2], females_endo, saison_deb, saison_end)
+        females[jour, 3] <- females_count3(jour, alpha[[3]], females_exo[, 3], females_endo, saison_deb, saison_end)
+    }
+    
+    larves
+}
+
+females_count3 <- function(day, alpha, females_exo, females_endo, saison_deb, saison_end) {
+    ## Nombre total de femelles
+    if (day <= 59)
+        return((females_exo[day] + alpha[day, ] %*% females_endo[day, ]) * saison_deb)
+    if (day > 59)
+        return((females_exo[day] + alpha[day, ] %*% females_endo[day, ]) * saison_end)
+}
+
