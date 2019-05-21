@@ -1,7 +1,7 @@
 ## Script implémentant le sous-modèle 1
 
 ## Paramètres fixes
-sex_ratio <- 0
+sex_ratio <- 0.5
 mu_PS <- 0
 proba_pupe <- 0.77
 pupe_duration <- 5
@@ -110,7 +110,7 @@ larvaes_count <- function(day, inflo_capacity, inflos, females) {
 
 emerging <- function(day, larves, mu_sol) {
     ## Femelles endogenes
-    if (day <= 5)
+    if (day <= 7)
         c(0, 0, 0)
     else
         larves[day - pupe_duration, ] * mu_sol * proba_pupe * sex_ratio
@@ -129,8 +129,6 @@ dynamics <- function(arg, bursts) {
     mu_EH <- arg[4]
     inflo_capacity <- arg[5]
     delta_t <- arg[6]
-    saison_deb <- arg[7]
-    saison_end <- arg[8]
     
     inflos <- cbind(inflo_attractive(bursts[, 1], "ER", delta_t),
                     inflo_attractive(bursts[, 2], "PS", delta_t),
@@ -162,10 +160,9 @@ dynamics2 <- function(arg, inflos) {
     mu_EH <- arg[4]
     inflo_capacity <- arg[5]
     
-    
     alpha <- exchange(proba_migration, inflos)
-    females_exo <- incoming(gamma, inflos)
-    # females_exo <- matrix(20, nrow = 80, ncol = 3)
+    # females_exo <- incoming(gamma, inflos)
+    females_exo <- matrix(20, nrow = 80, ncol = 3)
     larves <- matrix(0, nrow = nb_jours, ncol = 3)
     females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
     females <- matrix(0, nrow = nb_jours, ncol = 3)
@@ -192,8 +189,8 @@ dynamics3 <- function(arg, inflos) {
     saison_end <- arg[7]
     
     alpha <- exchange(proba_migration, inflos)
-    females_exo <- incoming(gamma, inflos)
-    # females_exo <- matrix(20, nrow = 80, ncol = 3)
+    # females_exo <- incoming(gamma, inflos)
+    females_exo <- matrix(20, nrow = 80, ncol = 3)
     larves <- matrix(0, nrow = nb_jours, ncol = 3)
     females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
     females <- matrix(0, nrow = nb_jours, ncol = 3)
