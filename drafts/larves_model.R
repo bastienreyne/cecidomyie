@@ -52,14 +52,14 @@ give <- function(x, larve) {
 
 res_ER <- nsga2(objectif_larves, 138, 1, larves_ER,
                 lower.bounds = rep(0, 138), upper.bounds = rep(5000, 138),
-                popsize = 800, generations = 5000)
+                popsize = 800, generations = 1000)
 
 res_PS <- nsga2(objectif_larves, 138, 1, larves_PS,
                 lower.bounds = rep(0, 138), upper.bounds = rep(5000, 138),
-                popsize = 800, generations = 5000)
+                popsize = 800, generations = 1000)
 
 res_EH <- nsga2(objectif_larves, 138, 1, larves_EH,
                 lower.bounds = rep(0, 138), upper.bounds = rep(5000, 138),
-                popsize = 800, generations = 5000)
+                popsize = 800, generations = 16000)
 
 
