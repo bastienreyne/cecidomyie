@@ -6,9 +6,9 @@ library(tidyverse)
 library(mco)
 data <- read.csv("../data/2017_piege.csv")
 
-larves_ER <- data %>% filter(Sol == "ER") %>% pull(inflos)
-larves_PS <- data %>% filter(Sol == "PS") %>% pull(inflos)
-larves_EH <- data %>% filter(Sol == "EH") %>% pull(inflos)
+larves_ER <- data %>% filter(Sol == "ER") %>% pull(larves)
+larves_PS <- data %>% filter(Sol == "PS") %>% pull(larves)
+larves_EH <- data %>% filter(Sol == "EH") %>% pull(larves)
 
 # Corrélations ------------------------------------------------------------
 

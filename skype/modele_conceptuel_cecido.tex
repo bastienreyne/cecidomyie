@@ -53,12 +53,12 @@ Il faut noter que l'on utilisera uniquement les individus vérifiant $t > 17$ jo
 
 \subsection{Enherbement ras}
 
-Le seuil de significativité sera fixé à $\alpha = 0.05$.
+Le risque de première espèce du test de Student (pour la nullité des coefficients) sera fixé à $\alpha = 0.05$.
 Les résultats de la régression linéaire sont visibles dans la table~\ref{tab:lmer}. Il apparaît que seule l'ordonnée à l'origine est significative. Dès lors, il apparaît compliqué de prédire uniquement le nombre de larves à la date $t$ avec les nombres de larves à des dates antérieures.
 
 \begin{table}[ht]
 \centering
-\caption{Coefficients trouvés par la régression linéaire simple pour l'enherbement ras, ainsi que leurs erreurs standards associés. Pour un seuil de singnificativité d'$\alpha = 0.05$, seule l'ordonnée à l'origine est significative}
+\caption{Coefficients trouvés par la régression linéaire simple pour l'enherbement ras, ainsi que leurs erreurs standards associés. Pour un risque de première espèce d'$\alpha = 0.05$, seule l'ordonnée à l'origine est significative}
 \label{tab:lmer}
 \begin{tabular}{rrrrr}
  & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\ 
@@ -83,7 +83,7 @@ La figure~\ref{fig:lmer1} montre ainsi la tendance du modèle à renvoyer pour t
 \begin{figure}[ht]
  \centering
  \epsfig{file = plots/pred_obs_ER.eps, scale = 0.65}
- \caption{Comparaison entre les valeurs observées et les valeurs prédites pour l'enherbement ras. Une bonne prédiction montrerait les points proches de la doite $y=x$. Ce n'est pas le cas ici.}
+ \caption{Comparaison entre les valeurs observées et les valeurs prédites pour l'enherbement ras. Une bonne prédiction montrerait les points proches de la droite $y=x$. Ce n'est pas le cas ici.}
  \label{fig:lmer1}
 \end{figure}
 
@@ -96,11 +96,11 @@ La figure~\ref{fig:lmer1} montre ainsi la tendance du modèle à renvoyer pour t
 
 \subsection{Paillage synthétique}
 
-On réitère les calculs pour le paillage synthétique. Les résultats sont visibles dans la table~\ref{tab:lmps}, et comme pour l'enherbement ras seul l'ordonnée à l'origine est significative. Ainsi il n'est pas étonnant de trouver des résultats similaires concernant la prédiction comme l'illustre les figures~\ref{fig:lmps1} et \ref{fig:lmps2} : une prédiction mauvaise qui donne une valeur moyenne tout du long, manquant de réalisme.
+On réitère les calculs pour le paillage synthétique. Les résultats sont visibles dans la table~\ref{tab:lmps}, et comme pour l'enherbement ras seule l'ordonnée à l'origine est significative. Ainsi il n'est pas étonnant de trouver des résultats similaires concernant la prédiction comme l'illustrent les figures~\ref{fig:lmps1} et \ref{fig:lmps2} : une prédiction mauvaise qui donne une valeur moyenne tout du long, manquant de réalisme.
 
 \begin{table}[ht]
 \centering
-\caption{Coefficients trouvés par la régression linéaire simple pour le paillage synthétique, ainsi que leurs erreurs standards associés. Pour un seuil de singnificativité d'$\alpha = 0.05$, seule l'ordonnée à l'origine est significative}
+\caption{Coefficients trouvés par la régression linéaire simple pour le paillage synthétique, ainsi que leurs erreurs standards associés. Pour un risque de première espèce d'$\alpha = 0.05$, seule l'ordonnée à l'origine est significative}
 \label{tab:lmps}
 \begin{tabular}{rrrrr}
   
@@ -124,7 +124,7 @@ On réitère les calculs pour le paillage synthétique. Les résultats sont visi
 \begin{figure}[ht]
  \centering
  \epsfig{file = plots/pred_obs_PS.eps, scale = 0.65}
- \caption{Comparaison entre les valeurs observées et les valeurs prédites pour le paillage synthétique. Une bonne prédiction montrerait les points proches de la doite $y=x$. Ce n'est pas le cas ici.}
+ \caption{Comparaison entre les valeurs observées et les valeurs prédites pour le paillage synthétique. Une bonne prédiction montrerait les points proches de la droite $y=x$. Ce n'est pas le cas ici.}
  \label{fig:lmps1}
 \end{figure}
 
@@ -137,11 +137,11 @@ On réitère les calculs pour le paillage synthétique. Les résultats sont visi
 
 \subsection{Enherbement haut}
 
-Encore une fois, seule l'ordonnée à l'origine est significative (voir table~\ref{tab:lmeh}). Cependant la figure~\ref{fig:lmeh1} montre des prédictions plus variables, qui si elles ne sont pas parfaites (particulièrement vrai pour les valeurs observées très grande ou très petites) demeurent bien supérieures aux deux autres sous-blocs. Cela se vérifie sur la figure~\ref{fig:lmeh2} où l'on peut voir que la dynamique est plus ou moins captée (moins que plus, il est vrai).
+Encore une fois, seule l'ordonnée à l'origine est significative (voir table~\ref{tab:lmeh}). Cependant la figure~\ref{fig:lmeh1} montre des prédictions plus variables, qui si elles ne sont pas parfaites (particulièrement vrai pour les valeurs observées très grandes ou très petites) demeurent bien plus acceptables que celles des deux autres sous-blocs. Cela se vérifie sur la figure~\ref{fig:lmeh2} où l'on peut voir que la dynamique est plus ou moins captée (moins que plus, il est vrai).
 
 \begin{table}[ht]
 \centering
-\caption{Coefficients trouvés par la régression linéaire simple pour l'enherbement haut, ainsi que leurs erreurs standards associés. Pour un seuil de singnificativité d'$\alpha = 0.05$, seule l'ordonnée à l'origine est significative}
+\caption{Coefficients trouvés par la régression linéaire simple pour l'enherbement haut, ainsi que leurs erreurs standards associés. Pour un risque de première espèce d'$\alpha = 0.05$, seule l'ordonnée à l'origine est significative}
 \label{tab:lmeh}
 \begin{tabular}{rrrrr}
  & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\ 
@@ -164,7 +164,7 @@ Encore une fois, seule l'ordonnée à l'origine est significative (voir table~\r
 \begin{figure}[ht]
  \centering
  \epsfig{file = plots/pred_obs_EH.eps, scale = 0.65}
- \caption{Comparaison entre les valeurs observées et les valeurs prédites pour l'enherbement haut. Une bonne prédiction montrerait les points proches de la doite $y=x$. La prédiction n'est pas géniale ici.}
+ \caption{Comparaison entre les valeurs observées et les valeurs prédites pour l'enherbement haut. Une bonne prédiction montrerait les points proches de la droite $y=x$. La prédiction n'est pas géniale ici.}
  \label{fig:lmeh1}
 \end{figure}
 
@@ -180,7 +180,7 @@ Encore une fois, seule l'ordonnée à l'origine est significative (voir table~\r
 
 Les résultats présentés ici indiquent clairement que le nombre de larves au jour $t$ ne peut être modélisé par une combinaison linéaire des nombres de larves qu'il y a eu quelques jours plus tôt.
 
-D'autres méthodes ont étés testés, notamment un GLM Poisson et un GLM gaussien. Bien qu'il en ressortait que certaines variables étaient significatives, les prédictions étaient tout aussi mauvaises et similaires à la régression linéaire simple.
+D'autres méthodes ont étés testés, notamment un GLM Poisson et un GLM gaussien. Bien qu'il en ressortait que certaines variables étaient significatives, les prédictions étaient tout aussi mauvaises et ressemblaient fortement à celles de la régression linéaire simple.
 
 Enfin un modèle linéaire mixte a été réalisé sur l'ensemble de la parcelle avec la modalité de couverture de sol comme effet fixe. Il en ressort qu'il y avait une différence significative entre les trois modalités de couverture du sol, ce qui est encourageant dans la mesure que cela implique que ce facteur est utile pour expliquer les différences entre les trois sous-blocs.
 
@@ -233,18 +233,160 @@ $\rho\left( L_t, I_{t-17} \right)    $&  0.007& -0.063& 0.275
 \end{center}
 
 
-Un phénomène quelque peu semblable à l'autocorrélation des larves est présent. Une décroissance avec le temps d'une corrélation qui n'était pas bien forte au début. Cela reste néamoins plus intéprétable dans la mesure où la corrélation la plus importante coïncide avec la durée de larvation. Il convient cependant de rester prudent dans la mesure où l'on n'observe pas une franche diminution après la durée de larvation, ce qui semble plus indiquer que cela reste un phénomène lié au temps et indépendant du cycle de développement des cécidomyies.
+Un phénomène quelque peu semblable à l'autocorrélation des larves est présent. Une décroissance avec le temps d'une corrélation qui n'était pas bien forte au début. Cela reste néanmoins plus interprétable dans la mesure où la corrélation la plus importante coïncide avec la durée de larvation. Il convient cependant de rester prudent dans la mesure où l'on n'observe pas une franche diminution après la durée de larvation, ce qui semble plus indiquer que cela reste un phénomène lié au temps et indépendant du cycle de développement des cécidomyies.
 
 
 \subsection{Conclusion}
 
-Les corrélations calculées précedemment semblent en accord avec les résultats de la première partie. À savoir que les larves et les inflorescences ne peuvent (du moins linéairement) prédire le nombre de larves à venir. Cela a au moins le mérite de comforter l'approche choisie, à savoir un modèle décrivant les phénomènes observés.
+Les corrélations calculées précédemment semblent en accord avec les résultats de la première partie. À savoir que les larves et les inflorescences ne peuvent (du moins linéairement) prédire le nombre de larves à venir. Cela a au moins le mérite de conforter l'approche choisie, à savoir un modèle décrivant les phénomènes observés. Un essai de modèle linéaire mixte tenant aussi compte des inflorescences a été réalisé, les résultats sont visibles dans l'annexe A.
 
 \section{Modèle conceptuel}
 
 On s'intéresse au modèle conceptuel
 $$L_t = \alpha(t) R \left( \mu L_{t-12} + E(t-7) \right),$$
-où $R$ représente le coefficient de reproduction des femelles, $\mu$ la probabilité de survie des œufs, $E(t-7)$ les individus exogènes arrivant 7 jours avant, $L_{t-12}$ le nombre de larves présentes un cycle auparavant et $\alpha(t)$ un coefficient journalier représentant l'ensemble des conditions environnementales.
+où $R$ représente le coefficient de reproduction des femelles, $\mu$ la probabilité de survie des œufs, $E(t-7)$ les individus exogènes arrivant 7 jours avant, $L_{t-12}$ le nombre de larves présentes un cycle auparavant et $\alpha(t)$ un coefficient journalier représentant l'ensemble des conditions environnementales. On a les contraintes suivantes sur les paramètres :
+\begin{itemize}
+ \item $\forall\ t,\ \alpha(t) \in [0;1],$
+ \item $R \in [0;10],$
+ \item $\mu \in [0;1],$
+ \item $\forall\ t,\ E(t-7) \in \mathbf{R}_+$.
+\end{itemize}
+
+Au vu des résultats précédents, on peut s'attendre à ce que l'optimisation ajuste sur les individus exogènes. Ce qui sera intéressant, c'est de voir dans quelle mesure les larves observées interviendront dans la prédiction.
+
+\subsection{Trois sous-modèles distincts}
+
+On commence par appliquer ce modèle indépendamment aux trois sous-blocs.
+
+
+
+\begin{figure}[ht]
+ \centering
+ \epsfig{file = plots/pred_obs_nsga.eps, scale = 0.65}
+ \caption{Comparaison des valeurs prédites et observées par l'optimisation du modèle conceptuel par l'algorithme NSGA-II pour chacun des trois sous-blocs.  Les points sont proches de la droite $y =x$, signe d'une prédiction convenable.}
+ \label{fig:nsga}
+\end{figure}
+
+\begin{figure}[ht]
+ \centering
+ \epsfig{file = plots/trajs_nsga.eps, scale = 0.65}
+ \caption{Dynamiques observées et simulées pour chacun des trois sous-blocs par le modèle conceptuel et l'algorithme génétique NSGA-II.}
+ \label{fig:tnsga}
+\end{figure}
+
+
+Sans vraiment trop de surprises, le modèle arrive à recréer les dynamiques observées comme le montrent les figures~\ref{fig:nsga} et \ref{fig:tnsga}. Pour les coefficients $R$ et $\mu$, on trouve les résultats suivants :
+\begin{center}
+\begin{tabular}{rrrr}
+ & Enherbement ras & Paillage synthétique & Enherbement haut\\
+$R$ & 0.163 & 0.100 & 0.189\\
+$\mu$ & 0.896 & 0.201 & 0.868\\
+$R\mu$ & 0.146 & 0.020 & 0.164
+\end{tabular}
+\end{center}
+Il demeure compliqué d'interpréter ces résultats dans la mesure où le modèle a deux paramètres libres chaque jour (et donc un nombre infini de façon de reproduire les dynamiques observées). Sans tirer de conclusion, on peut néanmoins apprécier le fait que $\mu^{ER} > \mu^{EH} > \mu^{PS}$, en accord avec nos hypothèses. Globalement, l'influence des larves antérieures est plutôt limitée.
+
+Les coefficients $\alpha(t)$ ne semblent pas suivre un schéma commun aux trois sous blocs. Ils pourraient être interprétés comme l'effet du nombre d'inflorescences pour l'enherbement haut $\rho^{EH}\left( \alpha(t), I_t \right) = 0.72$ mais cette explication ne convient pas vraiment aux deux autres sous-blocs ($\rho^{ER}\left( \alpha(t), I_t \right) = 0.38$ et $\rho^{EH}\left( \alpha(t), I_t \right) = 0.51$). Les corrélations entre $\alpha(t)$ et $I_{t-7}$ sont encore plus faibles.
+
+\subsection{Modèle global}
+
+On réitère ce qui vient d'être fait, à la différence que l'on impose que le $R$ soit le même pour les trois sous-blocs. On obtient ainsi :
+\begin{itemize}
+ \item $R = 0.171$
+ \item $\mu^{ER} = 0.580$
+ \item $\mu^{PS} = 0.287$
+ \item $\mu^{EH} = 0.938$
+\end{itemize}
+
+
+
+\begin{figure}[ht]
+ \centering
+ \epsfig{file = plots/alast.eps, scale = 0.65}
+ \caption{Comparaison des valeurs prédites et observées par l'optimisation du modèle conceptuel par l'algorithme NSGA-II pour chacun des trois sous-blocs. Les points sont plus ou moins proches de la droite $y=x$ préfigurant une prédiction acceptable bien qu'améliorable.}
+ \label{fig:p}
+\end{figure}
+
+\begin{figure}[ht]
+ \centering
+ \epsfig{file = plots/last.eps, scale = 0.65}
+ \caption{Dynamiques observées et simulées pour chacun des trois sous-blocs par le modèle conceptuel et l'algorithme génétique NSGA-II.}
+ \label{fig:t}
+\end{figure}
+
+L'algorithme converge plus lentement dans ce cas-ci. On peut noter que l'ordre des $\mu$ a changé. Ce qui ne change pas en revanche, c'est la propension du modèle à ajuster sur les larves exogènes. Et une fois de plus les $\alpha(t)$ ne semblent pas suivre une logique précise.
+
+
+\subsection{Conclusion}
+
+Ce modèle n'est pas vraiment exploitable dans la mesure où les deux paramètres libres chaque jour permettent un nombre infini de façons de reproduire nos observations. On pourrait multiplier les tentatives en introduisant des contraintes mais les résultats précédent laissent présager que cela ne fonctionnerait pas.
+
+D'une manière plus générale, les données que l'on possède sont trop peu nombreuses pour un modèle prédictif. Il faudrait bien plus d'individus et bien plus de variables explicatives pour s'essayer à une régression ou du \emph{machine learning} qui soit exploitable quand le phénomène considéré est par nature très variable.
+
+\appendix
+\newpage
+\section{Modèle linéaire mixte avec larves et inflorescences}
+
+On essaye ici de régresser $L_t$ en fonction des larves tombés 7 à 17 jours auparavant, des inflorescences présentes de 0 à 17 jours auparavant et de la modalité de couverture du sol. Cette dernière variable est considéré comme un effet fixe. Comme le montre la table~\ref{tab:mml}, les variables significatives sont peu nombreuses.
+
+\begin{table}[ht]
+\centering
+\caption{Coefficients trouvés par le modèle linéaire mixte, ainsi que leurs erreurs standards associés. Pour un risque de première espèce d'$\alpha = 0.05$, seules les inflorescences du jour et les modalités de couvertures des sols ER et PS sont significatives.}
+\label{tab:mml}
+\begin{tabular}{rrrrr}
+ & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\ 
+  \hline
+`Lt-7` & 0.1436 & 0.1521 & 0.94 & 0.3465 \\ 
+  `Lt-8` & -0.0009 & 0.1999 & -0.00 & 0.9966 \\ 
+  `Lt-9` & -0.0501 & 0.2018 & -0.25 & 0.8041 \\ 
+  `Lt-10` & -0.0284 & 0.2000 & -0.14 & 0.8872 \\ 
+  `Lt-11` & -0.1284 & 0.1981 & -0.65 & 0.5179 \\ 
+  `Lt-12` & 0.0040 & 0.1995 & 0.02 & 0.9841 \\ 
+  `Lt-13` & -0.1130 & 0.2025 & -0.56 & 0.5776 \\ 
+  `Lt-14` & 0.3194 & 0.2198 & 1.45 & 0.1483 \\ 
+  `Lt-15` & -0.0690 & 0.2288 & -0.30 & 0.7635 \\ 
+  `Lt-16` & -0.1480 & 0.2288 & -0.65 & 0.5185 \\ 
+  `Lt-17` & -0.0934 & 0.1760 & -0.53 & 0.5964 \\ 
+  It & 0.7197 & 0.3304 & 2.18 & 0.0309 \\ 
+  `It-1` & -0.6987 & 0.7118 & -0.98 & 0.3278 \\ 
+  `It-2` & -0.0162 & 0.8284 & -0.02 & 0.9844 \\ 
+  `It-3` & 0.0635 & 0.8387 & 0.08 & 0.9398 \\ 
+  `It-4` & 0.1723 & 0.8653 & 0.20 & 0.8425 \\ 
+  `It-5` & -0.1859 & 0.8702 & -0.21 & 0.8311 \\ 
+  `It-6` & 0.3835 & 0.8804 & 0.44 & 0.6638 \\ 
+  `It-7` & 0.4353 & 0.9197 & 0.47 & 0.6366 \\ 
+  `It-8` & -0.3300 & 0.9323 & -0.35 & 0.7238 \\ 
+  `It-9` & 0.8294 & 0.9548 & 0.87 & 0.3864 \\ 
+  `It-10` & -0.9268 & 1.0591 & -0.88 & 0.3829 \\ 
+  `It-11` & 0.8237 & 1.1512 & 0.72 & 0.4754 \\ 
+  `It-12` & -0.8740 & 1.1979 & -0.73 & 0.4667 \\ 
+  `It-13` & 0.6701 & 1.2190 & 0.55 & 0.5833 \\ 
+  `It-14` & -1.6787 & 1.2321 & -1.36 & 0.1750 \\ 
+  `It-15` & 1.1881 & 1.3621 & 0.87 & 0.3844 \\ 
+  `It-16` & -1.1056 & 1.2267 & -0.90 & 0.3688 \\ 
+  `It-17` & 0.9019 & 0.5901 & 1.53 & 0.1285 \\ 
+  SolER & 382.9572 & 90.2334 & 4.24 & 0.0000 \\ 
+  SolPS & -158.1030 & 77.0743 & -2.05 & 0.0419 \\ 
+  SolEH & -187.5178 & 113.9947 & -1.64 & 0.1020 
+\end{tabular}
+\end{table}
+
+\begin{figure}[ht]
+ \centering
+ \epsfig{file = plots/pred_obs_mml.eps, scale = 0.65}
+ \caption{Comparaison des valeurs observées et prédites par le modèle linéaire mixte pour chacun des trois sous-blocs.}
+ \label{fig:mmls}
+\end{figure}
+
+\begin{figure}[ht]
+ \centering
+ \epsfig{file = plots/mml.eps, scale = 0.6}
+ \caption{Dynamiques observées et prédites par le modèle linéaire mixte.}
+ \label{fig:mml}
+\end{figure}
+
+Les figures~\ref{fig:mmls} et \ref{fig:mml} montrent les résultats de la prédiction. Les dynamiques du paillage synthétique et de l'enherbement haut sont bien reproduites. Ce n'est pas le cas de l'enherbement ras. C'est dû au fait que l'enherbement ras n'avait pas une dynamique de larves similaire à la dynamique d'inflorescences. En effet, on peut voir que le modèle se contente de \emph{scaler} les inflorescences (le coefficient associé à $I_t$ est de 0.7) pour s'approcher au mieux de la dynamique de larves. Ne dépendre uniquement des inflorescences du jour n'est probablement pas une bonne idée pour modéliser un phénomène complexe.
+
 
 \end{document}
 
