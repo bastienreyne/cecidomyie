@@ -9,7 +9,7 @@ library(mco)
 source("decomposition.R")
 simulated <- (read.csv("../data/attractive_simulated.csv") %>% as.matrix())[, 3:5]
 attractiv <- (read.csv("../data/2017_attractives.csv") %>% as.matrix())[, 3:5]
-bursts
+# bursts
 
 
 data2017PS <- read_csv("b1.csv")
