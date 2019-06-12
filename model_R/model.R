@@ -67,6 +67,17 @@ exchange2 <- function(leaving_to_ps, inflos) {
     return(list(alphaER, alphaPS, alphaEH))
 }
 
+# Test modif proc
+exchange3 <- function(leaving_to_ps, inflos) {
+    ## Echange entre les sous-blocs
+    alpha_all <- cbind(inflos[, 1] / (inflos[, 1] + inflos[, 2] + inflos[, 3]),
+                       inflos[, 2] / (inflos[, 1] + inflos[, 2] + inflos[, 3]),
+                       inflos[, 3] / (inflos[, 1] + inflos[, 2] + inflos[, 3]))
+    alphaER <- alphaPS <- alphaEH <- matrix(1/3, nrow = 80, ncol = 3)
+    
+    return(list(alphaER, alphaPS, alphaEH))
+}
+
 
 disponibility <- function(day, inflo_capacity, inflos, females) {
     ## Disponibilité des ressources
@@ -75,6 +86,17 @@ disponibility <- function(day, inflo_capacity, inflos, females) {
     ans[females[day, ] > inflo_capacity * inflos[day, ]] <- inflo_capacity *
         inflos[day, which(females[day, ] > inflo_capacity * inflos[day, ])] /
         females[day, which(females[day, ] > inflo_capacity * inflos[day, ])]
+    
+    ans
+}
+
+disponibility2 <- function(day, inflo_capacity, inflos, females) {
+    ## Disponibilité des ressources
+    ans <- rep(NA, 3)
+    ans[females[day, ] <= inflos[day, ]] <- 1
+    ans[females[day, ] > inflos[day, ]] <-
+        inflos[day, which(females[day, ] > inflos[day, ])] /
+        females[day, which(females[day, ] > inflos[day, ])]
     
     ans
 }
@@ -91,32 +113,32 @@ larvaes_count <- function(day, inflo_capacity, inflos, females) {
     
     larvae7 <- larvae8 <- larvae9 <- larvae10 <- larvae11 <- larvae12 <- 0
     if (day > 7) {
-        R <- disponibility(day - 7, inflo_capacity, inflos, females)
+        R <- disponibility2(day - 7, inflo_capacity, inflos, females)
         larvae7 <- females[day - 7, ] * R * eggs * mu_larvation
     }
     
     if (day > 8) {
-        R <- disponibility(day - 8, inflo_capacity, inflos, females)
+        R <- disponibility2(day - 8, inflo_capacity, inflos, females)
         larvae8 <- females[day - 8, ] * R * eggs * mu_larvation
     }
     
     if (day > 9) {
-        R <- disponibility(day - 9, inflo_capacity, inflos, females)
+        R <- disponibility2(day - 9, inflo_capacity, inflos, females)
         larvae9 <- females[day - 9, ] * R * eggs * mu_larvation
     }
     
     if (day > 10) {
-        R <- disponibility(day - 10, inflo_capacity, inflos, females)
+        R <- disponibility2(day - 10, inflo_capacity, inflos, females)
         larvae10 <- females[day - 10, ] * R * eggs * mu_larvation
     }
     
     if (day > 11) {
-        R <- disponibility(day - 11, inflo_capacity, inflos, females)
+        R <- disponibility2(day - 11, inflo_capacity, inflos, females)
         larvae11 <- females[day - 11, ] * R * eggs * mu_larvation
     }
     
     if (day > 12) {
-        R <- disponibility(day - 12, inflo_capacity, inflos, females)
+        R <- disponibility2(day - 12, inflo_capacity, inflos, females)
         larvae12 <- females[day - 12, ] * R * eggs * mu_larvation
     }
     
@@ -177,7 +199,6 @@ dynamics2 <- function(arg, inflos) {
     mu_EH <- arg[4]
     inflo_capacity <- arg[5]
     
-    
     alpha <- exchange2(leaving, inflos)
     females_exo <- incoming(gamma, inflos)
     # females_exo <- matrix(20, nrow = 80, ncol = 3)
@@ -199,10 +220,10 @@ dynamics2 <- function(arg, inflos) {
     larves
 }
 
-females_count3 <- function(day, alpha, females_exo, females_endo, saison_deb, saison_end) {
+females_count3 <- function(day, alpha, females_exo, females_endo, saison_end) {
     ## Nombre total de femelles
     if (day <= 59)
-        return((females_exo[day] + alpha[day, ] %*% females_endo[day, ]) * saison_deb)
+        return(females_exo[day] + alpha[day, ] %*% females_endo[day, ])
     if (day > 59)
         return((females_exo[day] + alpha[day, ] %*% females_endo[day, ]) * saison_end)
 }
@@ -346,9 +367,9 @@ decomposition2 <- function(arg, inflos) {
         larves_exo[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, females_exo)
         larves_endo[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_endo)
         
-        females[jour, 1] <- females_count(jour, alpha[[1]], females_exo[, 1], females_endo)
-        females[jour, 2] <- females_count(jour, alpha[[2]], females_exo[, 2], females_endo)
-        females[jour, 3] <- females_count(jour, alpha[[3]], females_exo[, 3], females_endo)
+        females[jour, 1] <- females_count3(jour, alpha[[1]], females_exo[, 1], females_endo)
+        females[jour, 2] <- females_count3(jour, alpha[[2]], females_exo[, 2], females_endo)
+        females[jour, 3] <- females_count3(jour, alpha[[3]], females_exo[, 3], females_endo)
     }
     prop_endo <- larves_endo / (larves_endo + larves_side + larves_exo)
     prop_side <- larves_side / (larves_endo + larves_side + larves_exo)

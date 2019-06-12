@@ -394,3 +394,79 @@ to_plot %>%
   theme(legend.title = element_blank(), legend.position = "bottom") +
   facet_grid(. ~ Sol) +
   scale_color_manual(values = c("black", "green4"))
+
+
+
+# Décompo ref -------------------------------------------------------------
+
+decref <- decomposition2(c(0.073, 0.373, 0.223, 0, 10.788), inflos_simulated)
+
+erref <- data.frame(Date = date2017,
+                  Observées = larves[, 1],
+                  Référence = decref[[1]][, 1],
+                  Exogène = decref[[2]][, 1],
+                  Endogène = decref[[3]][, 1],
+                  Side = decref[[4]][, 1]) %>% 
+  gather(Exogène, Endogène, Side, key = provenance,
+         value = Nombre, factor_key = TRUE) %>%
+  ggplot +
+  aes(x = Date) +
+  geom_line(aes(y = Observées, color = "Observées")) +
+  geom_point(aes(y = Observées, color = "Observées")) +
+  geom_line(aes(y = Référence, color = "Référence")) +
+  geom_point(aes(y = Référence, color = "Référence")) +
+  geom_area(aes(y = Nombre, fill = provenance), alpha = 0.5) +
+  theme_bw() +
+  theme(legend.title = element_blank(), legend.position = "none") +
+  ggtitle("Enherbement ras") +
+  ylab("Nombre de larves") +
+  xlab("Date\n\n\n\n\n\n") +
+  scale_color_manual(values = c("black", "green4")) 
+
+psref <- data.frame(Date = date2017,
+                  Observées = larves[, 2],
+                  Référence = decref[[1]][, 2],
+                  Exogène = decref[[2]][, 2],
+                  Endogène = decref[[3]][, 2],
+                  Side = decref[[4]][, 2]) %>% 
+  gather(Exogène, Endogène, Side, key = provenance,
+         value = Nombre, factor_key = TRUE) %>%
+  ggplot +
+  aes(x = Date) +
+  geom_line(aes(y = Observées, color = "Observées")) +
+  geom_point(aes(y = Observées, color = "Observées")) +
+  geom_line(aes(y = Référence, color = "Référence")) +
+  geom_point(aes(y = Référence, color = "Référence")) +
+  geom_area(aes(y = Nombre, fill = provenance), alpha = 0.5) +
+  theme_bw() +
+  theme(legend.title = element_blank(), legend.position = "bottom") +
+  ggtitle("Paillage synthétique") +
+  ylab("Nombre de larves") +
+  scale_color_manual(values = c("black", "green4")) +
+  guides(fill = guide_legend(ncol = 1),
+         color = guide_legend(ncol = 1))
+
+ehref <- data.frame(Date = date2017,
+                  Observées = larves[, 3],
+                  Référence = decref[[1]][, 3],
+                  Exogène = decref[[2]][, 3],
+                  Endogène = decref[[3]][, 3],
+                  Side = decref[[4]][, 3]) %>% 
+  gather(Exogène, Endogène, Side, key = provenance,
+         value = Nombre, factor_key = TRUE) %>%
+  ggplot +
+  aes(x = Date) +
+  geom_line(aes(y = Observées, color = "Observées")) +
+  geom_point(aes(y = Observées, color = "Observées")) +
+  geom_line(aes(y = Référence, color = "Référence")) +
+  geom_point(aes(y = Référence, color = "Référence")) +
+  geom_area(aes(y = Nombre, fill = provenance), alpha = 0.5) +
+  theme_bw() +
+  theme(legend.title = element_blank(), legend.position = "none") +
+  ggtitle("Enherbement haut") +
+  ylab("Nombre de larves") +
+  xlab("Date\n\n\n\n\n\n") +
+  scale_color_manual(values = c("black", "green4"))
+
+grid.arrange(erref, psref, ehref, ncol = 3)
+
