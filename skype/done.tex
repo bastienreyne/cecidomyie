@@ -153,7 +153,7 @@ Il faut aussi noter que le modèle a besoin des inflorescences en entrée. Il a 
 
 Sur ces 20 valeurs, on utilise la fonction de coût $MAE$ définie par
 $$
-MAE(y, \hat y) = \frac{1}{n}\sum_n | y - \hat y |.
+MAE(y, \hat y) = \frac{1}{n}\sum_j^n | y_j - \hat y_j |.
 $$
 
 On le fait distinctement pour chacun des trois sous-blocs. Cela donne trois valeurs à minimiser.

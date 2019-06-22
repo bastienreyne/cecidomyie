@@ -1,6 +1,7 @@
 ## Script qui réalise une analyse de sensibilité du modèle.
 
 library(tidyverse)
+library(hydroGOF)
 source("../model_R/model.R")
 load("../data/date2017.Rdata")
 laps <- c(7, 7, 7, 8, 2, 5, 2, 4, 3, 5, 2, 5, 2, 5, 2, 4, 3, 4, 3)
@@ -17,9 +18,11 @@ N <- 10000
 Matrice <- matrix(runif(N * 5 * 2), nrow = N)
 
 mat_A <- Matrice[, 1:5]
+mat_A[, 1] <- 0.1 * mat_A[, 1]
 mat_A[, 5] <- 1 + 49 * mat_A[, 5]
 
 mat_B <- Matrice[, 6:10]
+mat_B[, 1] <- 0.1 * mat_B[, 1]
 mat_B[, 5] <- 1 + 49 * mat_B[, 5]
 
 mat_C1 <- cbind(mat_A[, 1], mat_B[, 2:5])
@@ -57,9 +60,9 @@ obj <- function(x) {
     
     larves_observed <- larves[true_index, ]
     
-    c(my_mae(larves_est[, 1], larves_observed[, 1]),
-      my_mae(larves_est[, 2], larves_observed[, 2]),
-      my_mae(larves_est[, 3], larves_observed[, 3]))
+    c(nrmse(larves_est[, 1], larves_observed[, 1], norm = "maxmin"),
+      nrmse(larves_est[, 2], larves_observed[, 2], norm = "maxmin"),
+      nrmse(larves_est[, 3], larves_observed[, 3], norm = "maxmin"))
 }
 
 
@@ -184,3 +187,4 @@ to_plot %>% ggplot +
     scale_x_discrete(labels = c(expression(gamma), expression(p[m]),
                                 expression(mu[ER]), expression(mu[EH]),
                                 expression(k)))
+        

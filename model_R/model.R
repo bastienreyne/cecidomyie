@@ -220,6 +220,35 @@ dynamics2 <- function(arg, inflos) {
     larves
 }
 
+critere <- function(arg, inflos) {
+    ## Calcule le nombre de larves (inch'allah)
+    gamma <- arg[1]
+    leaving <- arg[2]
+    mu_ER <- arg[3]
+    mu_EH <- arg[4]
+    inflo_capacity <- arg[5]
+    
+    alpha <- exchange2(leaving, inflos)
+    females_exo <- incoming(gamma, inflos)
+    # females_exo <- matrix(20, nrow = 80, ncol = 3)
+    larves <- matrix(0, nrow = nb_jours, ncol = 3)
+    females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
+    females <- matrix(0, nrow = nb_jours, ncol = 3)
+    mu_sol <- c(mu_ER, mu_PS, mu_EH)
+    for (jour in 1:nb_jours) {
+        larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females)
+        females_endo[jour, ] <- emerging(jour, larves, mu_sol)
+        females[jour, 1] <- females_count(jour, alpha[[1]],
+                                          females_exo[, 1], females_endo)
+        females[jour, 2] <- females_count(jour, alpha[[2]],
+                                          females_exo[, 2], females_endo)
+        females[jour, 3] <- females_count(jour, alpha[[3]],
+                                          females_exo[, 3], females_endo)
+    }
+    
+    -sum((females - females_exo) / females)
+}
+
 females_count3 <- function(day, alpha, females_exo, females_endo, saison_end) {
     ## Nombre total de femelles
     if (day <= 59)
@@ -367,9 +396,9 @@ decomposition2 <- function(arg, inflos) {
         larves_exo[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, females_exo)
         larves_endo[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_endo)
         
-        females[jour, 1] <- females_count3(jour, alpha[[1]], females_exo[, 1], females_endo)
-        females[jour, 2] <- females_count3(jour, alpha[[2]], females_exo[, 2], females_endo)
-        females[jour, 3] <- females_count3(jour, alpha[[3]], females_exo[, 3], females_endo)
+        females[jour, 1] <- females_count(jour, alpha[[1]], females_exo[, 1], females_endo)
+        females[jour, 2] <- females_count(jour, alpha[[2]], females_exo[, 2], females_endo)
+        females[jour, 3] <- females_count(jour, alpha[[3]], females_exo[, 3], females_endo)
     }
     prop_endo <- larves_endo / (larves_endo + larves_side + larves_exo)
     prop_side <- larves_side / (larves_endo + larves_side + larves_exo)

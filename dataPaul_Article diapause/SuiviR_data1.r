@@ -4,7 +4,7 @@
 # PARCELLE TEMOIN DU CPEA
 
 data.df <- read.table("data1.txt", header=T, sep="\t")
-meteo.df <- read.table("data1_meteo.txt",header=T,sep="\t")
+meteo.df <- read.table("data1_meteo.txt", header=T, sep="\t")
 
 data.df$Date <- as.Date(data.df$Date,"%d/%m/%Y")
 
@@ -32,26 +32,29 @@ library(gplots)     # pour barplot2
 data.df$Sem <- cut(data.df$Date,"week",labels=FALSE)
 
 # Faire un dataframe a l echelle de la semaine
-data2.df <- aggregate(data.df$Nbad,list(data.df$Piege,data.df$Sem,data.df$Intro),sum,simplify=F)
+data2.df <- aggregate(data.df$Nbad, 
+                      list(data.df$Piege, data.df$Sem, data.df$Intro),
+                      sum,
+                      simplify=F)
 data2.df <- as.data.frame(data2.df)
-names(data2.df) <- c("Piege","Sem","Intro","Nbad")
+names(data2.df) <- c("Piege", "Sem", "Intro", "Nbad")
 data2.df$Sem <- as.factor(data2.df$Sem)
 data2.df$Nbad <- as.numeric(data2.df$Nbad)
 
 
 # Donnees de temperatures du CPEA
-meteo.df[,1] <- as.Date(meteo.df[,1],format="%d/%m/%Y")
+meteo.df[,1] <- as.Date(meteo.df[,1], format="%d/%m/%Y")
 meteo.df$an <- as.factor(meteo.df$an)
-# pour Saint-Paul au lycée agricole  LEGTA
+# pour Saint-Paul au lyc?e agricole  LEGTA
 XX <- meteo.df[meteo.df$lieu=="LEGTA",]
 # Rajoute une colonne semaine
-XX$sem <- cut(XX$date,"week",labels=FALSE)+21
+XX$sem <- cut(XX$date,"week",labels=FALSE) + 21
 XX$sem <- factor(XX$sem)
 # Temperature moyenne hebdomadaire
-mXX <- tapply(XX$tempm,XX$sem,mean,na.rm=T)
-nXX <- tapply(XX$tempn,XX$sem,mean,na.rm=T)
-xXX <- tapply(XX$tempx,XX$sem,mean,na.rm=T)
-rXX <- tapply(XX$rr,XX$sem,sum,na.rm=T)
+mXX <- tapply(XX$tempm, XX$sem, mean, na.rm=T)
+nXX <- tapply(XX$tempn, XX$sem, mean, na.rm=T)
+xXX <- tapply(XX$tempx, XX$sem, mean, na.rm=T)
+rXX <- tapply(XX$rr, XX$sem, sum, na.rm=T)
 
 
 

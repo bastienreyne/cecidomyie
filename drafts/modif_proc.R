@@ -47,11 +47,10 @@ obj <- function(x) {
       my_mae(larves_est[, 3], larves_observed[, 3]))
 }
 
-set.seed(1848)
-res_ref <- nsga2(obj, 6, 3,
-                 lower.bounds = c(0, 0, 0, 0, 1, 0),
-                 upper.bounds = c(1, 1, 1, 1, 70, 1),
-                 popsize = 200, generations = 200)
+res_ref <- nsga2(obj, 5, 3,
+                 lower.bounds = c(0, 0, 0, 0, 1),
+                 upper.bounds = c(1, 1, 1, 1, 70),
+                 popsize = 40, generations = 200)
 
 indref <- res_ref$value %>% as_tibble %>%
     mutate(norm = abs(V1 + V2 + V3)) %$%
@@ -59,6 +58,46 @@ indref <- res_ref$value %>% as_tibble %>%
 
 argref <- res_ref$par[indref, ]
 
+res_ref2 <- nsga2(obj, 5, 3,
+                 lower.bounds = c(0, 0, 0, 0, 1),
+                 upper.bounds = c(1, 1, 1, 1, 70),
+                 popsize = 40, generations = 200)
+
+indref2 <- res_ref2$value %>% as_tibble %>%
+  mutate(norm = abs(V1 + V2 + V3)) %$%
+  which.min(norm)
+
+argref2 <- res_ref2$par[indref2, ]
+res_ref3 <- nsga2(obj, 5, 3,
+                 lower.bounds = c(0, 0, 0, 0, 1),
+                 upper.bounds = c(1, 1, 1, 1, 70),
+                 popsize = 40, generations = 200)
+
+indref3 <- res_ref3$value %>% as_tibble %>%
+  mutate(norm = abs(V1 + V2 + V3)) %$%
+  which.min(norm)
+
+argref3 <- res_ref3$par[indref3, ]
+res_ref4 <- nsga2(obj, 5, 3,
+                 lower.bounds = c(0, 0, 0, 0, 1),
+                 upper.bounds = c(1, 1, 1, 1, 70),
+                 popsize = 40, generations = 200)
+
+indref4 <- res_ref4$value %>% as_tibble %>%
+  mutate(norm = abs(V1 + V2 + V3)) %$%
+  which.min(norm)
+
+argref4 <- res_ref4$par[indref4, ]
+res_ref5 <- nsga2(obj, 5, 3,
+                 lower.bounds = c(0, 0, 0, 0, 1),
+                 upper.bounds = c(1, 1, 1, 1, 70),
+                 popsize = 40, generations = 200)
+
+indref5 <- res_ref5$value %>% as_tibble %>%
+  mutate(norm = abs(V1 + V2 + V3)) %$%
+  which.min(norm)
+
+argref5 <- res_ref5$par[indref5, ]
 # Plots -------------------------------------------------------------------
 
 estimation <- dynamics2(argref, inflos_simulated)

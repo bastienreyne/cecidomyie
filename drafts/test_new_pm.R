@@ -95,13 +95,13 @@ obj2 <- function(x, inflos) {
 #     my_mae(larvesEH, larves_EH))
 # }
 
-set.seed(1848)
+
 res1 <- nsga2(obj1, 5, 3, inflos,
               lower.bounds = c(0, 0, 0, 0, 1),
               upper.bounds = c(1, 1, 1, 1, 70),
               popsize = 200, generations = 200)
 
-set.seed(1848)
+
 res2 <- nsga2(obj2, 5, 3, inflos,
               lower.bounds = c(0, 0, 0, 0, 1),
               upper.bounds = c(1, 1, 1, 1, 70),

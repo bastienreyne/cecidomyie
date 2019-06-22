@@ -1,0 +1,67 @@
+\documentclass[a4paper, 11pt]{article}
+
+% Nécessaire
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amsthm}
+\usepackage{amsfonts,amssymb}
+
+% Marge
+\usepackage{geometry}
+\geometry{margin={2.2cm ,2cm}}
+
+% Figures, graphiques
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{caption}
+
+% Surlignage
+\usepackage{alltt}
+
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{color}
+\usepackage{colortbl}
+
+% Indicatrice
+\usepackage{dsfont}
+
+\usepackage{multirow}
+\usepackage{eurosym}
+\usepackage{extarrows}
+
+% Graphique
+\usepackage{tikz}
+
+
+% Titre
+\title{NSGA-II 5 fois}
+\author{}
+\date{}
+
+
+
+\begin{document}
+\maketitle
+
+Algorithme NSGA-II exécuté 5 fois avec $popsize = 40$ et $generations = 200$. Résultats
+\begin{center}
+\begin{tabular}{llllll}
+\textbf{} & $\gamma$ & $p_m$ & $\mu_{ER}$ & $\mu_{EH}$ & $k$\\
+\textbf{Exécution 1} & 0.068 & 0.910 & 0.217 & 0.000 & 63.335\\
+\textbf{Exécution 2} & 0.063 & 0.658 & 0.200 & 0.001 & 45.691\\
+\textbf{Exécution 3} & 0.055 & 0.872 & 0.296 & 0.011 & 46.712\\
+\textbf{Exécution 4} & 0.060 & 0.822 & 0.263 & 0.000 & 39.117\\
+\textbf{Exécution 5} & 0.065 & 0.979 & 0.192 & 0.001 & 58.495\\
+\textbf{Moyenne} & \textbf{0.062} & \textbf{0.848} & \textbf{0.234} & \textbf{0.003} & \textbf{50.670}
+\end{tabular}
+\end{center}
+
+
+
+
+
+\end{document}
+
