@@ -1,0 +1,120 @@
+\documentclass[a4paper, 11pt]{article}
+
+% Nécessaire
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+% Biblio
+\usepackage{natbib}
+\bibliographystyle{humannat}
+\usepackage{hypernat}
+\bibpunct{\textcolor{blue}{[}}{\textcolor{blue}{]}}{}{a}{\textcolor{blue}{,}}{;}
+
+\usepackage[french]{babel}
+\usepackage{amsmath, amsthm}
+\usepackage{amsfonts,amssymb}
+
+% Marge
+\usepackage{geometry}
+\geometry{margin={2.2cm ,2cm}}
+
+% Figures, graphiques
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{caption}
+
+% Surlignage
+\usepackage{alltt}
+
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{color}
+\usepackage{colortbl}
+
+% Indicatrice
+\usepackage{dsfont}
+
+\usepackage{multirow}
+\usepackage{eurosym}
+\usepackage{extarrows}
+\usepackage[colorlinks=true, citecolor=blue, linkcolor=.]{hyperref}
+
+% Graphique
+\usepackage{tikz}
+
+
+% Titre
+\title{Schéma conceptuel du modèle}
+\author{}
+\date{}
+
+
+
+\begin{document}
+ \maketitle
+ 
+\begin{figure}[ht]
+ \centering
+ \begin{tikzpicture}
+ \draw (0, 0) node{\textsc{sol}};
+  \draw (0.5, 0) -- (15, 0);
+  % RECTANGLES
+  \draw (0.7,  -1.5) rectangle (2.4,  -2.5); %diap + mort
+  \draw (8.4,  -1.5) rectangle (10.1, -2.5); % P
+  \draw (12.5, -1.5) rectangle (14.2, -2.5); %Diap
+  \draw (4.3,   1.5) rectangle (6,   2.5); % L
+  \draw (9.4,   1.5) rectangle (11.1,  2.5); % N pupe
+  \draw (11.5,  1.5) rectangle (13.2,  2.5); % N diap
+  \draw (9.1,   1.2) rectangle (13.5,  3.4); % N emer
+  \draw (4.3,   7) rectangle (6,   8); % N exo
+  \draw (0.7,   4.5) rectangle (2.4,   5.5); % N voisins
+  \draw (8.4,   4.5) rectangle (10.1,  5.5); % N endo
+  \draw (12.5,  4.5) rectangle (14.2,  5.5); % N degage
+  \draw (4.3,   4.5) rectangle (6, 5.5); % N
+  % TEXTES CASES
+  \draw (1.55, -2) node {Mort};
+  \draw (1.55,  5) node {$N^\text{voisins}$};
+  \draw (5.15,   7.5) node {$N^\text{exo}$};
+  \draw (5.15,   2) node {$L_{t, i}$};
+  \draw (5.15,   5) node {$N_{t, i}$};
+  \draw (13.35, 5) node {$N^\text{départ}$};
+  \draw (9.25,  5) node {$N^\text{endo}$};
+  \draw (9.25, -2) node {$P$};
+  \draw (13.35,-2) node {$D$};
+  \draw (12.35, 2) node {$N^{\text{diap}}$};
+  \draw (10.25, 2) node {$N^{\text{pupe}}$};
+  \draw (11.3,  3) node {$N^{\text{emer}}$};
+  % LIGNES FLECHES
+  \draw      (5.1,   1.5) -- (5.1,  -2);
+  \draw [->] (5.1,  -2  ) -- (2.4,  -2);
+  \draw [->] (5.1,  -2  ) -- (8.4,  -2);
+  \draw      (10.1, -2  ) -- (10.8, -2);
+  \draw      (12.5, -2  ) -- (11.8, -2);
+  \draw [->] (10.8,  -2 ) -- (10.8,  1.5);
+  \draw [->] (11.8,  -2 ) -- (11.8,  1.5);
+  \draw      (11.3,  3.4) -- (11.3,  5);
+  \draw [->] (11.3,   5 ) -- (10.1,  5);
+  \draw [->] (11.3,   5 ) -- (12.5,  5);
+  \draw [->] (14.2,   5 ) -- (14.8,  5);
+  \draw [->] (8.4,   5) -- (6, 5);
+  \draw [->] (5.15,  4.5) -- (5.15, 2.5);
+  \draw [->] (5.15,   7 ) -- (5.15,  5.5);
+  \draw [->] (2.4,   5 ) -- (4.3,  5);
+  % PARAMÈTRES
+  \draw (5.6, 0.3)   node {$\mu_{\text{MS}}^1$};
+  \draw (11.32, 0.3) node {$\mu_{\text{MS}}^2$};
+  \draw (6.8, -2.3)    node {$p_{\text{pup}}$};
+  \draw (6.8, -2.8)    node {$=$};
+  \draw (6.8, -3.2)    node {$p_p \times \mu_p$};
+  \draw (3.8, -2.3)    node {$1-p_{\text{pup}}$};
+  \draw (11.32, -0.4)  node {$\frac{1}{1 + SR}$};
+  \draw (5.55, 4.1)     node {$R$};
+  \draw (5.6, 3.5)     node {$E_0$};
+  \draw (5.6, 2.9)     node {$\mu_\ell$};
+ \end{tikzpicture}
+
+\end{figure}
+
+
+\end{document}

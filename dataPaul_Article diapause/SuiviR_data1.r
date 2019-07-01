@@ -82,7 +82,7 @@ sd <- replace(rep(0,max(as.numeric(names(sd)))),as.numeric(names(sd)),sd)
 test <- replace(rep(0,max(as.numeric(names(m)))),as.numeric(names(m)),m)
 names(test) <-  c(29:52,1:52)[1:length(test)]
 
-          barplot2(log10(test+1),plot.ci=T,ci.u=log10(test+sd+1),ci.l=log10(test+1),xlab="",ylab="",ylim=c(0,2.5))
+barplot2(log10(test+1),plot.ci=T,ci.u=log10(test+sd+1),ci.l=log10(test+1),xlab="",ylab="",ylim=c(0,2.5))
 text(75,2,"A",cex=3)
 abline(v=29,lty=2)
 text(25,2.2,"2011",cex=1.8)

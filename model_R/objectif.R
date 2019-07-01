@@ -83,3 +83,45 @@ objPS <- function(x) {
   
   nrmse(larves_est[, 2], larves_observed[, 2], norm = "maxmin")
 }
+
+obj_isa <- function(x) {
+  larves_estimees <- dynamics_isa(x, inflos_simulated)
+  larvesER <- larves_estimees[, 1]
+  larvesPS <- larves_estimees[, 2]
+  larvesEH <- larves_estimees[, 3]
+  
+  larves_est <- matrix(NA, nrow = length(laps), ncol = 3)
+  for (i in 1:length(laps)) {
+    indices <- (true_index[i] - laps[i] + 1):true_index[i]
+    larves_est[i, ] <- c(mean(larvesER[indices]),
+                         mean(larvesPS[indices]),
+                         mean(larvesEH[indices]))
+  }
+  
+  larves_observed <- larves[true_index, ]
+  
+  c(nrmse(larves_est[, 1], larves_observed[, 1], norm = "maxmin"),
+    nrmse(larves_est[, 3], larves_observed[, 3], norm = "maxmin"),
+    critere(x, inflos_simulated))
+}
+
+obj_fred <- function(x) {
+  larves_estimees <- dynamics_fred(x, inflos_simulated)
+  larvesER <- larves_estimees[, 1]
+  larvesPS <- larves_estimees[, 2]
+  larvesEH <- larves_estimees[, 3]
+  
+  larves_est <- matrix(NA, nrow = length(laps), ncol = 3)
+  for (i in 1:length(laps)) {
+    indices <- (true_index[i] - laps[i] + 1):true_index[i]
+    larves_est[i, ] <- c(mean(larvesER[indices]),
+                         mean(larvesPS[indices]),
+                         mean(larvesEH[indices]))
+  }
+  
+  larves_observed <- larves[true_index, ]
+  
+  c(nrmse(larves_est[, 1], larves_observed[, 1], norm = "maxmin"),
+    nrmse(larves_est[, 3], larves_observed[, 3], norm = "maxmin"),
+    critere(x, inflos_simulated))
+}

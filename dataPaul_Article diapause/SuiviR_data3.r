@@ -22,8 +22,8 @@ tot11 <- tapply(var11.df[!duplicated(paste(var11.df$Pro,var11.df$boite)),]$nblar
 # V1 changement precoce de temperature
 # V2 changement tardif de temperature
 # Nat simulation des conditions naturelles
-# Cst20 temperature constante de 20°
-# Cst26 temperature constante de 26°
+# Cst20 temperature constante de 20?
+# Cst26 temperature constante de 26?
 
 # Format date
 var11.df$datprelev <- as.Date(var11.df$datprelev,format="%d/%m/%Y")
@@ -36,10 +36,10 @@ var11.df$Sem <- cut(c(var11.df$datprelev[1],var11.df$dateme),"week",labels=FALSE
 
 
 # Pour 2011
-# Enleve les emergences dans les 3 premieres semaines qui correspondent à des émergences immédiates sans diapause
+# Enleve les emergences dans les 3 premieres semaines qui correspondent ? des ?mergences imm?diates sans diapause
 # cad enelve les emergences <=21 jours
-# Ensuite regroupe les donnees par arbre en 4 périodes
-# Periode 1 : semaine 4 à 1er changement de temperature SEMAINE 6
+# Ensuite regroupe les donnees par arbre en 4 p?riodes
+# Periode 1 : semaine 4 ? 1er changement de temperature SEMAINE 6
 # cut(c(var11.df$datprelev[1],var11.df$dattemp2),"week",labels=FALSE)
 # Periode 2 : entre 1er et 2eme changement de temperature SEMAINE 16
 # Periode 3 : entre 2eme changement de temperature et fin des manip Variations SEMAINE 21
@@ -88,8 +88,8 @@ tot12 <- tapply(var12.df[!duplicated(paste(var12.df$Pro,var12.df$boite)),]$nblar
 # Protocole
 # V1 changement precoce de temperature
 # V2 changement tardif de temperature
-# Cst20 temperature constante de 20°
-# Cst26 temperature constante de 26°
+# Cst20 temperature constante de 20?
+# Cst26 temperature constante de 26?
 
 # Format date
 var12.df$datprelev <- as.Date(var12.df$datprelev,format="%d/%m/%Y")
@@ -102,10 +102,10 @@ var12.df$Sem <- cut(c(var12.df$datprelev[1],var12.df$dateme),"week",labels=FALSE
 plot(tapply(var12.df[var12.df$Pro=="Cst20","cecido"],var12.df[var12.df$Pro=="Cst20","Sem"],sum))
 
 # Pour 2012
-# Enleve les emergences dans les 3 premieres semaines qui correspondent à des émergences immédiates sans diapause
+# Enleve les emergences dans les 3 premieres semaines qui correspondent ? des ?mergences imm?diates sans diapause
 # cad enelve les emergences <=21 jours
-# Ensuite regroupe les donnees par arbre en 3 périodes
-# Periode 1 : semaine 4 à 1er changement de temperature SEMAINE 9
+# Ensuite regroupe les donnees par arbre en 3 p?riodes
+# Periode 1 : semaine 4 ? 1er changement de temperature SEMAINE 9
 # cut(c(var12.df$datprelev[1],var12.df$dattemp2),"week",labels=FALSE)
 # Periode 2 : entre 1er et 2eme changement de temperature SEMAINE 13
 # Periode 3 : entre 2eme changement de temperature et fin des manip Variations SEMAINE 21
@@ -166,7 +166,7 @@ names(test) <-  c(4:22)
 
 barplot(test,xlab="Week",ylab="Number of adults emerged from diapause",names.arg=c(as.character(4:21),">=22"),col="black",
         ylim=c(0,7),main="Larvae collected on winter 2011")
-text(3,6.5,"Temperature constant at 26°C ( n=15 )",pos=4)
+text(3,6.5,"Temperature constant at 26C ( n=15 )",pos=4)
 
 # Protocole V1
 ess <- tapply(V111.df$cecido,V111.df$Sem,sum,na.rm=T)[1:8]
@@ -176,7 +176,7 @@ names(test) <-  c(4:22)
 
 barplot(test,xlab="Week",ylab="Number of adults emerged from diapause",names.arg=c(as.character(4:21),">=22"),col="grey30",ylim=c(0,12))
 arrows(3,7,3,1,length=0.15)
-text(2.8,8.1,"Transfer to 20°C",pos=1)
+text(2.8,8.1,"Transfer to 20?C",pos=1)
 text(19,11.5,"( n=29 )",pos=1)
 
 
@@ -187,7 +187,7 @@ names(test) <-  c(4:22)
 
 barplot(test,xlab="Week",ylab="Number of adults emerged from diapause",names.arg=c(as.character(4:21),">=22"),col="grey80",ylim=c(0,14))
 arrows(15.1,8,15.1,2.5,length=0.15)
-text(13.5,9.5,"Transfer to 20°C",pos=1)
+text(13.5,9.5,"Transfer to 20?C",pos=1)
 text(19.5,13.5,"( n=34 )",pos=4)
 
 
@@ -200,7 +200,7 @@ names(test) <-  c(4:22)
 
 barplot(test,xlab="Week",ylab="Number of adults emerged from diapause",names.arg=c(as.character(4:21),">=22"),col="black",
         ylim=c(0,22),main="Larvae collected on summer 2012")
-text(3,20,"Temperature constant at 26°C ( n=68 )",pos=4)
+text(3,20,"Temperature constant at 26?C ( n=68 )",pos=4)
 
 
 
@@ -211,7 +211,7 @@ names(test) <-  c(4:22)
 
 barplot(test,xlab="Week",ylab="Number of adults emerged from diapause",names.arg=c(as.character(4:21),">=22"),col="grey30",ylim=c(0,25))
 arrows(6.7,18,6.7,10,length=0.15)
-text(7.5,20,"Transfer to 20°C",pos=1)
+text(7.5,20,"Transfer to 20?C",pos=1)
 text(19,24,"( n=70 )",pos=4)
 
 # Protocole V2
@@ -221,7 +221,7 @@ names(test) <-  c(4:22)
 
 barplot(test,xlab="Week",ylab="Number of adults emerged from diapause",names.arg=c(as.character(4:21),">=22"),col="grey80",ylim=c(0,14))
 arrows(11.5,8,11.5,1.5,length=0.15)
-text(10.5,9.5,"Transfer to 20°C",pos=1)
+text(10.5,9.5,"Transfer to 20?C",pos=1)
 text(19,13,"( n=48 )",pos=4)
 
 dev.off()
@@ -248,7 +248,7 @@ sum(test)
 names(test) <-  c(4:22)
 barplot(test,xlab="",ylab="",names.arg=c(as.character(4:21),">=22"),col="black",
         ylim=c(0,25),main="Larvae from winter 2011",cex.main=1)
-text(3,22,"26°C temperature constant",pos=4)
+text(3,22,"26?C temperature constant",pos=4)
 text(19,19,"n=15")
 
 # Protocole V1
@@ -261,7 +261,7 @@ par(las=0)
 mtext("Number of adults emerged from diapause                                          ",2,outer=T,adj=1,line=-1,cex=1)
 par(las=1)
 arrows(3,13,3,1,length=0.15)
-text(5,17,"Transfer to 20°C",pos=1)
+text(5,17,"Transfer to 20?C",pos=1)
 text(19,24,"n=29")
 
 # Protocole V2
@@ -270,7 +270,7 @@ test <- c(replace(rep(0,21),as.numeric(names(ess)),ess),0)[4:22]
 names(test) <-  c(4:22)
 barplot(test,xlab="",ylab="",names.arg=c(as.character(4:21),">=22"),col="grey80",ylim=c(0,25))
 arrows(15.1,12.5,15.1,2.5,length=0.15)
-text(12.5,16,"Transfer to 20°C",pos=1)
+text(12.5,16,"Transfer to 20?C",pos=1)
 text(19,24,"n=34")
 
 ################################## 2012
@@ -281,7 +281,7 @@ sum(test)
 names(test) <-  c(4:22)
 barplot(test,xlab="",ylab="",names.arg=c(as.character(4:21),">=22"),col="black",
         ylim=c(0,25),main="Larvae from summer 2012",cex.main=1)
-text(3,22,"26°C temperature constant",pos=4)
+text(3,22,"26?C temperature constant",pos=4)
 text(19,19,"n=68")
 
 # Protocole V1
@@ -290,7 +290,7 @@ test <- c(replace(rep(0,21),as.numeric(names(ess)),ess),0)[4:22]
 names(test) <-  c(4:22)
 barplot(test,xlab="",ylab="Number of adults emerged from diapause",names.arg=c(as.character(4:21),">=22"),col="grey30",ylim=c(0,25))
 arrows(6.7,18,6.7,10,length=0.15)
-text(9.5,21.5,"Transfer to 20°C",pos=1)
+text(9.5,21.5,"Transfer to 20?C",pos=1)
 text(19,24,"n=70")
 
 # Protocole V2
@@ -299,7 +299,7 @@ test <- c(replace(rep(0,21),as.numeric(names(ess)),ess),0)[4:22]
 names(test) <-  c(4:22)
 barplot(test,xlab="Week",ylab="",names.arg=c(as.character(4:21),">=22"),col="grey80",ylim=c(0,25))
 arrows(11.5,13,11.5,1.5,length=0.15)
-text(9,17,"Transfer to 20°C",pos=1)
+text(9,17,"Transfer to 20?C",pos=1)
 text(19,24,"n=48")
 
 
@@ -349,7 +349,7 @@ ess1 <- tapply(c2012.df[,"cecido"],c2012.df[,"Sem"],sum,na.rm=T)
 test1220 <- replace(rep(0,22),as.numeric(names(ess1)),ess1)[4:22]
 names(test1220) <-  c(4:22)
 ess2 <- tapply(c2612.df[,"cecido"],c2612.df[,"Sem"],sum,na.rm=T)
-test1226 <- c(replace(rep(0,21),as.numeric(names(ess2)),ess2)[4:21],22)  # 22 individus en diapause après tamisage
+test1226 <- c(replace(rep(0,21),as.numeric(names(ess2)),ess2)[4:21],22)  # 22 individus en diapause apr?s tamisage
 names(test1226) <-  c(4:22)
 
 
@@ -357,7 +357,7 @@ names(test1226) <-  c(4:22)
 
 ######## Graphiques
 
-# Hiver 20°C et 26 °C
+# Hiver 20?C et 26 ?C
 #tiff(filename = "FigureZ.tiff", width = 1300, height = 1640 ,compression="lzw", res=100 )
 
 
@@ -367,14 +367,14 @@ par(mfrow=c(2,1),mar=c(2,4,2,1),cex=1.2)
 barplot(rbind(test1120c,test1126c),beside=T,xlab="",ylab="",
               ylim=c(0,45),names.arg=c(as.character(4:21),">=22"),col=c("orange","darkgreen"))
 text(56,35,"A",cex=2)
-legend(35,40,c("20°C ( n=71 )","26°C ( n=15 )"),fill=c("orange","darkgreen"),bty="n")
+legend(35,40,c("20?C ( n=71 )","26?C ( n=15 )"),fill=c("orange","darkgreen"),bty="n")
 mtext("Number of adults emerged from diapause",2,outer=T,padj=2,line=0,cex=1.2)
-# Ete 20°C et 26 °C
+# Ete 20?C et 26 ?C
 par(mar=c(4,4,0,1),cex=1.2)
 barplot(rbind(test1220,test1226),beside=T,xlab="Weeks",ylab="",
               ylim=c(0,45),names.arg=c(as.character(4:21),">=22"),col=c("orange","darkgreen"))
 
-legend(35,40,c("20°C ( n=55 )","26°C ( n=68 )"),fill=c("orange","darkgreen"),bty="n")
+legend(35,40,c("20?C ( n=55 )","26?C ( n=68 )"),fill=c("orange","darkgreen"),bty="n")
 text(56,35,"B",cex=2)
 
 
@@ -387,7 +387,7 @@ par(mar=c(4,4,2,2),cex.lab=1.4,cex.axis=1.4)
 layout(matrix(c(1,2,1,2),ncol=2))
 barplot(rbind(test1120c,test1126c),beside=T,xlab="Weeks",ylab="",
               ylim=c(0,45),names.arg=c(as.character(4:21),">=22"),col=c("blue","red"))
-legend(35,40,c("20°C (n = 71)","26°C (n = 15)"),fill=c("blue","red"),bty="n",cex=1.4,title="Constant temperature ")
+legend(35,40,c("20?C (n = 71)","26?C (n = 15)"),fill=c("blue","red"),bty="n",cex=1.4,title="Constant temperature ")
 
 # Protocole V2
 ess <- tapply(V211.df$cecido,V211.df$Sem,sum,na.rm=T)
@@ -395,7 +395,7 @@ test <- c(replace(rep(0,21),as.numeric(names(ess)),ess),0)[4:22]
 names(test) <-  c(4:22)
 barplot(test,xlab="",ylab="",names.arg=c(as.character(4:21),">=22"),col=c(rep("red",13),rep("blue",6)),ylim=c(0,25))
 arrows(15.1,12.5,15.1,2.5,length=0.15,lwd=2)
-text(12.5,16,"Transfer to 20°C",pos=1,cex=1.6)
+text(12.5,16,"Transfer to 20?C",pos=1,cex=1.6)
 text(19,24,"n = 34",cex=1.4)
 mtext("Number of adults emerged from diapause                           ",2,outer=T,adj=1,line=-1.5,cex=1.4)
 
@@ -412,16 +412,16 @@ sum(test)
 names(test) <-  c(4:22)
 barplot(test,xlab="",ylab="",names.arg=c(as.character(4:21),">=22"),col="red",
         ylim=c(0,25),main="Larvae from summer 2012",cex.main=1)
-text(3,22,"Temperature constante de 26°C",pos=4)
+text(3,22,"Temperature constante de 26?C",pos=4)
 text(19,19,"n=68")
 
 # Protocole V1
 ess <- tapply(V112.df$cecido,V112.df$Sem,sum,na.rm=T)
 test <- c(replace(rep(0,21),as.numeric(names(ess)),ess),0)[4:22]
 names(test) <-  c(4:22)
-barplot(test,xlab="",ylab="Nombre d'adultes émergés",names.arg=c(as.character(4:21),">=22"),col=c(rep("red",6),rep("blue",16)),ylim=c(0,25))
+barplot(test,xlab="",ylab="Nombre d'adultes ?merg?s",names.arg=c(as.character(4:21),">=22"),col=c(rep("red",6),rep("blue",16)),ylim=c(0,25))
 arrows(6.7,18,6.7,10,length=0.15)
-text(8,23,"Transfert à 20°C",pos=1)
+text(8,23,"Transfert ? 20?C",pos=1)
 text(19,24,"n=70")
 
 # Protocole V2
@@ -430,7 +430,7 @@ test <- c(replace(rep(0,21),as.numeric(names(ess)),ess),0)[4:22]
 names(test) <-  c(4:22)
 barplot(test,xlab="Week",ylab="",names.arg=c(as.character(4:21),">=22"),col=c(rep("red",10),rep("blue",10)),ylim=c(0,25))
 arrows(11.5,13,11.5,1.5,length=0.15)
-text(10,17,"Transfert à 20°C",pos=1)
+text(10,17,"Transfert ? 20?C",pos=1)
 text(19,24,"n=48")
 
 mtext("                 Semaine",1,outer=T,line=-1)
@@ -444,14 +444,14 @@ par(mfrow=c(2,1),mar=c(2,4,2,1),cex=1.3,las=1)
 barplot(rbind(test1120c,test1220),beside=T,xlab="",ylab="",
               ylim=c(0,45),names.arg=c(as.character(4:21),">=22"),col=c("orange","darkgreen"))
 
-legend(35,40,c("Larves d'hiver ( n=71 )","Larves d'été ( n=55 )"),fill=c("orange","darkgreen"),bty="n")
-mtext("Nombre d'adultes émergés après diapause",2,outer=T,padj=2,line=0,cex=1.2,las=0)
-# Ete 20°C et 26 °C
+legend(35,40,c("Larves d'hiver ( n=71 )","Larves d'?t? ( n=55 )"),fill=c("orange","darkgreen"),bty="n")
+mtext("Nombre d'adultes ?merg?s apr?s diapause",2,outer=T,padj=2,line=0,cex=1.2,las=0)
+# Ete 20?C et 26 ?C
 par(mar=c(4,4,0,1),cex=1.3)
 barplot(rbind(test1126c,test1226),beside=T,xlab="Semaine",ylab="",
               ylim=c(0,45),names.arg=c(as.character(4:21),">=22"),col=c("orange","darkgreen"))
 
-legend(35,40,c("Larves d'hiver ( n=68 )","Larves d'été ( n=15 )"),fill=c("orange","darkgreen"),bty="n")
+legend(35,40,c("Larves d'hiver ( n=68 )","Larves d'?t? ( n=15 )"),fill=c("orange","darkgreen"),bty="n")
 
 
 
