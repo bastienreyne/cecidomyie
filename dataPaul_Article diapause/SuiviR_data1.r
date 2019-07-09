@@ -78,8 +78,8 @@ par(mfrow=c(4,1),mar=c(4,5,1,0),cex.axis=1.4,cex.lab=1.8,las=1,oma=c(0,0,0,0))
 # Piege sans inflorescence ni pousse vegetative recente
 m  <- tapply(data2.df[data2.df$Intro=="A",]$Nbad,data2.df[data2.df$Intro=="A",]$Sem,mean)
 sd <- tapply(data2.df[data2.df$Intro=="A",]$Nbad,data2.df[data2.df$Intro=="A",]$Sem,sd)
-sd <- replace(rep(0,max(as.numeric(names(sd)))),as.numeric(names(sd)),sd)
-test <- replace(rep(0,max(as.numeric(names(m)))),as.numeric(names(m)),m)
+sd <- replace(rep(0,max(as.numeric(names(sd)))), as.numeric(names(sd)), sd)
+test <- replace(rep(0,max(as.numeric(names(m)))), as.numeric(names(m)), m)
 names(test) <-  c(29:52,1:52)[1:length(test)]
 
 barplot2(log10(test+1),plot.ci=T,ci.u=log10(test+sd+1),ci.l=log10(test+1),xlab="",ylab="",ylim=c(0,2.5))

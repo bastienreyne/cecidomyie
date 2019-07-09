@@ -3,6 +3,8 @@ library(magrittr)
 library(mco)
 library(hydroGOF)
 source("/home/bastien/cecidomyie/model_R/model.R")
+source("/home/bastien/cecidomyie/model_R/model_diapause.R")
+source("/home/bastien/cecidomyie/model_R/model_new.R")
 load("/home/bastien/cecidomyie/data/date2017.Rdata")
 laps <- c(7, 7, 7, 8, 2, 5, 2, 4, 3, 5, 2, 5, 2, 5, 2, 4, 3, 4, 3)
 true_index <- which(date2017 %in% true_date2017)
@@ -124,4 +126,70 @@ obj_fred <- function(x) {
   c(nrmse(larves_est[, 1], larves_observed[, 1], norm = "maxmin"),
     nrmse(larves_est[, 3], larves_observed[, 3], norm = "maxmin"),
     critere(x, inflos_simulated))
+}
+
+
+obj_diap <- function(x) {
+  larves_estimees <- dynamics_diap(x, inflos_simulated)
+  larvesER <- larves_estimees[, 1]
+  larvesPS <- larves_estimees[, 2]
+  larvesEH <- larves_estimees[, 3]
+  
+  larves_est <- matrix(NA, nrow = length(laps), ncol = 3)
+  for (i in 1:length(laps)) {
+    indices <- (true_index[i] - laps[i] + 1):true_index[i]
+    larves_est[i, ] <- c(mean(larvesER[indices]),
+                         mean(larvesPS[indices]),
+                         mean(larvesEH[indices]))
+  }
+  
+  larves_observed <- larves[true_index, ]
+  
+  c(nrmse(larves_est[, 1], larves_observed[, 1], norm = "maxmin"),
+    nrmse(larves_est[, 3], larves_observed[, 3], norm = "maxmin"),
+    critere_diap(x, inflos_simulated))
+}
+
+
+obj_diap0 <- function(x) {
+  larves_estimees <- dynamics_diap(x, inflos_simulated)
+  larvesER <- larves_estimees[, 1]
+  larvesPS <- larves_estimees[, 2]
+  larvesEH <- larves_estimees[, 3]
+  
+  larves_est <- matrix(NA, nrow = length(laps), ncol = 3)
+  for (i in 1:length(laps)) {
+    indices <- (true_index[i] - laps[i] + 1):true_index[i]
+    larves_est[i, ] <- c(mean(larvesER[indices]),
+                         mean(larvesPS[indices]),
+                         mean(larvesEH[indices]))
+  }
+  
+  larves_observed <- larves[true_index, ]
+  
+  c(nrmse(larves_est[, 1], larves_observed[, 1], norm = "maxmin"),
+    nrmse(larves_est[, 2], larves_observed[, 2], norm = "maxmin"),
+    nrmse(larves_est[, 3], larves_observed[, 3], norm = "maxmin"))
+}
+
+
+obj_ressources <- function(x) {
+  larves_estimees <- dynamics_ressources(x, inflos_simulated)
+  larvesER <- larves_estimees[, 1]
+  larvesPS <- larves_estimees[, 2]
+  larvesEH <- larves_estimees[, 3]
+  
+  larves_est <- matrix(NA, nrow = length(laps), ncol = 3)
+  for (i in 1:length(laps)) {
+    indices <- (true_index[i] - laps[i] + 1):true_index[i]
+    larves_est[i, ] <- c(mean(larvesER[indices]),
+                         mean(larvesPS[indices]),
+                         mean(larvesEH[indices]))
+  }
+  
+  larves_observed <- larves[true_index, ]
+  
+  c(nrmse(larves_est[, 1], larves_observed[, 1], norm = "maxmin"),
+    nrmse(larves_est[, 2], larves_observed[, 2], norm = "maxmin"),
+    nrmse(larves_est[, 3], larves_observed[, 3], norm = "maxmin"))
 }

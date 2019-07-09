@@ -14,4 +14,24 @@ temp2 <- c(20.31667, 20.84286, 22.05714, 21.22857, 21.25714, 21.45714, 21.44286,
            20.86667, 21.24286, 21.35000, 21.57143)
 
 ## Seuil 20.5°C
-density(c(data1, data2))
+sortie <- density(c(data1, data2))
+fdr <- ecdf(c(data1, data2))
+
+prop_sortie <- rep(NA, 12)
+prop_sortie[1] <- fdr(1) - fdr(-15)
+for (i in 2:12) {
+    prop_sortie[i] <- fdr(i) - fdr(i-1) 
+}
+
+
+toto <- data.frame(jour = 1:84, prob = rep(prop_sortie/7, each = 7))
+toto %>% ggplot +
+    aes(x = jour, y = prob) +
+    geom_point() +
+    theme_bw() +
+    ylab("Proportion du stock de diapausantes qui sortent") +
+    xlab("Jour")
+
+prop_sortie <- rep(prop_sortie/7, each = 7)
+save(prop_sortie, file = "sortie_diapause2017.Rdata")
+    

@@ -10,6 +10,7 @@ mu_larvation <- 0.04
 nb_jours <- 80
 load("/home/bastien/cecidomyie/data/p_pup.Rdata")
 load("/home/bastien/cecidomyie/data/p_pup15j.Rdata")
+load("/home/bastien/cecidomyie/data/sortie_diapause2017.Rdata")
 
 # Fonctions ---------------------------------------------------------------
 
@@ -96,19 +97,7 @@ exchange2 <- function(leaving_to_ps, inflos) {
     return(list(alphaER, alphaPS, alphaEH))
 }
 
-
-disponibility <- function(day, inflo_capacity, inflos, females) {
-    ## Disponibilité des ressources
-    ans <- rep(NA, 3)
-    ans[females[day, ] <= inflo_capacity * inflos[day, ]] <- 1
-    ans[females[day, ] > inflo_capacity * inflos[day, ]] <- inflo_capacity *
-        inflos[day, which(females[day, ] > inflo_capacity * inflos[day, ])] /
-        females[day, which(females[day, ] > inflo_capacity * inflos[day, ])]
-    
-    ans
-}
-
-larvaes_count <- function(day, inflo_capacity, inflos, females) {
+larvaes_count <- function(day, inflo_capacity, inflos, females, mu_sol) {
     ## Nombre de larves chaque jour
     beta7 <-  0.025
     beta8 <-  0.075
@@ -119,32 +108,32 @@ larvaes_count <- function(day, inflo_capacity, inflos, females) {
     
     larvae7 <- larvae8 <- larvae9 <- larvae10 <- larvae11 <- larvae12 <- 0
     if (day > 7) {
-        R <- disponibility(day - 7, inflo_capacity, inflos, females)
+        R <- inflo_capacity[day - 7, ]
         larvae7 <- females[day - 7, ] * R * eggs * mu_larvation
     }
     
     if (day > 8) {
-        R <- disponibility(day - 8, inflo_capacity, inflos, females)
+        R <- inflo_capacity[day - 8, ]
         larvae8 <- females[day - 8, ] * R * eggs * mu_larvation
     }
     
     if (day > 9) {
-        R <- disponibility(day - 9, inflo_capacity, inflos, females)
+        R <- inflo_capacity[day - 9, ]
         larvae9 <- females[day - 9, ] * R * eggs * mu_larvation
     }
     
     if (day > 10) {
-        R <- disponibility(day - 10, inflo_capacity, inflos, females)
+        R <- inflo_capacity[day - 10, ]
         larvae10 <- females[day - 10, ] * R * eggs * mu_larvation
     }
     
     if (day > 11) {
-        R <- disponibility(day - 11, inflo_capacity, inflos, females)
+        R <- inflo_capacity[day - 11, ]
         larvae11 <- females[day - 11, ] * R * eggs * mu_larvation
     }
     
     if (day > 12) {
-        R <- disponibility(day - 12, inflo_capacity, inflos, females)
+        R <- inflo_capacity[day - 12, ]
         larvae12 <- females[day - 12, ] * R * eggs * mu_larvation
     }
     
@@ -162,36 +151,40 @@ emerging1j <- function(day, larves, mu_sol) {
         larves[day - pupe_duration, ] * mu_sol * p_pup[day - pupe_duration] * sex_ratio
 }
 
-emerging15j <- function(day, larves, mu_sol) {
+emerging15j <- function(day, larves, mu_sol, stock) {
     ## Femelles endogenes
     if (day <= 5)
         c(0, 0, 0)
     else
-        larves[day - pupe_duration, ] * mu_sol * p_pup15j[day - pupe_duration] * sex_ratio
+        ((larves[day - pupe_duration, ] * mu_sol) * p_pup15j[day - pupe_duration] * sex_ratio +
+             sortie_diapause2017[day] * stock) * mu_sol
 }
 
-emerging <- function(day, larves, mu_sol) {
+emerging <- function(day, larves, mu_sol, stock) {
     ## Femelles endogenes
     if (day <= 5)
-        c(0, 0, 0)
+        c(0, 0, 0) + sortie_diapause2017 * stock
     else
-        larves[day - pupe_duration, ] * mu_sol * 0.77 * sex_ratio
+        (larves[day - pupe_duration, ] * 0.77 * sex_ratio +
+             sortie_diapause2017 * stock) * mu_sol
 }
-
-
 
 females_count <- function(day, alpha, females_exo, females_endo) {
     ## Nombre total de femelles
     females_exo[day] + alpha[day, ] %*% females_endo[day, ]
 }
 
-dynamics2 <- function(arg, inflos) {
+dynamics_ressources <- function(arg, inflos) {
     ## Calcule le nombre de larves (inch'allah)
     gamma <- arg[1]
     leaving <- arg[2]
     mu_ER <- arg[3]
     mu_EH <- arg[4]
-    inflo_capacity <- arg[5]
+    stock <- arg[5]
+    k_er <- arg[6:85]
+    k_ps <- arg[86:165]
+    k_eh <- arg[166:245]
+    inflo_capacity <- cbind(k_er, k_ps, k_eh)
     
     alpha <- exchange_isa(leaving, inflos)
     females_exo <- incoming(gamma, inflos)
@@ -201,8 +194,8 @@ dynamics2 <- function(arg, inflos) {
     females <- matrix(0, nrow = nb_jours, ncol = 3)
     mu_sol <- c(mu_ER, mu_PS, mu_EH)
     for (jour in 1:nb_jours) {
-        larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females)
-        females_endo[jour, ] <- emerging15j(jour, larves, mu_sol)
+        larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females, mu_sol)
+        females_endo[jour, ] <- emerging15j(jour, larves, mu_sol, stock)
         females[jour, 1] <- females_count(jour, alpha[[1]],
                                           females_exo[, 1], females_endo)
         females[jour, 2] <- females_count(jour, alpha[[2]],
@@ -214,15 +207,16 @@ dynamics2 <- function(arg, inflos) {
     larves
 }
 
-critere <- function(arg, inflos) {
+critere_diap <- function(arg, inflos) {
     ## Calcule le nombre de larves (inch'allah)
     gamma <- arg[1]
     leaving <- arg[2]
     mu_ER <- arg[3]
     mu_EH <- arg[4]
     inflo_capacity <- arg[5]
+    stock <- arg[6]
     
-    alpha <- exchange2(leaving, inflos)
+    alpha <- exchange_isa(leaving, inflos)
     females_exo <- incoming(gamma, inflos)
     # females_exo <- matrix(20, nrow = 80, ncol = 3)
     larves <- matrix(0, nrow = nb_jours, ncol = 3)
@@ -230,8 +224,8 @@ critere <- function(arg, inflos) {
     females <- matrix(0, nrow = nb_jours, ncol = 3)
     mu_sol <- c(mu_ER, mu_PS, mu_EH)
     for (jour in 1:nb_jours) {
-        larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females)
-        females_endo[jour, ] <- emerging(jour, larves, mu_sol)
+        larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females, mu_sol)
+        females_endo[jour, ] <- emerging15j(jour, larves, mu_sol, stock)
         females[jour, 1] <- females_count(jour, alpha[[1]],
                                           females_exo[, 1], females_endo)
         females[jour, 2] <- females_count(jour, alpha[[2]],
