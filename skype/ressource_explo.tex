@@ -60,12 +60,12 @@
  \]
  Pour l'instant, ce coefficient ne donne pas l'impression d'avoir un impact notable sur le modèle.
  
- L'idée est d'alors de remplacer $R$ par un coefficient $k(t)$ libre chaque jour et pour chaque sous-bloc, de sorte que le modèle puisse ajuster aux mieux nos données sur nos observations. Et ensuite essayer de déterminer s'il y a une relation entre $k(t)$ et $I/N$ ou $N/I$.
+ L'idée est d'alors de remplacer $R$ par un coefficient $k(t) \in [0;1]$ libre chaque jour et pour chaque sous-bloc, de sorte que le modèle puisse ajuster aux mieux nos données sur nos observations. Et ensuite essayer de déterminer s'il y a une relation entre $k(t)$ et $I/N$ ou $N/I$.
 
  Comme prévu, le modèle arrive à bien ajuster aux données observées comme le montre la figure~\ref{toto}.
  \begin{figure}[ht]
   \centering
-  \epsfig{file = plots/ressource_libre.eps, scale = 0.65}
+  \epsfig{file = plots/kdet.eps, scale = 0.65}
   \caption{Résultats de la calibration avec un paramètre libre $k(t)$ chaque jour pour chaque sous-bloc.}
   \label{toto}
  \end{figure}
@@ -75,14 +75,14 @@
  
   \begin{figure}[ht]
   \centering
-  \epsfig{file = plots/kisurn.eps, scale = 0.60}
+  \epsfig{file = plots/IsurN.eps, scale = 0.60}
   \caption{$k(t)$ en fonction du ratio $I/N$.}
   \label{tutu}
  \end{figure}
 
   \begin{figure}[ht]
   \centering
-  \epsfig{file = plots/knsuri.eps, scale = 0.60}
+  \epsfig{file = plots/NsurI.eps, scale = 0.60}
   \caption{$k(t)$ en fonction du ratio $N/I$.}
   \label{titi}
  \end{figure}

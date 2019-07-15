@@ -13,18 +13,10 @@ source("../model_R/objectif.R")
 res1 <- nsga2(obj_ressources, 247, 3,
               lower.bounds = c(0, 0, 0, 0, 10900, 1, rep(0, 240)),
               upper.bounds = c(0.1, 1, 1, 1, 20300, 10, rep(1, 240)),
-              popsize = 200, generations = 10000)
-        
-# res2 <- nsga2(obj_ressources, 245, 3,
-#               lower.bounds = c(0, 0, 0, 0, 3700, rep(0, 240)),
-#               upper.bounds = c(0.1, 1, 1, 1, 6700, rep(100, 240)),
-#               popsize = 200, generations = 1500)                              
-# 
-# res3 <- nsga2(obj_ressources, 245, 3,
-#               lower.bounds = c(0, 0, 0, 0, 3700, rep(0, 240)),
-#               upper.bounds = c(0.1, 1, 1, 1, 6700, rep(100, 240)),
-#                  popsize = 200, generations = 1500)
-    
+              popsize = 200, generations = 200)
+
+toto <- optim(c(0.6, 0.7, 1, 0.8, 15000, 140, rep(1, 240)), 
+              obj_ressources0, method = "L-BFGS-B", lower = 0, upper = 1)
 
 # Arguments ---------------------------------------------------------------
 
@@ -33,24 +25,12 @@ ind1 <- res1$value %>%
     mutate(norm = abs(V1) + abs(V2) + abs(V3)) %$%
     which.min(norm)
 
-            # ind2 <- res2$value %>%
-            #     as_tibble %>% 
-            #     mutate(norm = abs(V1) + abs(V2) + abs(V3)) %$%
-            #     which.min(norm)
-            # 
-            # ind3 <- res3$value %>%
-            #     as_tibble %>% 
-            #     mutate(norm = abs(V1) + abs(V2) + abs(V3)) %$%
-            #     which.min(norm)
-
 arg1 <- res1$par[ind1, ]
-# arg2 <- res1$par[ind2, ]
-# arg3 <- res1$par[ind3, ]
 
 # plots -------------------------------------------------------------------
 
 obs <- larves
-est <- dynamics_ressources(arg1, inflos_simulated)
+est <- dynamics_ressources(res$par[4, ], inflos_simulated)
 
 er <- data.frame(date = date2017, obs = obs[, 1], est = est[, 1]) %>%
     mutate(Sol = factor("ER", levels = c("ER", "PS", "EH"))) %>% 
