@@ -5,6 +5,7 @@
 library(tidyverse)
 library(magrittr)
 library(mco)
+library(emoa)
 source("../model_R/model_new.R")
 source("../model_R/objectif.R")
 source("../model_R/plot_res.R")
@@ -54,3 +55,14 @@ arg3 <- res3$par[ind3, ]
 plot_decompo(arg1, inflosCDE)
 plot_decompo(arg2, inflosCDE)
 plot_decompo(arg3, inflosCDE)
+
+# pareto ------------------------------------------------------------------
+
+front <- rbind(res1$value, res2$value, res3$value)
+ind_pareto <- !is_dominated(t(front))
+pareto_front <- front[ind_pareto, ]
+parameters <- rbind(res1$par, res2$par, res3$par)[ind_pareto, ]
+
+which.min(abs(pareto_front[, 1]) + abs(pareto_front[, 2]) + abs(pareto_front[, 3]))
+
+plot_decompo(parameters[291, ], inflosCDE)

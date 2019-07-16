@@ -6,7 +6,7 @@
 library(tidyverse)
 library(magrittr)
 load("../data/Btc1.Rdata") ## Débourrements observés mis à l'échelle
-load("../data/Bts.Rdata") ## Débourrements simulés mis à l'échelle
+load("../data/Bts.Rdata") ## Débourrements simulés      
 load("../data/date2017.Rdata")
 day <- 1:80
 mu <- 29  
