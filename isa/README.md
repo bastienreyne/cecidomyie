@@ -29,6 +29,7 @@ La fonction objectif se trouve dans le script *objectif.R*
 
 ### La calibration
 
+Le script pour la calibration se nomme *opti.R*.
 
 ### Affichage des résultats
 
@@ -41,6 +42,7 @@ Pour calibrer les paramètres du modèle, il faut ouvrir le script *opti.R* et l
 Des réglages sont possibles, notamment pour le nombre de répétitions de NSGA-II et de la taille de la population.
 Le nombre de répétitions de NSGA-II est contrôlé par la variable *n_iter*.
 La taille de la population est contrôlée par la variable *taille_pop*.
+Le nombre de générations de NSGA-II est géré par la variable *n_gen*.
 Pour donner une idée, une exécution avec une taille de populaion de 200 prends ~5/7 minutes sur mon ordinateur.
 
 L'ensemble des solutions non-dominées se trouve dans la matrice *parameters*. Par défaut, je sélectionne la solution qui minimise la norme 1 dans le vecteur *arg1*.
