@@ -325,7 +325,7 @@ plot_EH <- resultats_EH %>% ggplot(aes(x = date, y = Nombre, color = Source)) +
 burst_ER <- floraison2017_ER %>% arrange(birth) %>% count(birth)
 burst_PS <- floraison2017_PS %>% arrange(birth) %>% count(birth)
 burst_EH <- floraison2017_EH %>% arrange(birth) %>% count(birth)
-
+    
 burstER <- burstPS <- burstEH <- rep(0, length(date2017))
 ind_ER <- which(date2017 %in% burst_ER$birth)
 ind_PS <- which(date2017 %in% burst_PS$birth)

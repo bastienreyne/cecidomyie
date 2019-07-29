@@ -4,7 +4,7 @@ library(lubridate)
 library(readxl)
 
 ## Importation des données
-data <- read_csv2("raw/2017_floraison.csv")
+data <- read_csv2("raw/floraison0.csv")
 data %<>% mutate_at(c("ApdateC", "ApdateM",
                       c(paste0("Lat",1:5,"dateC"),
                         paste0("Lat", 1:5, "dateM"))), dmy)
