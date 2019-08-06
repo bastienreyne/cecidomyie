@@ -1,10 +1,7 @@
 ## Implémentation du modèle en R
 
-Le modèle est décrit dans le fichier *model1.pdf*. Le script *model1.R* est son implémentation.
+Le modèle est implémenté dans le fichier *model1_new.R*.
 
-Les paramètres du modèles sont calibrés grâce au script *model1-calibration.R* qui fait appel à l'algorithme NSGA-II.
+Différentes fonction objectif sont disponibles dans le fichier *objectif.R*.
 
-Une anlyse de sensibilité SOBOL du modèle est faite dans le script *model1-sensivity.R* **NE MARCHE PAS (ENCORE)**
-
-Enfin, les fichiers *csv* sont ceux utilisés par le modèle ou la calibration.
-
+Le script *plot_res.R* permet l'affichage des résultats.
