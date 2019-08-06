@@ -23,8 +23,8 @@ df <- data.frame(Date = rep(date2017[1:77], 9),
                                     "Enherbement haut"),
                                   each = 77, times = 3),
                               levels = c("Enherbement ras",
-                                         "Paillage synthétique",
-                                         "Enherbement haut")),
+                                         "Enherbement haut",
+                                         "Paillage synthétique")),
                  Dataset = factor(rep(c("It1", "Itc1", "It2"), each = 231),
                                   levels = c("It1", "Itc1", "It2")))
 
@@ -34,7 +34,7 @@ df %>% ggplot +
     theme_bw() +
     facet_grid(. ~ Sol) +
     ylab("Nombre d'inflorescences vivantes") +
-    theme(legend.title = element_blank(), legend.position = "bottom", legend.text = element_text(size = 10)) +
+    theme(legend.title = element_blank(), legend.position = "bottom", 
+          legend.text = element_text(size = 10)) +
     scale_color_discrete(labels = c("Dataset 1   ", "Dataset 1 corrigé   ", "Dataset 2")) +
     xlab(element_blank())
-    

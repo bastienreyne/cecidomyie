@@ -106,6 +106,7 @@ inflos_ER <- inflos_rawER
 inflos_ER[1:49] <- inflos_ER[1:49] - cumsum(deads_ER)[1:49]
 inflos_ER <- inflos_ER * my_alpha_ER
 
+## PS
 my_x_PS <- resPS$par[1, 1:50]
 my_alpha_PS <- resPS$par[1, 51]
 
@@ -115,7 +116,7 @@ inflos_PS <- inflos_rawPS
 inflos_PS[1:49] <- inflos_PS[1:49] - cumsum(deads_PS)[1:49]
 inflos_PS <- inflos_PS * my_alpha_PS
 
-
+## EH
 my_x_EH <- resEH$par[1, 1:50]
 my_alpha_EH <- resEH$par[1, 51]
 
@@ -128,13 +129,13 @@ inflos_EH <- inflos_EH * my_alpha_EH
 
 inflos_corrected <- cbind(inflos_ER, inflos_PS, inflos_EH)
 
-# write.csv(inflos_corrected, file = "2017_inflos_corrected_bloc2.csv")
+# write.csv(inflos_corrected, file = "2017_inflos_corrected_bloc1.csv")
 
 inflos1_ech <- cbind(inflos_rawER * my_alpha_ER,
                      inflos_rawPS * my_alpha_PS,
                      inflos_rawEH * my_alpha_EH)
 
-# write.csv(inflos1_ech, "2017_inflos1_echelle_dataset1_bloc2.csv")
+# write.csv(inflos1_ech, "2017_inflos1_echelle_dataset1_bloc1.csv")
 
 
 # Débourrements à l'échelle -----------------------------------------------
