@@ -20,7 +20,7 @@ incoming <- function(gamma, inflos) {
 }
 
 exchange <- function(param_migration, inflos) {
-    ## Échange entre les sous-blocs
+    ## Échange entre les sous-blocs du bloc 1 [ER|PS|EH]
     ## Les matrices alpha représente les individus VENANT dans le sous-bloc
     ## Par exemple, alphaER[, 3] désigne les individus allant de EH dans ER
     alphaER <- alphaPS <- alphaEH <- matrix(0, nrow = nb_jours, ncol = 3)
@@ -50,6 +50,37 @@ exchange <- function(param_migration, inflos) {
     list(alphaER, alphaPS, alphaEH)
 }
 
+exchange_b2 <- function(param_migration, inflos) {
+    ## Échange entre les sous-blocs du bloc 2 [ER|EH|PS]
+    ## Les matrices alpha représente les individus VENANT dans le sous-bloc
+    ## Par exemple, alphaER[, 3] désigne les individus allant de EH dans ER
+    alphaER <- alphaPS <- alphaEH <- matrix(0, nrow = nb_jours, ncol = 3)
+    
+    alphaER[, 1] <- inflos[, 1] / (inflos[, 1] + inflos[, 3] * param_migration +
+                                       inflos[, 2] * param_migration^2)
+    alphaPS[, 2] <- inflos[, 2] / (inflos[, 2] + inflos[, 1] * param_migration^2 +
+                                       inflos[, 3] * param_migration)
+    alphaEH[, 3] <- inflos[, 3] / (inflos[, 3] + inflos[, 2] * param_migration +
+                                       inflos[, 1] * param_migration)
+    
+    alphaER[, 2] <- param_migration^2 * inflos[, 1] / 
+        (inflos[, 2] + inflos[, 1] * param_migration^2 + inflos[, 3] * param_migration)
+    alphaEH[, 2] <- param_migration * inflos[, 3] / 
+        (inflos[, 2] + inflos[, 1] * param_migration^2 + inflos[, 3] * param_migration)
+    alphaPS[, 1] <- param_migration^2 * inflos[, 2] /
+        (inflos[, 1] + inflos[, 2] * param_migration^2 + inflos[, 3] * param_migration)
+    alphaPS[, 3] <- param_migration * inflos[, 2] /
+        (inflos[, 3] + inflos[, 2] * param_migration + inflos[, 1] * param_migration)
+    
+    alphaER[, 3] <- param_migration * inflos[, 1] /
+        (inflos[, 3] + inflos[, 2] * param_migration + inflos[, 1] * param_migration)
+    alphaEH[, 1] <- param_migration * inflos[, 3] /
+        (inflos[, 1] + inflos[, 2] * param_migration^2 + inflos[, 3] * param_migration)
+    
+    
+    list(alphaER, alphaPS, alphaEH)
+}
+
 disponibility <- function(day, inflo_capacity, inflos, females) {
     ## Disponibilité des ressources
     ## Coefficient R dans le modèle
@@ -64,12 +95,12 @@ disponibility <- function(day, inflo_capacity, inflos, females) {
 
 larvaes_count <- function(day, inflo_capacity, inflos, females, mu_sol, reproduction) {
     ## Nombre de larves qui s'éjectent des inflorescences
-    beta7 <-  0.025
-    beta8 <-  0.075
-    beta9 <-  0.400
-    beta10 <- 0.400
-    beta11 <- 0.075
-    beta12 <- 0.025
+    beta7 <-  0
+    beta8 <-  0
+    beta9 <-  0
+    beta10 <- 1
+    beta11 <- 0
+    beta12 <- 0
     
     larvae7 <- larvae8 <- larvae9 <- larvae10 <- larvae11 <- larvae12 <- 0
     if (day > 7) {
@@ -134,7 +165,39 @@ dynamics <- function(arg, inflos) {
     
     alpha <- exchange(migration, inflos)
     females_exo <- incoming(gamma, inflos)
-    # females_exo <- matrix(20, nrow = 80, ncol = 3)
+    # females_exo <- matrix(30, nrow = 80, ncol = 3)
+    larves <- matrix(0, nrow = nb_jours, ncol = 3)
+    females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
+    females <- matrix(0, nrow = nb_jours, ncol = 3)
+    mu_sol <- c(mu_ER, mu_PS, mu_EH)
+    for (jour in 1:nb_jours) {
+        larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                        mu_sol, reproduction)
+        females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+        females[jour, 1] <- females_count(jour, alpha[[1]],
+                                          females_exo[, 1], females_endo)
+        females[jour, 2] <- females_count(jour, alpha[[2]],
+                                          females_exo[, 2], females_endo)
+        females[jour, 3] <- females_count(jour, alpha[[3]],
+                                          females_exo[, 3], females_endo)
+    }
+    
+    larves
+}
+
+dynamics_b2 <- function(arg, inflos) {
+    ## Renvoie la dynamique de larves pour les trois sous-blocs
+    gamma <- arg[1]
+    migration <- arg[2]
+    mu_ER <- arg[3]
+    mu_EH <- arg[4]
+    inflo_capacity <- arg[5]
+    stock <- arg[6]
+    reproduction <- arg[7]
+    
+    alpha <- exchange_b2(migration, inflos)
+    # females_exo <- incoming(gamma, inflos)
+    females_exo <- matrix(30, nrow = 80, ncol = 3)
     larves <- matrix(0, nrow = nb_jours, ncol = 3)
     females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
     females <- matrix(0, nrow = nb_jours, ncol = 3)
@@ -188,12 +251,12 @@ critere <- function(arg, inflos) {
 
 larvaes_count2 <- function(day, inflo_capacity, inflos, females, reproduction) {
     ## Nombre de larves chaque jour sans limitation de ressources                    
-    beta7 <-  0.025
-    beta8 <-  0.075
-    beta9 <-  0.400
-    beta10 <- 0.400
-    beta11 <- 0.075
-    beta12 <- 0.025
+    beta7 <-  0
+    beta8 <-  0
+    beta9 <-  0
+    beta10 <- 1
+    beta11 <- 0
+    beta12 <- 0
     
     larvae7 <- larvae8 <- larvae9 <- larvae10 <- larvae11 <- larvae12 <- 0
     if (day > 7) {
@@ -252,7 +315,7 @@ decomposition <- function(arg, inflos) {
     ## Modèle normal
     alpha <- exchange(migration, inflos)
     females_exo <- incoming(gamma, inflos)
-    # females_exo <- matrix(20, nrow = 80, ncol = 3)
+    # females_exo <- matrix(30, nrow = 80, ncol = 3)
     larves <- matrix(0, nrow = nb_jours, ncol = 3)
     females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
     females <- matrix(0, nrow = nb_jours, ncol = 3)
@@ -280,6 +343,576 @@ decomposition <- function(arg, inflos) {
                                           females_exo[, 2], females_endo)
         females[jour, 3] <- females_count(jour, alpha[[3]],
                                           females_exo[, 3], females_endo)
+        
+        ## Décomposition
+        female_pupe[jour, 1] <- emerging(jour, larves, mu_sol, stock = 0)[1] * alpha[[1]][jour, 1]
+        female_pupe[jour, 2] <- emerging(jour, larves, mu_sol, stock = 0)[2] * alpha[[2]][jour, 2]
+        female_pupe[jour, 3] <- emerging(jour, larves, mu_sol, stock = 0)[3] * alpha[[3]][jour, 3]
+        
+        female_diap[jour, 1] <- emerging_diap(jour, larves, mu_sol, stock)[1] * alpha[[1]][jour, 1]
+        female_diap[jour, 2] <- emerging_diap(jour, larves, mu_sol, stock)[2] * alpha[[2]][jour, 2]
+        female_diap[jour, 3] <- emerging_diap(jour, larves, mu_sol, stock)[3] * alpha[[3]][jour, 3]
+        
+        female_side[jour, 1] <- females_side(jour, alpha[[1]], cbind(0, females_endo[, 2:3]))
+        female_side[jour, 2] <- females_side(jour, alpha[[2]], 
+                                             cbind(females_endo[, 1], 0, females_endo[, 3]))
+        female_side[jour, 3] <- females_side(jour, alpha[[3]], cbind(females_endo[, 1:2], 0))
+        
+        larves_side[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_side, reproduction)
+        larves_exo[jour, ]  <- larvaes_count2(jour, inflo_capacity, inflos, females_exo, reproduction)
+        larves_pupe[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_pupe, reproduction)
+        larves_diap[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_diap, reproduction)
+        
+    }
+    prop_pupe <- larves_pupe / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_diap <- larves_diap / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_side <- larves_side / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_exo  <- larves_exo  / (larves_pupe + larves_diap + larves_side + larves_exo)
+    
+    list(larves, prop_pupe * larves, prop_diap * larves,
+         prop_side * larves, prop_exo * larves, females,
+         female_pupe, female_diap, female_side, females_exo)
+}
+
+decomposition_b2 <- function(arg, inflos) {
+    ## Décompose la provenance des femelles : pupaison, diapause,
+    ## side ou exogène
+    gamma <- arg[1]
+    migration <- arg[2]
+    mu_ER <- arg[3]
+    mu_EH <- arg[4]
+    inflo_capacity <- arg[5]
+    stock <- arg[6]
+    reproduction <- arg[7]
+    
+    ## Modèle normal
+    alpha <- exchange_b2(migration, inflos)
+    # females_exo <- incoming(gamma, inflos)
+    females_exo <- matrix(30, nrow = 80, ncol = 3)
+    larves <- matrix(0, nrow = nb_jours, ncol = 3)
+    females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
+    females <- matrix(0, nrow = nb_jours, ncol = 3)
+    mu_sol <- c(mu_ER, mu_PS, mu_EH)
+    
+    ## Décomposition
+    prop_endo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    prop_exo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    prop_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_pupe <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_diap <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_exo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_pupe <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_diap <- matrix(NA, nrow = nb_jours, ncol = 3)
+    for (jour in 1:nb_jours) {
+        ## Modèle normal
+        larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                        mu_sol, reproduction)
+        females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+        females[jour, 1] <- females_count(jour, alpha[[1]],
+                                          females_exo[, 1], females_endo)
+        females[jour, 2] <- females_count(jour, alpha[[2]],
+                                          females_exo[, 2], females_endo)
+        females[jour, 3] <- females_count(jour, alpha[[3]],
+                                          females_exo[, 3], females_endo)
+
+        ## Décomposition
+        female_pupe[jour, 1] <- emerging(jour, larves, mu_sol, stock = 0)[1] * alpha[[1]][jour, 1]
+        female_pupe[jour, 2] <- emerging(jour, larves, mu_sol, stock = 0)[2] * alpha[[2]][jour, 2]
+        female_pupe[jour, 3] <- emerging(jour, larves, mu_sol, stock = 0)[3] * alpha[[3]][jour, 3]
+        
+        female_diap[jour, 1] <- emerging_diap(jour, larves, mu_sol, stock)[1] * alpha[[1]][jour, 1]
+        female_diap[jour, 2] <- emerging_diap(jour, larves, mu_sol, stock)[2] * alpha[[2]][jour, 2]
+        female_diap[jour, 3] <- emerging_diap(jour, larves, mu_sol, stock)[3] * alpha[[3]][jour, 3]
+        
+        female_side[jour, 1] <- females_side(jour, alpha[[1]], cbind(0, females_endo[, 2:3]))
+        female_side[jour, 2] <- females_side(jour, alpha[[2]], 
+                                             cbind(females_endo[, 1], 0, females_endo[, 3]))
+        female_side[jour, 3] <- females_side(jour, alpha[[3]], cbind(females_endo[, 1:2], 0))
+        
+        larves_side[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_side, reproduction)
+        larves_exo[jour, ]  <- larvaes_count2(jour, inflo_capacity, inflos, females_exo, reproduction)
+        larves_pupe[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_pupe, reproduction)
+        larves_diap[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_diap, reproduction)
+        
+    }
+    prop_pupe <- larves_pupe / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_diap <- larves_diap / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_side <- larves_side / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_exo  <- larves_exo  / (larves_pupe + larves_diap + larves_side + larves_exo)
+    
+    list(larves, prop_pupe * larves, prop_diap * larves,
+         prop_side * larves, prop_exo * larves, females,
+         female_pupe, female_diap, female_side, females_exo)
+}
+
+
+dynamics_season_b1 <- function(arg, inflos) {
+    ## Renvoie la dynamique de larves pour les trois sous-blocs
+    gamma <- arg[1]
+    migration <- arg[2]
+    mu_ER <- arg[3]
+    mu_EH <- arg[4]
+    inflo_capacity <- arg[5]
+    stock <- arg[6]
+    # stock <- 0
+    reproduction <- arg[7]
+    season <- arg[8]
+    
+    alpha <- exchange(migration, inflos)
+    females_exo <- incoming(gamma, inflos)
+    # females_exo <- matrix(30, nrow = 80, ncol = 3)
+    larves <- matrix(0, nrow = nb_jours, ncol = 3)
+    females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
+    females <- matrix(0, nrow = nb_jours, ncol = 3)
+    mu_sol <- c(mu_ER, mu_PS, mu_EH)
+    for (jour in 1:nb_jours) {
+        if (jour < 59) {
+            larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                            mu_sol, reproduction)
+            females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+            females[jour, 1] <- females_count(jour, alpha[[1]],
+                                              females_exo[, 1], females_endo)
+            females[jour, 2] <- females_count(jour, alpha[[2]],
+                                              females_exo[, 2], females_endo)
+            females[jour, 3] <- females_count(jour, alpha[[3]],
+                                              females_exo[, 3], females_endo)
+        } else {
+            larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                            mu_sol, reproduction)
+            females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+            females[jour, 1] <- females_count(jour, alpha[[1]],
+                                              females_exo[, 1], females_endo)
+            females[jour, 2] <- females_count(jour, alpha[[2]],
+                                              females_exo[, 2], females_endo)
+            females[jour, 3] <- females_count(jour, alpha[[3]],
+                                              females_exo[, 3], females_endo)
+            females[jour, ] <- females[jour, ] * season
+        }
+    }
+    
+    larves
+}
+
+dynamics_season_b2 <- function(arg, inflos) {
+    ## Renvoie la dynamique de larves pour les trois sous-blocs
+    gamma <- arg[1]
+    migration <- arg[2]
+    mu_ER <- arg[3]
+    mu_EH <- arg[4]
+    inflo_capacity <- arg[5]
+    stock <- arg[6]
+    # stock <- 0
+    reproduction <- arg[7]
+    season <- arg[8]
+    
+    alpha <- exchange(migration, inflos)
+    females_exo <- incoming(gamma, inflos)
+    # females_exo <- matrix(30, nrow = 80, ncol = 3)
+    larves <- matrix(0, nrow = nb_jours, ncol = 3)
+    females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
+    females <- matrix(0, nrow = nb_jours, ncol = 3)
+    mu_sol <- c(mu_ER, mu_PS, mu_EH)
+    for (jour in 1:nb_jours) {
+        if (jour < 36) {
+            larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                            mu_sol, reproduction)
+            females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+            females[jour, 1] <- females_count(jour, alpha[[1]],
+                                              females_exo[, 1], females_endo)
+            females[jour, 2] <- females_count(jour, alpha[[2]],
+                                              females_exo[, 2], females_endo)
+            females[jour, 3] <- females_count(jour, alpha[[3]],
+                                              females_exo[, 3], females_endo)
+        }
+        
+        if (jour >= 36 & jour < 51) {
+            larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                            mu_sol, reproduction)
+            females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+            females[jour, 1] <- females_count(jour, alpha[[1]],
+                                              females_exo[, 1], females_endo)
+            females[jour, 2] <- females_count(jour, alpha[[2]],
+                                              females_exo[, 2], females_endo)
+            females[jour, 3] <- females_count(jour, alpha[[3]],
+                                              females_exo[, 3], females_endo)
+            females[jour, 2:3] <- females[jour, 2:3] * season
+        }
+        
+        if (jour >= 51) {
+            larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                            mu_sol, reproduction)
+            females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+            females[jour, 1] <- females_count(jour, alpha[[1]],
+                                              females_exo[, 1], females_endo)
+            females[jour, 2] <- females_count(jour, alpha[[2]],
+                                              females_exo[, 2], females_endo)
+            females[jour, 3] <- females_count(jour, alpha[[3]],
+                                              females_exo[, 3], females_endo)
+            females[jour, ] <- females[jour, ] * season
+        }
+    }
+    
+    larves
+}
+
+decomposition_season_bloc1 <- function(arg, inflos) {
+    ## Décompose la provenance des femelles : pupaison, diapause,
+    ## side ou exogène
+    gamma <- arg[1]
+    migration <- arg[2]
+    mu_ER <- arg[3]
+    mu_EH <- arg[4]
+    inflo_capacity <- arg[5]
+    stock <- arg[6]
+    # stock <- 0
+    reproduction <- arg[7]
+    season <- arg[8]
+    
+    ## Modèle normal
+    alpha <- exchange(migration, inflos)
+    # females_exo <- incoming(gamma, inflos)
+    females_exo <- matrix(30, nrow = 80, ncol = 3)
+    larves <- matrix(0, nrow = nb_jours, ncol = 3)
+    females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
+    females <- matrix(0, nrow = nb_jours, ncol = 3)
+    mu_sol <- c(mu_ER, mu_PS, mu_EH)
+    
+    ## Décomposition
+    prop_endo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    prop_exo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    prop_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_pupe <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_diap <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_exo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_pupe <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_diap <- matrix(NA, nrow = nb_jours, ncol = 3)
+    for (jour in 1:nb_jours) {
+        if (jour < 59) {
+            ## Modèle normal
+            larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                            mu_sol, reproduction)
+            females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+            females[jour, 1] <- females_count(jour, alpha[[1]],
+                                              females_exo[, 1], females_endo)
+            females[jour, 2] <- females_count(jour, alpha[[2]],
+                                              females_exo[, 2], females_endo)
+            females[jour, 3] <- females_count(jour, alpha[[3]],
+                                              females_exo[, 3], females_endo)
+        } else {
+            larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                            mu_sol, reproduction)
+            females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+            females[jour, 1] <- females_count(jour, alpha[[1]],
+                                              females_exo[, 1], females_endo)
+            females[jour, 2] <- females_count(jour, alpha[[2]],
+                                              females_exo[, 2], females_endo)
+            females[jour, 3] <- females_count(jour, alpha[[3]],
+                                              females_exo[, 3], females_endo)
+            females[jour, ] <- females[jour, ] * season
+        }
+        
+        ## Décomposition
+        female_pupe[jour, 1] <- emerging(jour, larves, mu_sol, stock = 0)[1] * alpha[[1]][jour, 1]
+        female_pupe[jour, 2] <- emerging(jour, larves, mu_sol, stock = 0)[2] * alpha[[2]][jour, 2]
+        female_pupe[jour, 3] <- emerging(jour, larves, mu_sol, stock = 0)[3] * alpha[[3]][jour, 3]
+        
+        female_diap[jour, 1] <- emerging_diap(jour, larves, mu_sol, stock)[1] * alpha[[1]][jour, 1]
+        female_diap[jour, 2] <- emerging_diap(jour, larves, mu_sol, stock)[2] * alpha[[2]][jour, 2]
+        female_diap[jour, 3] <- emerging_diap(jour, larves, mu_sol, stock)[3] * alpha[[3]][jour, 3]
+        
+        female_side[jour, 1] <- females_side(jour, alpha[[1]], cbind(0, females_endo[, 2:3]))
+        female_side[jour, 2] <- females_side(jour, alpha[[2]], 
+                                             cbind(females_endo[, 1], 0, females_endo[, 3]))
+        female_side[jour, 3] <- females_side(jour, alpha[[3]], cbind(females_endo[, 1:2], 0))
+        
+        larves_side[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_side, reproduction)
+        larves_exo[jour, ]  <- larvaes_count2(jour, inflo_capacity, inflos, females_exo, reproduction)
+        larves_pupe[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_pupe, reproduction)
+        larves_diap[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_diap, reproduction)
+        
+    }
+    prop_pupe <- larves_pupe / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_diap <- larves_diap / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_side <- larves_side / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_exo  <- larves_exo  / (larves_pupe + larves_diap + larves_side + larves_exo)
+    
+    list(larves, prop_pupe * larves, prop_diap * larves,
+         prop_side * larves, prop_exo * larves, females,
+         female_pupe, female_diap, female_side, females_exo)
+}
+
+decomposition_season_bloc2 <- function(arg, inflos) {
+    ## Décompose la provenance des femelles : pupaison, diapause,
+    ## side ou exogène
+    gamma <- arg[1]
+    migration <- arg[2]
+    mu_ER <- arg[3]
+    mu_EH <- arg[4]
+    inflo_capacity <- arg[5]
+    stock <- arg[6]
+    # stock <- 0
+    reproduction <- arg[7]
+    season <- arg[8]
+    
+    ## Modèle normal
+    alpha <- exchange(migration, inflos)
+    # females_exo <- incoming(gamma, inflos)
+    females_exo <- matrix(30, nrow = 80, ncol = 3)
+    larves <- matrix(0, nrow = nb_jours, ncol = 3)
+    females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
+    females <- matrix(0, nrow = nb_jours, ncol = 3)
+    mu_sol <- c(mu_ER, mu_PS, mu_EH)
+    
+    ## Décomposition
+    prop_endo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    prop_exo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    prop_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_pupe <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_diap <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_exo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_pupe <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_diap <- matrix(NA, nrow = nb_jours, ncol = 3)
+    for (jour in 1:nb_jours) {
+        if (jour < 36) {
+            larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                            mu_sol, reproduction)
+            females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+            females[jour, 1] <- females_count(jour, alpha[[1]],
+                                              females_exo[, 1], females_endo)
+            females[jour, 2] <- females_count(jour, alpha[[2]],
+                                              females_exo[, 2], females_endo)
+            females[jour, 3] <- females_count(jour, alpha[[3]],
+                                              females_exo[, 3], females_endo)
+        }
+        
+        if (jour >= 36 & jour < 51) {
+            larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                            mu_sol, reproduction)
+            females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+            females[jour, 1] <- females_count(jour, alpha[[1]],
+                                              females_exo[, 1], females_endo)
+            females[jour, 2] <- females_count(jour, alpha[[2]],
+                                              females_exo[, 2], females_endo)
+            females[jour, 3] <- females_count(jour, alpha[[3]],
+                                              females_exo[, 3], females_endo)
+            females[jour, 2:3] <- females[jour, 2:3] * season
+        }
+        
+        if (jour >= 51) {
+            larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                            mu_sol, reproduction)
+            females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+            females[jour, 1] <- females_count(jour, alpha[[1]],
+                                              females_exo[, 1], females_endo)
+            females[jour, 2] <- females_count(jour, alpha[[2]],
+                                              females_exo[, 2], females_endo)
+            females[jour, 3] <- females_count(jour, alpha[[3]],
+                                              females_exo[, 3], females_endo)
+            females[jour, ] <- females[jour, ] * season
+        }
+        
+        ## Décomposition
+        female_pupe[jour, 1] <- emerging(jour, larves, mu_sol, stock = 0)[1] * alpha[[1]][jour, 1]
+        female_pupe[jour, 2] <- emerging(jour, larves, mu_sol, stock = 0)[2] * alpha[[2]][jour, 2]
+        female_pupe[jour, 3] <- emerging(jour, larves, mu_sol, stock = 0)[3] * alpha[[3]][jour, 3]
+        
+        female_diap[jour, 1] <- emerging_diap(jour, larves, mu_sol, stock)[1] * alpha[[1]][jour, 1]
+        female_diap[jour, 2] <- emerging_diap(jour, larves, mu_sol, stock)[2] * alpha[[2]][jour, 2]
+        female_diap[jour, 3] <- emerging_diap(jour, larves, mu_sol, stock)[3] * alpha[[3]][jour, 3]
+        
+        female_side[jour, 1] <- females_side(jour, alpha[[1]], cbind(0, females_endo[, 2:3]))
+        female_side[jour, 2] <- females_side(jour, alpha[[2]], 
+                                             cbind(females_endo[, 1], 0, females_endo[, 3]))
+        female_side[jour, 3] <- females_side(jour, alpha[[3]], cbind(females_endo[, 1:2], 0))
+        
+        larves_side[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_side, reproduction)
+        larves_exo[jour, ]  <- larvaes_count2(jour, inflo_capacity, inflos, females_exo, reproduction)
+        larves_pupe[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_pupe, reproduction)
+        larves_diap[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_diap, reproduction)
+        
+    }
+    prop_pupe <- larves_pupe / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_diap <- larves_diap / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_side <- larves_side / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_exo  <- larves_exo  / (larves_pupe + larves_diap + larves_side + larves_exo)
+    
+    list(larves, prop_pupe * larves, prop_diap * larves,
+         prop_side * larves, prop_exo * larves, females,
+         female_pupe, female_diap, female_side, females_exo)
+}
+
+
+dynamics_season_inflos_b1 <- function(arg, inflos) {
+    ## Renvoie la dynamique de larves pour les trois sous-blocs
+    gamma <- arg[1]
+    migration <- arg[2]
+    mu_ER <- arg[3]
+    mu_EH <- arg[4]
+    inflo_capacity <- arg[5]
+    stock <- arg[6]
+    # stock <- 0
+    reproduction <- arg[7]
+    season <- arg[8]
+    
+    inflos[59:80, ] <- inflos[59:80, ] * season
+    
+    alpha <- exchange(migration, inflos)
+    females_exo <- incoming(gamma, inflos)
+    # females_exo <- matrix(30, nrow = 80, ncol = 3)
+    larves <- matrix(0, nrow = nb_jours, ncol = 3)
+    females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
+    females <- matrix(0, nrow = nb_jours, ncol = 3)
+    mu_sol <- c(mu_ER, mu_PS, mu_EH)
+    for (jour in 1:nb_jours) {
+        larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                        mu_sol, reproduction)
+        females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+        females[jour, 1] <- females_count(jour, alpha[[1]],
+                                          females_exo[, 1], females_endo)
+        females[jour, 2] <- females_count(jour, alpha[[2]],
+                                          females_exo[, 2], females_endo)
+        females[jour, 3] <- females_count(jour, alpha[[3]],
+                                          females_exo[, 3], females_endo)
+        
+    }
+    
+    larves
+}
+
+decomposition_season_inflos_bloc1 <- function(arg, inflos) {
+    ## Décompose la provenance des femelles : pupaison, diapause,
+    ## side ou exogène
+    gamma <- arg[1]
+    migration <- arg[2]
+    mu_ER <- arg[3]
+    mu_EH <- arg[4]
+    inflo_capacity <- arg[5]
+    stock <- arg[6]
+    # stock <- 0
+    reproduction <- arg[7]
+    season <- arg[8]
+    
+    inflos[59:80, ] <- inflos[59:80, ] * season
+    
+    ## Modèle normal
+    alpha <- exchange(migration, inflos)
+    females_exo <- incoming(gamma, inflos)
+    # females_exo <- matrix(30, nrow = 80, ncol = 3)
+    larves <- matrix(0, nrow = nb_jours, ncol = 3)
+    females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
+    females <- matrix(0, nrow = nb_jours, ncol = 3)
+    mu_sol <- c(mu_ER, mu_PS, mu_EH)
+    
+    ## Décomposition
+    prop_endo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    prop_exo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    prop_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_pupe <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_diap <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_exo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_pupe <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_diap <- matrix(NA, nrow = nb_jours, ncol = 3)
+    for (jour in 1:nb_jours) {
+        
+        ## Modèle normal
+        larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                        mu_sol, reproduction)
+        females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+        females[jour, 1] <- females_count(jour, alpha[[1]],
+                                          females_exo[, 1], females_endo)
+        females[jour, 2] <- females_count(jour, alpha[[2]],
+                                          females_exo[, 2], females_endo)
+        females[jour, 3] <- females_count(jour, alpha[[3]],
+                                          females_exo[, 3], females_endo)
+        
+        
+        ## Décomposition
+        female_pupe[jour, 1] <- emerging(jour, larves, mu_sol, stock = 0)[1] * alpha[[1]][jour, 1]
+        female_pupe[jour, 2] <- emerging(jour, larves, mu_sol, stock = 0)[2] * alpha[[2]][jour, 2]
+        female_pupe[jour, 3] <- emerging(jour, larves, mu_sol, stock = 0)[3] * alpha[[3]][jour, 3]
+        
+        female_diap[jour, 1] <- emerging_diap(jour, larves, mu_sol, stock)[1] * alpha[[1]][jour, 1]
+        female_diap[jour, 2] <- emerging_diap(jour, larves, mu_sol, stock)[2] * alpha[[2]][jour, 2]
+        female_diap[jour, 3] <- emerging_diap(jour, larves, mu_sol, stock)[3] * alpha[[3]][jour, 3]
+        
+        female_side[jour, 1] <- females_side(jour, alpha[[1]], cbind(0, females_endo[, 2:3]))
+        female_side[jour, 2] <- females_side(jour, alpha[[2]], 
+                                             cbind(females_endo[, 1], 0, females_endo[, 3]))
+        female_side[jour, 3] <- females_side(jour, alpha[[3]], cbind(females_endo[, 1:2], 0))
+        
+        larves_side[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_side, reproduction)
+        larves_exo[jour, ]  <- larvaes_count2(jour, inflo_capacity, inflos, females_exo, reproduction)
+        larves_pupe[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_pupe, reproduction)
+        larves_diap[jour, ] <- larvaes_count2(jour, inflo_capacity, inflos, female_diap, reproduction)
+        
+    }
+    prop_pupe <- larves_pupe / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_diap <- larves_diap / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_side <- larves_side / (larves_pupe + larves_diap + larves_side + larves_exo)
+    prop_exo  <- larves_exo  / (larves_pupe + larves_diap + larves_side + larves_exo)
+    
+    list(larves, prop_pupe * larves, prop_diap * larves,
+         prop_side * larves, prop_exo * larves, females,
+         female_pupe, female_diap, female_side, females_exo)
+}
+
+decomposition_season_inflos_bloc2 <- function(arg, inflos) {
+    ## Décompose la provenance des femelles : pupaison, diapause,
+    ## side ou exogène
+    gamma <- arg[1]
+    migration <- arg[2]
+    mu_ER <- arg[3]
+    mu_EH <- arg[4]
+    inflo_capacity <- arg[5]
+    # stock <- arg[6]
+    stock <- 0
+    reproduction <- arg[7]
+    season <- arg[8]
+    
+    inflos[36:80, 2:3] <- inflos[36:80, 2:3] * season + 1
+    inflos[51:80, 1] <- inflos[51:80, 1] * season + 1
+    
+    ## Modèle normal
+    alpha <- exchange(migration, inflos)
+    females_exo <- incoming(gamma, inflos)
+    # females_exo <- matrix(30, nrow = 80, ncol = 3)
+    larves <- matrix(0, nrow = nb_jours, ncol = 3)
+    females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
+    females <- matrix(0, nrow = nb_jours, ncol = 3)
+    mu_sol <- c(mu_ER, mu_PS, mu_EH)
+    
+    ## Décomposition
+    prop_endo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    prop_exo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    prop_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_pupe <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_diap <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_exo <- matrix(NA, nrow = nb_jours, ncol = 3)
+    larves_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_side <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_pupe <- matrix(NA, nrow = nb_jours, ncol = 3)
+    female_diap <- matrix(NA, nrow = nb_jours, ncol = 3)
+    for (jour in 1:nb_jours) {
+        
+        ## Modèle normal
+        larves[jour, ] <- larvaes_count(jour, inflo_capacity, inflos, females,
+                                        mu_sol, reproduction)
+        females_endo[jour, ] <- emerging(jour, larves, mu_sol, stock)
+        females[jour, 1] <- females_count(jour, alpha[[1]],
+                                          females_exo[, 1], females_endo)
+        females[jour, 2] <- females_count(jour, alpha[[2]],
+                                          females_exo[, 2], females_endo)
+        females[jour, 3] <- females_count(jour, alpha[[3]],
+                                          females_exo[, 3], females_endo)
+        
         
         ## Décomposition
         female_pupe[jour, 1] <- emerging(jour, larves, mu_sol, stock = 0)[1] * alpha[[1]][jour, 1]
