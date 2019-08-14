@@ -6,7 +6,7 @@ library(mco) ## Pour nsga2
 library(emoa) ## Pour is_dominated
 library(snow) ## Pour la parallelisation
 library(snowfall) ## Pour la parallelisation
-source("/home/bastien/cecidomyie/model_R/objectif.R")
+source("/home/bastien/cecidomyie/model_R/objectif_A.R")
 
 # NSGA-II -----------------------------------------------------------------
 
@@ -37,15 +37,15 @@ sfStop()
 
 # Solutions ---------------------------------------------------------------
 
-pareto <- res[[1]]$value
-params <- res[[1]]$par
+pareto_A <- res[[1]]$value
+params_A <- res[[1]]$par
 for (i in 2:length(res)) {
-    pareto <- rbind(pareto, res[[i]]$value)
-    params <- rbind(params, res[[i]]$par)
+    pareto_A <- rbind(pareto_A, res[[i]]$value)
+    params_A <- rbind(params_A, res[[i]]$par)
 }
 
-pareto_front <- pareto[!is_dominated(t(pareto)), ]
-params_front <- params[!is_dominated(t(pareto)), ]
+pareto_front_A <- pareto_A[!is_dominated(t(pareto_A)), ]
+params_front_A <- params_A[!is_dominated(t(pareto_A)), ]
 
 
-save(pareto, params, pareto_front, params_front, file = "calibration.Rdata")
+save(pareto_A, params_A, pareto_front_A, params_front_A, file = "calibration_A.Rdata")
