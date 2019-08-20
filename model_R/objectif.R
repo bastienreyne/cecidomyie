@@ -20,6 +20,34 @@ larves2 <- data_piege %>% filter(Sol == "PS") %>% pull(larves)
 larves3 <- data_piege %>% filter(Sol == "EH") %>% pull(larves)
 larves <- cbind(larves1, larves2, larves3)
 
+## Chargement inflos vivantes
+inflos1 <- data_piege %>% filter(Sol == "ER") %>% pull(inflos)
+inflos2 <- data_piege %>% filter(Sol == "PS") %>% pull(inflos)
+inflos3 <- data_piege %>% filter(Sol == "EH") %>% pull(inflos)
+inflos <- cbind(inflos1, inflos2, inflos3)
+
+obj_A <- function(x) {
+  ## ER, PS et EH
+  larves_estimees <- dynamics_A(x, inflos)
+  larvesER <- larves_estimees[, 1]
+  larvesPS <- larves_estimees[, 2]
+  larvesEH <- larves_estimees[, 3]
+  
+  larves_est <- matrix(NA, nrow = length(laps), ncol = 3)
+  for (i in 1:length(laps)) {
+    indices <- (true_index[i] - laps[i] + 1):true_index[i]
+    larves_est[i, ] <- c(mean(larvesER[indices]),
+                         mean(larvesPS[indices]),
+                         mean(larvesEH[indices]))
+  }
+  
+  larves_observed <- larves[true_index, ]
+  
+  c(nrmse(larves_est[, 1], larves_observed[, 1], norm = "maxmin"),
+    nrmse(larves_est[, 2], larves_observed[, 2], norm = "maxmin"),
+    nrmse(larves_est[, 3], larves_observed[, 3], norm = "maxmin"))
+}
+
 
 
 obj <- function(x) {
