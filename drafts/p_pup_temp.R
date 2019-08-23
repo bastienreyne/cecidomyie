@@ -48,13 +48,15 @@ for (i in 1:80) {
 
 p_pup15j <- 1.95554 - 0.05497 * temp201715j
 
-data.frame(date = date2017, jour = p_pup, quinzaine = p_pup15j, constant = 0.77) %>% 
-    gather(jour, quinzaine, constant, key = method, value = proba) %>% 
+data.frame(date = date2017, quinzaine = p_pup15j, constant = 0.77) %>% 
+    gather(quinzaine, constant, key = method, value = proba) %>% 
     ggplot +
     aes(x = date, y = proba, color = method) +
     geom_line(lwd = 0.75) +
-    ylab("Probabilité de pupaison") +
+    ylab("Probabilité d'entrer en pupaison et d'y survivre") +
     xlab("Date") +
     theme_bw() +
-    scale_color_discrete(labels = c("0.77 ", "Température quotidienne ", "Température sur la quinzaine ")) +
+    scale_color_discrete(labels = c("0.77 ",
+                                         "Température sur la quinzaine ")) +
     theme(legend.title = element_blank(), legend.position = "bottom")
+        

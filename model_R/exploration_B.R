@@ -7,18 +7,18 @@ library(corrplot)
 source("model_new.R")
 source("objectif.R")
 source("plot_res.R")
-load("/home/bastien/cecidomyie/model_R/calibration_A3.Rdata")
+load("/home/bastien/cecidomyie/model_R/calibration_B.Rdata")
 
 # Corrélations ------------------------------------------------------------
     
-X <- scale(params_front_A)
-Y <- scale(pareto_front_A)
+X <- scale(params_front_B)
+Y <- scale(pareto_front_B)
 
 matcor <- cor(cbind(X, Y), method = "spearman")
 rownames(matcor) <- c(":gamma", ":p[m]", ":mu[ER]", ":mu[EH]",
-                      ":k", "stock", ":E[0] * mu[l]", "ER", "PS", "EH")
+                      ":k", "stock", ":E[0] * mu[l]", "varpi", "ER", "PS", "EH")
 colnames(matcor) <- c(":gamma", ":p[m]", ":mu[ER]", ":mu[EH]",
-                      ":k", "stock", ":E[0] * mu[l]", "ER", "PS", "EH")
+                      ":k", "stock", ":E[0] * mu[l]", "varpi", "ER", "PS", "EH")
 corrplot.mixed(matcor, tl.pos = "lt", mar = c(0, 0, 0.2, 0))
 
 # Classe de solutions -----------------------------------------------------
@@ -26,7 +26,7 @@ corrplot.mixed(matcor, tl.pos = "lt", mar = c(0, 0, 0.2, 0))
 ## On effectue une CAH
 hca <- hclust(dist(X), method = "ward.D2")
 
-inertie <- data.frame(height = rev(hca$height), nb_class = 1:841)
+inertie <- data.frame(height = rev(hca$height), nb_class = 1:(nrow(X)-1))
 ggplot(inertie[1:25, ]) +
     aes(y = height, x = nb_class) +
     geom_step(lwd = 0.75) + 
@@ -34,9 +34,9 @@ ggplot(inertie[1:25, ]) +
     ylab("Inertie interne") +
     xlab("Nombre de classes")
 
-classes <- cutree(hca, 16) ## On choisit 16 classes
+classes <- cutree(hca, 13)
 
 # Affichage des résultats -------------------------------------------------
 
-classe <- 1 ## Affiche une solution de la classe 1
-plot_decompo_A(params_front_A[which(classes == classe)[1], ], inflos_obs)
+classe <- 1
+plot_decompo_B(params_front_B[which(classes == classe)[1], ], inflos_obs)

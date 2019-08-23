@@ -1,2 +1,0 @@
-Les 3 notebooks permettent de mettre en forme les données brutes. 
-On retrouve les fichiers à jour dans le dossier "Dropbox/Cecidomyie/Fichier de donnees"
