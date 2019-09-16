@@ -13,6 +13,7 @@ true_index <- which(date2017 %in% true_date2017)
 inflosCDE <- as.matrix(read.csv(file = "/home/bastien/cecidomyie/data/2017_inflosCDE_bloc1.csv",
                                 row.names = "id"))
 
+
 ## Chargement larves observees  
 data_piege <- read.csv("/home/bastien/cecidomyie/data/2017_piege.csv")
 larves1 <- data_piege %>% filter(Sol == "ER") %>% pull(larves)
@@ -123,6 +124,30 @@ obj0_season_inflos <- function(x) {
   ## ER, PS et EH
   ## Modèle saisonnalité sur inflos
   larves_estimees <- dynamics_season_inflos_b1(x, inflosCDE)
+  larvesER <- larves_estimees[, 1]
+  larvesPS <- larves_estimees[, 2]
+  larvesEH <- larves_estimees[, 3]
+  
+  larves_est <- matrix(NA, nrow = length(laps), ncol = 3)
+  for (i in 1:length(laps)) {
+    indices <- (true_index[i] - laps[i] + 1):true_index[i]
+    larves_est[i, ] <- c(mean(larvesER[indices]),
+                         mean(larvesPS[indices]),
+                         mean(larvesEH[indices]))
+  }
+  
+  larves_observed <- larves[true_index, ]
+  
+  c(nrmse(larves_est[, 1], larves_observed[, 1], norm = "maxmin"),
+    nrmse(larves_est[, 2], larves_observed[, 2], norm = "maxmin"),
+    nrmse(larves_est[, 3], larves_observed[, 3], norm = "maxmin"))
+}
+
+
+obj_C <- function(x) {
+  ## ER, PS et EH
+  ## Modèle C avec calibration durée attra
+  # larves_estimees <- dynamics_C(x, inflosCDE)
   larvesER <- larves_estimees[, 1]
   larvesPS <- larves_estimees[, 2]
   larvesEH <- larves_estimees[, 3]
