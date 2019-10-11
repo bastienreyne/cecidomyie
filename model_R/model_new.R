@@ -28,6 +28,7 @@ exchange <- function(param_migration, inflos) {
     ## Échange entre les sous-blocs du bloc 1 [ER|PS|EH]
     ## Les matrices alpha représente les individus VENANT dans le sous-bloc
     ## Par exemple, alphaER[, 3] désigne les individus allant de EH dans ER
+    inflos <- inflos + 1
     alphaER <- alphaPS <- alphaEH <- matrix(0, nrow = nb_jours, ncol = 3)
     
     alphaER[, 1] <- inflos[, 1] / (inflos[, 1] + inflos[, 2] * param_migration +
@@ -59,6 +60,7 @@ exchange_b2 <- function(param_migration, inflos) {
     ## Échange entre les sous-blocs du bloc 2 [ER|EH|PS]
     ## Les matrices alpha représente les individus VENANT dans le sous-bloc
     ## Par exemple, alphaER[, 3] désigne les individus allant de EH dans ER
+    inflos <- inflos + 1
     alphaER <- alphaPS <- alphaEH <- matrix(0, nrow = nb_jours, ncol = 3)
     
     alphaER[, 1] <- inflos[, 1] / (inflos[, 1] + inflos[, 3] * param_migration +
@@ -991,8 +993,8 @@ decomposition_season_bloc1 <- function(arg, inflos) {
     
     ## Modèle normal
     alpha <- exchange(migration, inflos)
-    # females_exo <- incoming(gamma, inflos)
-    females_exo <- matrix(30, nrow = 80, ncol = 3)
+    females_exo <- incoming(gamma, inflos)
+    # females_exo <- matrix(30, nrow = 80, ncol = 3)
     larves <- matrix(0, nrow = nb_jours, ncol = 3)
     females_endo <- matrix(0, nrow = nb_jours, ncol = 3)
     females <- matrix(0, nrow = nb_jours, ncol = 3)

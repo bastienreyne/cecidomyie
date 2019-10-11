@@ -7,7 +7,7 @@ library(corrplot)
 source("model_new.R")
 source("objectif.R")
 source("plot_res.R")
-load("/home/bastien/cecidomyie/model_R/calibration_A3.Rdata")
+load("/home/bastien/cecidomyie/model_R/calibration_A.Rdata")
 
 # Corrélations ------------------------------------------------------------
     
