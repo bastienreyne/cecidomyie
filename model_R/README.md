@@ -92,7 +92,7 @@ Les **fonctions** spécifiques à ce modèle présentes dans *model_new.R* sont 
 + **dynamics_season_b1** : renvoie la dynamiques de larves pour chacune des trois sous-parcelles du verger n°1
 + **dynamics_season_b2** : renvoie la dynamiques de larves pour chacune des trois sous-parcelles du verger n°2
 + **decomposition_season_b1** : renvoie les différentes dynamiques (larves, femelles, femelles exogènes...) pour le verger n°1
-+ + **decomposition_season_b1** : renvoie les différentes dynamiques (larves, femelles, femelles exogènes...) pour le verger n°2
++ **decomposition_season_b1** : renvoie les différentes dynamiques (larves, femelles, femelles exogènes...) pour le verger n°2
 
 Pour effectuer la **représentation graphique**, il y dans le fichier *plot_res.R* la fonction :
 + **plot_decompo_season** : trace les dynamiques des larves observées et estimées pour chacune des trois sous-parcelles du verger n°1. La provenance des femelles étant à l'origine des larves est disponible pour les dynamiques de larves estimées.
