@@ -28,29 +28,28 @@ exchange <- function(param_migration, inflos) {
     ## Échange entre les sous-blocs du bloc 1 [ER|PS|EH]
     ## Les matrices alpha représente les individus VENANT dans le sous-bloc
     ## Par exemple, alphaER[, 3] désigne les individus allant de EH dans ER
-    inflos <- inflos + 1
     alphaER <- alphaPS <- alphaEH <- matrix(0, nrow = nb_jours, ncol = 3)
     
     alphaER[, 1] <- inflos[, 1] / (inflos[, 1] + inflos[, 2] * param_migration +
-                                       inflos[, 3] * param_migration^2)
+                                       inflos[, 3] * param_migration^2 + c(1,1,1))
     alphaPS[, 2] <- inflos[, 2] / (inflos[, 2] + inflos[, 1] * param_migration +
-                                       inflos[, 3] * param_migration)
+                                       inflos[, 3] * param_migration + c(1,1,1))
     alphaEH[, 3] <- inflos[, 3] / (inflos[, 3] + inflos[, 2] * param_migration +
-                                       inflos[, 1] * param_migration^2)
+                                       inflos[, 1] * param_migration^2 + c(1,1,1))
     
     alphaER[, 2] <- param_migration * inflos[, 1] / 
-        (inflos[, 2] + inflos[, 1] * param_migration + inflos[, 3] * param_migration)
+        (inflos[, 2] + inflos[, 1] * param_migration + inflos[, 3] * param_migration + c(1,1,1))
     alphaEH[, 2] <- param_migration * inflos[, 3] / 
-        (inflos[, 2] + inflos[, 1] * param_migration + inflos[, 3] * param_migration)
+        (inflos[, 2] + inflos[, 1] * param_migration + inflos[, 3] * param_migration + c(1,1,1))
     alphaPS[, 1] <- param_migration * inflos[, 2] /
-        (inflos[, 1] + inflos[, 2] * param_migration + inflos[, 3] * param_migration^2)
+        (inflos[, 1] + inflos[, 2] * param_migration + inflos[, 3] * param_migration^2 + c(1,1,1))
     alphaPS[, 3] <- param_migration * inflos[, 2] /
-        (inflos[, 3] + inflos[, 2] * param_migration + inflos[, 1] * param_migration^2)
+        (inflos[, 3] + inflos[, 2] * param_migration + inflos[, 1] * param_migration^2 + c(1,1,1))
     
     alphaER[, 3] <- param_migration^2 * inflos[, 1] /
-        (inflos[, 3] + inflos[, 2] * param_migration + inflos[, 1] * param_migration^2)
+        (inflos[, 3] + inflos[, 2] * param_migration + inflos[, 1] * param_migration^2 + c(1,1,1))
     alphaEH[, 1] <- param_migration^2 * inflos[, 3] /
-        (inflos[, 1] + inflos[, 2] * param_migration + inflos[, 3] * param_migration^2)
+        (inflos[, 1] + inflos[, 2] * param_migration + inflos[, 3] * param_migration^2 + c(1,1,1))
     
     
     list(alphaER, alphaPS, alphaEH)
@@ -60,29 +59,28 @@ exchange_b2 <- function(param_migration, inflos) {
     ## Échange entre les sous-blocs du bloc 2 [ER|EH|PS]
     ## Les matrices alpha représente les individus VENANT dans le sous-bloc
     ## Par exemple, alphaER[, 3] désigne les individus allant de EH dans ER
-    inflos <- inflos + 1
     alphaER <- alphaPS <- alphaEH <- matrix(0, nrow = nb_jours, ncol = 3)
     
     alphaER[, 1] <- inflos[, 1] / (inflos[, 1] + inflos[, 3] * param_migration +
-                                       inflos[, 2] * param_migration^2)
+                                       inflos[, 2] * param_migration^2 + c(1,1,1))
     alphaPS[, 2] <- inflos[, 2] / (inflos[, 2] + inflos[, 1] * param_migration^2 +
-                                       inflos[, 3] * param_migration)
+                                       inflos[, 3] * param_migration + c(1,1,1))
     alphaEH[, 3] <- inflos[, 3] / (inflos[, 3] + inflos[, 2] * param_migration +
-                                       inflos[, 1] * param_migration)
+                                       inflos[, 1] * param_migration + c(1,1,1))
     
     alphaER[, 2] <- param_migration^2 * inflos[, 1] / 
-        (inflos[, 2] + inflos[, 1] * param_migration^2 + inflos[, 3] * param_migration)
+        (inflos[, 2] + inflos[, 1] * param_migration^2 + inflos[, 3] * param_migration + c(1,1,1))
     alphaEH[, 2] <- param_migration * inflos[, 3] / 
-        (inflos[, 2] + inflos[, 1] * param_migration^2 + inflos[, 3] * param_migration)
+        (inflos[, 2] + inflos[, 1] * param_migration^2 + inflos[, 3] * param_migration + c(1,1,1))
     alphaPS[, 1] <- param_migration^2 * inflos[, 2] /
-        (inflos[, 1] + inflos[, 2] * param_migration^2 + inflos[, 3] * param_migration)
+        (inflos[, 1] + inflos[, 2] * param_migration^2 + inflos[, 3] * param_migration + c(1,1,1))
     alphaPS[, 3] <- param_migration * inflos[, 2] /
-        (inflos[, 3] + inflos[, 2] * param_migration + inflos[, 1] * param_migration)
+        (inflos[, 3] + inflos[, 2] * param_migration + inflos[, 1] * param_migration + c(1,1,1))
     
     alphaER[, 3] <- param_migration * inflos[, 1] /
-        (inflos[, 3] + inflos[, 2] * param_migration + inflos[, 1] * param_migration)
+        (inflos[, 3] + inflos[, 2] * param_migration + inflos[, 1] * param_migration + c(1,1,1))
     alphaEH[, 1] <- param_migration * inflos[, 3] /
-        (inflos[, 1] + inflos[, 2] * param_migration^2 + inflos[, 3] * param_migration)
+        (inflos[, 1] + inflos[, 2] * param_migration^2 + inflos[, 3] * param_migration + c(1,1,1))
     
     
     list(alphaER, alphaPS, alphaEH)
