@@ -92,15 +92,28 @@ Les **fonctions** spécifiques à ce modèle présentes dans *model_new.R* sont 
 + **dynamics_season_b1** : renvoie la dynamiques de larves pour chacune des trois sous-parcelles du verger n°1
 + **dynamics_season_b2** : renvoie la dynamiques de larves pour chacune des trois sous-parcelles du verger n°2
 + **decomposition_season_b1** : renvoie les différentes dynamiques (larves, femelles, femelles exogènes...) pour le verger n°1
-+ **decomposition_season_b1** : renvoie les différentes dynamiques (larves, femelles, femelles exogènes...) pour le verger n°2
++ **decomposition_season_b2** : renvoie les différentes dynamiques (larves, femelles, femelles exogènes...) pour le verger n°2
 
 Pour effectuer la **représentation graphique**, il y dans le fichier *plot_res.R* la fonction :
 + **plot_decompo_season** : trace les dynamiques des larves observées et estimées pour chacune des trois sous-parcelles du verger n°1. La provenance des femelles étant à l'origine des larves est disponible pour les dynamiques de larves estimées.
 + **plot_decompo_season_b2** : trace les dynamiques des larves observées et estimées pour chacune des trois sous-parcelles du verger n°2. La provenance des femelles étant à l'origine des larves est disponible pour les dynamiques de larves estimées.
 
 
+## Modèle E
 
+Le modèle utilise en entrée les inflorescences au stade phénologiques C, D et E.
+La probabilité de pupaison est calculé par une régression linéaire en fonction de la température.
+On calibre ici le premier jour d'éjéction des larves.
 
+Les **fonctions** spécifiques à ce modèle présentes dans *model_new.R* sont :
++ **emerging** : gère l'émergence des cécidomyies en utilisant une proba de pupaison dépendant de la tepérature.
++ **larvae_count_E** : permet de compter le nombre de larves au jour *j* en fonction du premier jour d'éjection des larves en direction du sol.
++ **dynamics_E** : renvoie la dynamiques de larves pour chacune des trois sous-parcelles du verger n°1.
++ **larvae_count2_E** : permet de compter le nombre de larves au jour *j* en fonction du premier jour d'éjection des larves en direction du sol (sans contraintes sur les ressources, utile pour la fonction **decomposition_E**).
++ **decomposition_E** : renvoie les différentes dynamiques (larves, femelles, femelles exogènes...) pour le verger n°1
+
+Pour effectuer la **représentation graphique**, il y dans le fichier *plot_res.R* la fonction :
++ **plot_decompo_E** : trace les dynamiques des larves observées et estimées pour chacune des trois sous-parcelles du verger n°1. La provenance des femelles étant à l'origine des larves est disponible pour les dynamiques de larves estimées.
 
 
 

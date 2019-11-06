@@ -627,6 +627,65 @@ plot_decompo_season_b2 <- function(args, inflos) {
     
 }
 
+plot_decompo_E <- function(args, inflos) {
+    obs <- larves_obs
+    estimations <- decomposition_E(args, inflos)
+    
+    ploter <- data.frame(Date = date2017,
+                         Sol = factor("Enherbement ras", levels = c("Enherbement ras",
+                                                                    "Paillage synthétique",
+                                                                    "Enherbement haut")),
+                         Observation = obs[, 1],
+                         Estimation = estimations[[1]][, 1],
+                         Pupaison = estimations[[2]][, 1],
+                         Diapause = estimations[[3]][, 1],
+                         Voisinage = estimations[[4]][, 1],
+                         Exogène = estimations[[5]][, 1]) %>% 
+        gather(Exogène, Voisinage, Diapause, Pupaison,
+               key = prov, value = prop, factor_key = TRUE)
+    
+    plotps <- data.frame(Date = date2017,
+                         Sol = factor("Paillage synthétique", levels = c("Enherbement ras",
+                                                                         "Paillage synthétique",
+                                                                         "Enherbement haut")),
+                         Observation = obs[, 2],
+                         Estimation = estimations[[1]][, 2],
+                         Pupaison = estimations[[2]][, 2],
+                         Diapause = estimations[[3]][, 2],
+                         Voisinage = estimations[[4]][, 2],
+                         Exogène = estimations[[5]][, 2]) %>% 
+        gather(Exogène, Voisinage, Diapause, Pupaison,
+               key = prov, value = prop, factor_key = TRUE)
+    
+    ploteh <- data.frame(Date = date2017,
+                         Sol = factor("Enherbement haut", levels = c("Enherbement ras",
+                                                                     "Paillage synthétique",
+                                                                     "Enherbement haut")),
+                         Observation = obs[, 3],
+                         Estimation = estimations[[1]][, 3],
+                         Pupaison = estimations[[2]][, 3],
+                         Diapause = estimations[[3]][, 3],
+                         Voisinage = estimations[[4]][, 3],
+                         Exogène = estimations[[5]][, 3]) %>% 
+        gather(Exogène, Voisinage, Diapause, Pupaison,
+               key = prov, value = prop, factor_key = TRUE)
+    
+    to_plot <- bind_rows(ploter, plotps, ploteh)
+    to_plot %>% ggplot +
+        aes(x = Date) +
+        geom_area(aes(y = prop, fill = prov), alpha = 0.5) +
+        geom_line(aes(y = Observation, color = "Observation"), lwd = 0.75) +
+        geom_line(aes(y = Estimation, color = "Estimation"), lwd = 0.75) +
+        geom_point(aes(y = Observation, color = "Observation")) +
+        geom_point(aes(y = Estimation, color = "Estimation")) +
+        theme_bw() +
+        facet_grid(. ~ Sol) +
+        theme(legend.title = element_blank(), legend.position = "bottom") +
+        scale_color_manual(values = c("green4", "black")) +
+        ylab("Nombre de larves")
+    
+}
+
 plot_decompo_15sept_b2 <- function(args, inflos) {
     obs <- larves_obs_b2
     estimations <- decomposition_15sept_bloc2(args, inflos)
