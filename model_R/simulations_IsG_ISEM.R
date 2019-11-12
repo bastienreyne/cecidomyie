@@ -63,7 +63,7 @@ inflos_virt1_CDE <- I_fun(fB1,16)
 
 # dynamique pour 2 flushs :
 # B2 <- round(c(rnorm(N/2,20,5),rnorm(N/2,40,5)))
-B2 <- round(c(rnorm(N/2,20,5),rnorm(N/2,51,5))) ## Les 2 flushs mieux séparés
+B2 <- round(c(rnorm(N/2,20,5),rnorm(N/2, 45,5))) ## Les 2 flushs mieux séparés
 B2 <- ifelse(B2<1,1,B2)
 B2 <- B2[order(B2)]
 fB_0 <- data.frame(day=unique(B2),B=as.numeric(table(B2)))
